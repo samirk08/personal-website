@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Projects — Samir Kadariya</title>
+  <meta name="description" content="Selected CS and math work from MIT coursework, research, and side projects — NLP, deep learning, network game theory, number theory, and more.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="page page--projects">
+    <header class="page-header">
+      <h1>Projects</h1>
+      <p class="page-header__lede">Selected CS and math work from MIT coursework, research, and side projects.</p>
+    </header>
+    <section class="page-body">
+      <h3 class="projects__sub reveal">CS Projects</h3>
+      <div class="card-grid" id="cs-projects-grid"><!-- populated by js/render-projects.js --></div>
+
+      <h3 class="projects__sub reveal">Math Projects</h3>
+      <div class="card-grid" id="math-projects-grid"><!-- populated by js/render-projects.js --></div>
+
+      <template id="project-card">
+        <article class="card reveal">
+          <span class="card__chip"></span>
+          <a class="card__link" href=""></a>
+          <h3 class="card__title"></h3>
+          <p class="card__teaser"></p>
+          <p class="card__meta"></p>
+          <ul class="tag-list"></ul>
+        </article>
+      </template>
+
+      <noscript>
+        <p>Card layout requires JavaScript. Direct links to projects:</p>
+        <ul>
+          <li><a href="/projects/nlp-tariff/">Concordance Mapping of U.S. Tariffs Over 250 Years</a></li>
+          <li><a href="/projects/encoding-attacks-llm/">Encoding-Based Attacks on Large Language Models</a></li>
+          <li><a href="/projects/soccer-clustering/">Clustering Soccer Playing Styles</a></li>
+          <li><a href="/projects/market-mood/">Market Mood — Reddit Sentiment Dashboard</a></li>
+          <li><a href="/projects/lobbying-networks/">Targeted Lobbying on Council Networks</a></li>
+          <li><a href="/projects/taxicab-numbers/">Properties of Taxicab Numbers</a></li>
+          <li><a href="/projects/branching-cancer/">Branching Process Models for Cancer (Survey)</a></li>
+          <li><a href="/projects/sepsis-prediction/">Early Sepsis Prediction with Deep Learning</a></li>
+          <li><a href="/projects/decimal-expansions/">Decimal Expansions of Rational Numbers</a></li>
+        </ul>
+      </noscript>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
