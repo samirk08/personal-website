@@ -169,4 +169,132 @@
     font-size: 1.05em;            /* KaTeX renders slightly small; nudge up */
     line-height: inherit;
   }
+
+  /* §6.1 Article TOC — bullets-on-a-rail layout (added 2026-05-07).
+     Wraps the article + references in a 2-column grid at >=1024 px:
+     a sticky monospace TOC on the left and the prose column on the right.
+     Below 1024 px the TOC is hidden (URL-anchor sharing still works because
+     the per-section H2 IDs remain in the DOM). */
+  .article-page {
+    max-inline-size: var(--measure-grid, 1200px);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  .article-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 1024px) {
+    .article-layout {
+      grid-template-columns: 220px minmax(0, 65ch);
+      gap: var(--space-10);
+      align-items: start;
+    }
+  }
+
+  .article-body { min-inline-size: 0; }
+
+  /* When the TOC layout is in effect the inner .article + .references blocks
+     should not re-impose their own outer max-width / centering — the layout
+     grid is the parent container now. */
+  @media (min-width: 1024px) {
+    .article-layout .article,
+    .article-layout .references {
+      max-inline-size: none;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+  }
+
+  .article-toc { display: none; }
+
+  @media (min-width: 1024px) {
+    .article-toc {
+      display: block;
+      position: sticky;
+      inset-block-start: var(--space-12);
+      align-self: start;
+      max-block-size: calc(100vh - var(--space-12));
+      overflow-y: auto;
+      padding-block: var(--space-2);
+      font-size: var(--text-sm);
+    }
+  }
+
+  .article-toc__heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+    font-weight: 600;
+  }
+
+  .article-toc__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    font-family: var(--font-mono);
+  }
+
+  .article-toc__list::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 5px;
+    inset-block-start: 8px;
+    inset-block-end: 8px;
+    width: 1px;
+    background: var(--surface-muted);
+  }
+
+  .article-toc__item {
+    position: relative;
+    padding-block: var(--space-1);
+  }
+
+  .article-toc__item a {
+    display: block;
+    position: relative;
+    padding: var(--space-1) 0 var(--space-1) calc(var(--space-4) + 4px);
+    color: var(--text-muted);
+    text-decoration: none;
+    line-height: 1.4;
+    font-size: var(--text-sm);
+  }
+
+  .article-toc__item a:hover { color: var(--text); }
+
+  .article-toc__item a:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  .article-toc__dot {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 10px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text-muted);
+    background: var(--bg);
+    box-sizing: border-box;
+    transition: background 150ms, border-color 150ms;
+  }
+
+  .article-toc__item a[aria-current="location"] .article-toc__dot {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .article-toc__item a[aria-current="location"] .article-toc__label {
+    color: var(--text);
+    font-weight: 600;
+  }
 }
