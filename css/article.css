@@ -155,4 +155,18 @@
     margin-inline-start: var(--space-1);
   }
   .references__doi:hover { text-decoration: underline; }
+
+  /* §4 KaTeX display + inline math (loaded only on the 4 math detail pages:
+     lobbying-networks, taxicab-numbers, branching-cancer, sepsis-prediction).
+     Plan 03-03 appends these rules per UI-SPEC §4. */
+  .article .katex-display {
+    margin-block: var(--space-5);
+    overflow-x: auto;            /* horizontal scroll on narrow viewports rather than overflow the layout */
+    overflow-y: hidden;
+    padding-block: var(--space-1);
+  }
+  .article .katex {
+    font-size: 1.05em;            /* KaTeX renders slightly small; nudge up */
+    line-height: inherit;
+  }
 }
