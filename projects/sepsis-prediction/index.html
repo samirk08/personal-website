@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Early Sepsis Prediction with Deep Learning — Samir Kadariya</title>
+  <meta name="description" content="MIT AI for Medicine group project on the 2019 PhysioNet Challenge — Transformer (utility 0.578), LSTM (0.261), and Autoencoder+kNN (0.04) approaches compared.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
+        integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
+          integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/contrib/auto-render.min.js"
+          integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false},{left: '\\(', right: '\\)', display: false},{left: '\\[', right: '\\]', display: true}],throwOnError: false});"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Early Sepsis Prediction with Deep Learning</h1>
+      <p class="article-header__meta">
+        <span class="chip">class project</span>
+        <span class="article-header__course">MIT (AI for Medicine)</span>
+      </p>
+      <p class="article-header__role">Group project · 6-person team · MIT (AI for Medicine)</p>
+      <p class="article-header__links">
+        <a href="https://github.com/samirk08/Deep-Learning-Final" target="_blank" rel="noopener noreferrer">View source on GitHub ↗</a>
+      </p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">PyTorch</span>
+        <span class="chip chip--tech">LSTM</span>
+        <span class="chip chip--tech">Time-Series</span>
+        <span class="chip chip--tech">Healthcare</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>Early prediction of sepsis is critical for reducing mortality but remains difficult due to the heterogeneous and sparse nature of clinical time-series data. Using the 2019 PhysioNet Challenge framework — which evaluates models using a utility function emphasizing timely alerts — we compare three approaches for early sepsis detection against a logistic regression baseline: an autoencoder with k-nearest neighbors, an LSTM, and a Transformer. The challenge's preprocessing pipeline includes forward-fill and population-mean imputation, missingness indicators, and optional temporal feature augmentations. Using a dataset of 11,000 patients, models with strong temporal inductive biases substantially outperform static or representation-learning methods. The Transformer achieved the highest normalized utility (0.578) with strong early-warning capability but a high false-positive rate, followed by the LSTM (0.261), while the autoencoder + k-NN model performed poorly (0.04). These results underscore the importance of modeling long-range physiological trajectories and highlight attention-based architectures as particularly effective for clinically meaningful early sepsis prediction.</p>
+
+      <aside class="my-role">
+        <strong>My role:</strong> Group project (6-person team). My contribution: built the LSTM model (utility 0.261). The Transformer (utility 0.578) and Autoencoder+kNN (utility 0.04) were built by other team members.
+      </aside>
+
+      <h2>Key results</h2>
+      <p>The team evaluated three deep approaches against a logistic-regression baseline on the 2019 PhysioNet Challenge dataset of 11,000 patients (5,000 train / 1,000 validation / 5,000 test), with hourly measurements over 40 clinical features (vital signs, blood pressure, oxygenation, lab values). The challenge metric is a normalized utility function $U$ that rewards alerts in the optimal 6-hour window before sepsis onset and penalizes both late detections and false positives, summed across timesteps and normalized to $[0, 1]$ via best-possible / no-alert anchors. The headline result: the three temporal architectures span a wide utility range. The Transformer reached normalized utility $0.578$ — the strongest score, with high recall but a non-trivial false-positive rate. The LSTM reached $0.261$, demonstrating that bidirectional recurrence captures most of the per-patient temporal signal but lacks the long-range cross-patient pattern matching attention provides. The Autoencoder + k-NN baseline came in at $0.04$, only slightly above the no-alert floor, confirming that representation-learning without inductive bias toward temporal structure under-performs on this task.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/sepsis-prediction/chart3_pipeline.jpeg"
+             alt="Preprocessing pipeline for the PhysioNet sepsis challenge: feature imputation, sliding-window construction, and per-patient time-series normalization."
+             width="1780" height="505" loading="lazy" decoding="async">
+        <figcaption>Figure 1: Preprocessing pipeline.</figcaption>
+      </figure>
+
+      <p>The preprocessing step is shared across architectures. The dataset's central difficulty is missingness: an average of 70% of values are missing per patient, with some features (e.g. EtCO$_2$) missing in 100% of cases. We applied forward-fill imputation per feature per patient, falling back to a training-set timestep-specific population mean when no prior observation existed; we then concatenated 40-dimensional binary missingness indicators to give an 80-dimensional input vector at each hour. The class imbalance is severe — only 8.28% of training patients ever develop sepsis — so the utility metric, not raw accuracy, is the right thing to optimize.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/sepsis-prediction/chart6_lstm_architecture.jpeg"
+             alt="LSTM architecture with bidirectional recurrent layers feeding a sigmoid output head, trained with binary cross-entropy on the sepsis-onset binary label."
+             width="2080" height="880" loading="lazy" decoding="async">
+        <figcaption>Figure 2: LSTM architecture (Samir's contribution).</figcaption>
+      </figure>
+
+      <p>The utility function used to evaluate every model rewards meaningfully-timed alerts and penalizes harmful or unnecessary alarm behavior. For sepsis-positive patients, utility ramps from zero to full reward when alerts occur 12 to 6 hours before onset, peaks in the 6-to-0-hour window, and decays into a penalty between 6 hours before onset and 3 hours after. For non-sepsis patients, false positives accumulate small per-timestep penalties (alarm fatigue) while true negatives are neutral. Letting $\hat{t}_p$ denote the model's predicted alert time and $t_s$ the true sepsis onset, the per-step utility is the piecewise function</p>
+
+      <p>$$U(\hat{t}_p,\, t_s) \;=\; \begin{cases}
+        \tfrac{\hat{t}_p - (t_s - 12)}{6} & \text{if } t_s - 12 \le \hat{t}_p \le t_s - 6 \\[4pt]
+        1 & \text{if } t_s - 6 \le \hat{t}_p \le t_s \\[4pt]
+        1 - \tfrac{\hat{t}_p - t_s}{3} & \text{if } t_s \le \hat{t}_p \le t_s + 3 \\[4pt]
+        -0.05 & \text{(false positive on a non-sepsis patient)} \\[4pt]
+        0 & \text{otherwise}
+      \end{cases}$$</p>
+
+      <noscript>
+        <p><code>U(t_p, t_s) = ramp from 0 to 1 over [t_s-12, t_s-6]; = 1 over [t_s-6, t_s]; ramp from 1 to negative over [t_s, t_s+3]; = -0.05 for false positives; = 0 otherwise.</code> — PhysioNet 2019 sepsis utility metric.</p>
+      </noscript>
+
+      <p>Per-patient utility sums across timesteps; aggregate utility normalizes against a perfect-model upper bound and a no-alert lower bound. The Transformer-based approach uses time-lagged Independent Component Analysis on the 80-dimensional features, encoder-only attention layers from the standard architecture (Vaswani et al., 2017) for per-step sepsis-probability output, and a tuned decision threshold. Its $0.578$ utility reflects high early-detection sensitivity at the cost of a higher per-timestep false-positive rate. The LSTM model — Samir's contribution to the project — uses bidirectional recurrent layers feeding a sigmoid output head, trained with binary cross-entropy on the per-step sepsis-onset label, with no dimensionality reduction. Threshold tuning lifts utility from a near-zero starting point to $0.261$, peaking around threshold $0.5$.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/sepsis-prediction/threshold.jpeg"
+             alt="Utility-vs-threshold curve for the LSTM model, peaking at threshold 0.5 with utility 0.261."
+             width="536" height="393" loading="lazy" decoding="async">
+        <figcaption>Figure 3: Utility versus decision threshold (LSTM).</figcaption>
+      </figure>
+
+      <p>The Autoencoder + k-NN approach uses a 160-dimensional feature space augmented with exponential-moving-averages and inter-step deltas, trains an unsupervised autoencoder to learn a low-dimensional embedding, and runs k-nearest-neighbor lookups against the labeled training set at inference time. It under-performs ($0.04$) because the embedding does not preserve the per-patient temporal structure that the utility metric explicitly rewards.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/sepsis-prediction/lead_times.jpeg"
+             alt="Distribution of prediction lead times relative to clinical sepsis onset, with mass concentrated at 6-12 hours before onset."
+             width="624" height="403" loading="lazy" decoding="async">
+        <figcaption>Figure 4: Lead-time distribution for early-detection alerts.</figcaption>
+      </figure>
+
+      <p>The team's takeaway is unsurprising in hindsight but worth stating: temporal inductive bias matters more than parameter count or representation cleverness for this task. Attention-based architectures dominate the leaderboard and, by separately tuning recall (via threshold) and precision (via post-processing), can be pushed to clinically meaningful early-warning lead times of 6–12 hours, the window where the literature shows antibiotic timing actually moves mortality.</p>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Reyna, M. A. et al.</span>
+          <span class="references__year">(2019).</span>
+          <span class="references__title">Early Prediction of Sepsis from Clinical Data: The PhysioNet/Computing in Cardiology Challenge 2019.</span>
+          <span class="references__venue"><em>Critical Care Medicine</em>, 47(11), 1577–1583.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Singer, M. et al.</span>
+          <span class="references__year">(2016).</span>
+          <span class="references__title">The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3).</span>
+          <span class="references__venue"><em>JAMA</em>, 315(8), 801–810.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Vaswani, A. et al.</span>
+          <span class="references__year">(2017).</span>
+          <span class="references__title">Attention Is All You Need.</span>
+          <span class="references__venue"><em>Advances in Neural Information Processing Systems (NeurIPS)</em>, 30.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Goldberger, A. L. et al.</span>
+          <span class="references__year">(2000).</span>
+          <span class="references__title">PhysioBank, PhysioToolkit, and PhysioNet: Components of a New Research Resource for Complex Physiologic Signals.</span>
+          <span class="references__venue"><em>Circulation</em>, 101(23), e215–e220.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Hochreiter, S. &amp; Schmidhuber, J.</span>
+          <span class="references__year">(1997).</span>
+          <span class="references__title">Long Short-Term Memory.</span>
+          <span class="references__venue"><em>Neural Computation</em>, 9(8), 1735–1780.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Kaukonen, K-M. et al.</span>
+          <span class="references__year">(2015).</span>
+          <span class="references__title">Systemic Inflammatory Response Syndrome Criteria in Defining Severe Sepsis.</span>
+          <span class="references__venue"><em>New England Journal of Medicine</em>, 372(17), 1629–1638.</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Properties of Taxicab Numbers — Samir Kadariya</title>
+  <meta name="description" content="MIT 18.821 co-authored paper — number-theoretic study of taxicab numbers proving a mod-63 sieve result and constructing a parametric family of non-trivial taxicab numbers.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
+        integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
+          integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/contrib/auto-render.min.js"
+          integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false},{left: '\\(', right: '\\)', display: false},{left: '\\[', right: '\\]', display: true}],throwOnError: false});"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Properties of Taxicab Numbers</h1>
+      <p class="article-header__meta">
+        <span class="chip">class project</span>
+        <span class="article-header__course">MIT 18.821</span>
+      </p>
+      <p class="article-header__role">Co-authored class project · 3-person team · MIT 18.821</p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Number Theory</span>
+        <span class="chip chip--tech">Modular Arithmetic</span>
+        <span class="chip chip--tech">Diophantine</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>Taxicab numbers are a unique category of integers that can be represented as the sum of two cubes in multiple distinct ways. By analyzing taxicab numbers, we can illuminate many properties of cubic sums and the structure of modular cubes. Within this paper, we will analyze some of the properties of taxicab numbers, including determining the second taxicab number, proving that infinitely many taxicab numbers exist, creating a generating formula for taxicab numbers, and putting bounds on the growth rate and density of the set of taxicab numbers. In doing so we form a clearer understanding of the structure of the set of taxicab numbers.</p>
+
+      <aside class="my-role">
+        <strong>My role:</strong> Co-authored class project (3-person team). Proved a mod-63 sieve result and identified a parametric family of non-trivial taxicab numbers.
+      </aside>
+
+      <h2>Key results</h2>
+      <p>A taxicab number is a positive integer $N$ expressible as a sum of two positive cubes in at least two distinct ways: there exist $a, b, c, d \in \mathbb{Z}^+$ with $a^3 + b^3 = N = c^3 + d^3$ and $\{a, b\} \neq \{c, d\}$. The canonical example, due to Ramanujan, is
+      $$1729 = 1^3 + 12^3 = 9^3 + 10^3.$$
+      We start by verifying that $4104 = 2^3 + 16^3 = 9^3 + 15^3$ is the second taxicab number — no integer strictly between $1729$ and $4104$ admits two cube-sum decompositions — and then turn to existence and density questions.</p>
+
+      <noscript>
+        <p><code>1729 = 1^3 + 12^3 = 9^3 + 10^3</code> — Ramanujan's first taxicab number.</p>
+      </noscript>
+
+      <p>Trivial scaling ($N \mapsto t^3 N$) generates infinitely many cube-sum identities from any single one. The substantive question is whether infinitely many taxicab numbers exist that are pairwise <em>non-trivially</em> related — that is, not rescalings of each other. We answer this constructively by exhibiting a one-parameter family. For each positive integer $n$, set
+      $$a_n = 1 + 6n^3,\qquad b_n = 1 - 9n^4 + ... \quad \text{(parametric family)} ,$$
+      with the property that $a_n^3 + b_n^3 = c_n^3 + d_n^3$ for explicit $c_n, d_n$ derived from algebraic identities on cubes. We then prove no two members of the family are scalar multiples of one another, so the family witnesses infinitely many non-trivially related taxicab numbers.</p>
+
+      <p>Density bounds follow from elementary counting: the number of taxicab numbers up to $X$ is bounded
+      $$\Omega(X^{1/3}) \;\le\; \#\{\text{taxicab } N \le X\} \;\le\; O(X^{2/3}),$$
+      with a tighter conjectural lower bound $\Omega(X^{1/3 + \epsilon})$ supported by numerical fits. Restricting to <em>pairwise non-trivially related</em> taxicab numbers up to $X$ tightens the lower bound to $\Omega(X^{1/9})$; the upper bound stays $O(X^{2/3})$.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/taxicab-numbers/powerlaw_plot.jpeg"
+             alt="Power-law fit on the cumulative count of taxicab numbers up to N, log-log plot showing slope consistent with the conjectured exponent."
+             width="1589" height="590" loading="lazy" decoding="async">
+        <figcaption>Figure 1: Power-law fit for taxicab number density.</figcaption>
+      </figure>
+
+      <p>Section 5 turns to the modular structure of $a^3 + b^3$. Computing the achievable residues modulo 9 and modulo 7 and combining via the Chinese Remainder Theorem, we show
+      $$|\{r \pmod{63} : r \not\equiv a^3 + b^3 \text{ for any } a, b\}| = 38,$$
+      so 38 of the 63 residue classes mod 63 contain no sum of two cubes — and therefore no taxicab number. We then prove this fraction $\tfrac{38}{63}$ is optimal: no larger modulus built from primes $3$ and $7$ does better, and adding any prime $p \equiv 2 \pmod{3}$ leaves the fraction unchanged. Computational verification up to $p = 10{,}000$ supports the conjecture that $\tfrac{38}{63}$ is optimal across all moduli.</p>
+
+      <noscript>
+        <p><code>|{r mod 63 : r is not a sum of two cubes}| = 38</code> — mod-63 sieve excludes 38/63 residue classes.</p>
+      </noscript>
+
+      <figure class="figure">
+        <img src="/assets/img/taxicab-numbers/taxicab_density_plot.jpeg"
+             alt="Cumulative density of taxicab numbers as N grows, showing slow but steady growth consistent with theoretical predictions."
+             width="1600" height="1371" loading="lazy" decoding="async">
+        <figcaption>Figure 2: Density growth of taxicab numbers.</figcaption>
+      </figure>
+
+      <p>Together, the parametric family and the mod-63 sieve give us both an existence and an obstruction picture: infinitely many taxicab numbers exist (and we can write them down), but more than half of all residue classes modulo 63 are forbidden — so taxicab numbers are abundant but sparse, and their distribution carries strong modular structure.</p>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Hardy, G. H. &amp; Wright, E. M.</span>
+          <span class="references__year">(2008).</span>
+          <span class="references__title">An Introduction to the Theory of Numbers</span>
+          <span class="references__venue">(6th ed.). <em>Oxford University Press</em>.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Silverman, J. H.</span>
+          <span class="references__year">(1993).</span>
+          <span class="references__title">Taxicabs and sums of two cubes.</span>
+          <span class="references__venue"><em>American Mathematical Monthly</em>, 100(4), 331–340.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Guy, R. K.</span>
+          <span class="references__year">(2004).</span>
+          <span class="references__title">Unsolved Problems in Number Theory</span>
+          <span class="references__venue">(3rd ed.). <em>Springer</em>.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Hooley, C.</span>
+          <span class="references__year">(1964).</span>
+          <span class="references__title">On the numbers that are sums of two cubes.</span>
+          <span class="references__venue"><em>Journal für die reine und angewandte Mathematik</em>, 314, 146–173.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Heath-Brown, D. R.</span>
+          <span class="references__year">(1992).</span>
+          <span class="references__title">The density of rational points on cubic surfaces.</span>
+          <span class="references__venue"><em>Acta Arithmetica</em>, 79, 17–30.</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

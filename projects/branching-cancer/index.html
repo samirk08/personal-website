@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Branching Process Models for Cancer (Survey) — Samir Kadariya</title>
+  <meta name="description" content="MIT 18.619 co-authored survey paper — branching-process models applied to cancer growth: Cheek-Antal birth-death rates, McDonald-Kimmel multitype matrix, and Durrett's site-frequency-spectrum power-law results.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
+        integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
+          integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/contrib/auto-render.min.js"
+          integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false},{left: '\\(', right: '\\)', display: false},{left: '\\[', right: '\\]', display: true}],throwOnError: false});"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">A Survey of Branching Process Models for Mutation and Evolution in Cancer (Survey)</h1>
+      <p class="article-header__meta">
+        <span class="chip">survey</span>
+        <span class="article-header__course">MIT 18.619</span>
+      </p>
+      <p class="article-header__role">Co-authored survey · 2-person team · MIT 18.619</p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Branching Processes</span>
+        <span class="chip chip--tech">Probability</span>
+        <span class="chip chip--tech">Mathematical Biology</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>In this survey, we review and synthesize results from two recent branching-process models of tumor evolution: (1) the two-type birth-death branching process model of Cheek &amp; Antal (2018), which provides rigorous results on mutation frequencies including multiple mutation sites without assuming each mutation is unique; and (2) the multitype infinite-allele Galton-Watson model of McDonald &amp; Kimmel (2015), which allows an unlimited number of possible distinct mutations (alleles) and distinguishes between multiple cell types. We also incorporate a third perspective, exemplified by Durrett (2013), which uses branching-process theory to derive the site frequency spectrum of neutral mutations in an exponentially growing tumor. Rather than simply summarizing each paper, we compare their approaches to common challenges in modeling tumor evolution, highlight their contributions and limitations, and discuss how these techniques connect to broader themes (e.g., statistical inference of evolutionary dynamics, and analogies to information-theoretic or combinatorial models). We also provide intuitive expositions of core results (including alternative derivations for classical results) and identify open problems and future directions in this field.</p>
+
+      <noscript>
+        <p><code>SFS(k) ~ k^{-2}</code> — heavy-tailed power law, the canonical signature of branching-process tumor evolution.</p>
+      </noscript>
+
+      <aside class="my-role">
+        <strong>My role:</strong> Co-authored survey paper (2-person team) summarizing Cheek-Antal, McDonald-Kimmel, and Durrett branching-process models applied to cancer evolution. No original mathematical contribution — this is explicitly a survey.
+      </aside>
+
+      <h2>Key results surveyed</h2>
+      <p>The first model we cover is Cheek &amp; Antal's two-type continuous-time birth-death process. Type-$A$ (wild-type) cells divide at rate $\lambda_A$, die at rate $\mu_A$, and mutate to type $B$ at rate $\nu$ per division; type-$B$ (mutant) cells divide and die at their own rates $\lambda_B, \mu_B$. The selection coefficient $s = \lambda_B - \mu_B - (\lambda_A - \mu_A)$ controls whether mutants outpace wild-type cells in expectation. The headline result is a rigorous derivation, in the supercritical regime ($\lambda_A &gt; \mu_A$), of the mutant-count distribution at large times — recovering the classical Luria–Delbruck heavy tail $\Pr(B &gt; k) \sim C/k$ when death is neglected, and refining it for general $\mu_A, \mu_B$. Cheek &amp; Antal extend this to a neutral multi-site model in which $S$ independent sites accumulate mutations independently, and prove that the mean site-frequency spectrum (SFS) — the number of sites present in exactly $k$ cells — has a heavy power-law tail
+      $$\mathbb{E}[X_k] \;\sim\; C\,k^{-2}, \qquad k \to \infty,$$
+      consistent with empirical tumor-sequencing data.</p>
+
+      <noscript>
+        <p><code>E[X_k] ~ C * k^{-2}</code> — Cheek-Antal multi-site SFS heavy tail.</p>
+      </noscript>
+
+      <p>The second model is the multitype Bienaymé-Galton-Watson process of McDonald &amp; Kimmel (2015). Cells progress through a discrete-generation branching process with $K$ possible types representing distinct driver-mutation states. Each type $i$ has its own offspring distribution; the dynamics are summarized by a $K \times K$ mean-offspring matrix $M$ whose entries $M_{ij}$ give the expected number of type-$j$ offspring per type-$i$ individual. The Perron-Frobenius spectral radius
+      $$\rho(M) \;=\; \max\{\, |\lambda| : \det(\lambda I - M) = 0 \,\}$$
+      is the per-generation growth rate. When $\rho(M) &gt; 1$ the process is supercritical and survives with positive probability; conditional on survival, type proportions converge almost surely to the Perron eigenvector. McDonald-Kimmel layer in the infinite-allele assumption — every mutation event produces a novel label never before seen — and derive limiting frequency-spectrum curves $\varphi_i(j) = \lim_{n \to \infty} \mathbb{E}[\alpha_i(j, n)]$, where $\alpha_i(j, n)$ counts type-$i$ alleles present in exactly $j$ individuals at generation $n$. The spectrum again decays like $j^{-2}$ in the large-clone regime.</p>
+
+      <p>The third perspective, Durrett (2013), comes from coalescent theory: in an exponentially growing population the genealogy of a sample is essentially star-shaped — almost all coalescent events happen near the root — which implies many singletons and a fat tail of high-frequency variants. Durrett's refinements correct the over-prediction of singletons that naive infinite-sites models suffer from, and confirm the same $k^{-2}$ tail emerges from a different angle. Together, the three models give a robust picture: heavy-tailed mutation-frequency distributions are intrinsic to exponential growth with rare mutations, and significant deviations from the $k^{-2}$ law signal non-neutral evolutionary forces. The survey closes with a discussion of modeling assumptions (infinite-sites vs. repeat mutations), biological relevance, and open directions including selection-aware spectra and clinical inference from sequencing data.</p>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Cheek, D. &amp; Antal, T.</span>
+          <span class="references__year">(2018).</span>
+          <span class="references__title">Mutation frequencies in a birth-death branching process.</span>
+          <span class="references__venue"><em>Annals of Applied Probability</em>, 28(6), 3922–3947.</span>
+          <a class="references__doi" href="https://doi.org/10.1214/17-AAP1386" target="_blank" rel="noopener noreferrer">DOI</a>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">McDonald, T. O. &amp; Kimmel, M.</span>
+          <span class="references__year">(2015).</span>
+          <span class="references__title">A multitype infinite-allele branching process with applications to cancer evolution.</span>
+          <span class="references__venue"><em>Journal of Applied Probability</em>, 52(3), 864–876.</span>
+          <a class="references__doi" href="https://doi.org/10.1239/jap/1435069065" target="_blank" rel="noopener noreferrer">DOI</a>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Durrett, R.</span>
+          <span class="references__year">(2013).</span>
+          <span class="references__title">Population genetics of neutral mutations in exponentially growing cancer cell populations.</span>
+          <span class="references__venue"><em>Annals of Applied Probability</em>, 23(1), 230–250.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Mansky, L. M. &amp; Temin, H. M.</span>
+          <span class="references__year">(1995).</span>
+          <span class="references__title">Lower in vivo mutation rate of human immunodeficiency virus type 1 than that predicted from the fidelity of purified reverse transcriptase.</span>
+          <span class="references__venue"><em>Journal of Virology</em>, 69(8), 5087–5094.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Pennings, P. S., Kryazhimskiy, S. &amp; Wakeley, J.</span>
+          <span class="references__year">(2014).</span>
+          <span class="references__title">Loss and recovery of genetic diversity in adapting populations of HIV.</span>
+          <span class="references__venue"><em>PLoS Genetics</em>, 10(1), e1004000.</span>
+          <a class="references__doi" href="https://doi.org/10.1371/journal.pgen.1004000" target="_blank" rel="noopener noreferrer">DOI</a>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

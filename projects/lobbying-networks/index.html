@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Targeted Lobbying on Council Networks — Samir Kadariya</title>
+  <meta name="description" content="MIT 14.18 co-authored paper — game-theoretic analysis showing that under linear voting, the optimal lobbying target is the Katz-Bonacich-maximizing node with decay parameter beta-over-c.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
+        integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
+          integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/contrib/auto-render.min.js"
+          integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false},{left: '\\(', right: '\\)', display: false},{left: '\\[', right: '\\]', display: true}],throwOnError: false});"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Targeted Lobbying on Council Networks</h1>
+      <p class="article-header__meta">
+        <span class="chip">class project</span>
+        <span class="article-header__course">MIT 14.18</span>
+      </p>
+      <p class="article-header__role">Co-authored class project · 2-person team · MIT 14.18</p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Game Theory</span>
+        <span class="chip chip--tech">Network Centrality</span>
+        <span class="chip chip--tech">Katz-Bonacich</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>A lobbyist with a limited budget must decide whom to push. Network ties mean that pressure on one council member can spill over to others. We study this problem with a static linear–quadratic network game and add a voting rule that turns members' actions into passage or failure. The main result is simple. With a linear passage rule, the cheapest plan puts the whole budget on the member with the highest Katz–Bonacich centrality with decay $\beta/c$. With any smooth strictly increasing passage rule, the small-budget target is the member with the largest <em>slope-weighted Bonacich return</em>
+      $$w_j = \sum_i f'(a_i^0) M_{ij}, \qquad a^0 = M b,$$
+      where $a^0$ is the no-lobbying equilibrium. If $f$ is linear or baseline actions are zero, this is just Katz–Bonacich centrality. If baselines differ and $f$ is concave, the ranking can flip: a peripheral member on the fence can be cheaper to target than a central member whose action is already saturated. We show this on a three-member path and then sketch a probabilistic-vote version where the same force appears as a swing-voter slope.</p>
+
+      <noscript>
+        <p><code>w_j = sum_i f'(a_i^0) * M_{ij}, where a^0 = M*b</code> — slope-weighted Bonacich return.</p>
+      </noscript>
+
+      <aside class="my-role">
+        <strong>My role:</strong> Co-authored class project (2-person team). Applied the existing Katz-Bonacich centrality framework to a council-network voting setting; under linear voting the optimal lobbying target is the Katz-Bonacich-maximizing node with decay beta-over-c.
+      </aside>
+
+      <h2>Key results</h2>
+      <p>The setting is a one-shot game between a lobbyist and an $n$-member council connected by an undirected weighted network $G$. Each member $i$ chooses a continuous level of support $a_i \in \mathbb{R}$ — floor speeches, whip activity, committee work — and faces strategic complementarities: the marginal benefit of supporting the bill rises when network neighbors also support it. The lobbyist publicly commits to a non-negative targeting vector $t = (t_1, \ldots, t_n)$ that shifts members' marginal benefits and pays cost $\sum_i t_i$. The institution then aggregates equilibrium actions $a^*$ into passage or failure; we want the cheapest plan that clears the threshold.</p>
+
+      <p>Solving the equilibrium gives $a^* = M(b + t)$ with $M = (cI - \beta G)^{-1}$, where $c$ is the own-action cost coefficient, $\beta$ is the network spillover, and $b$ encodes baseline incentives. Under a linear passage rule $\sum_i a_i \geq \bar T$, the lobbyist's problem reduces to a linear program whose corner solution puts the full budget on the member maximizing $v_i = (M\mathbf{1})_i$. Spelled out, this is the Katz–Bonacich centrality
+      $$v = M\mathbf{1} = \sum_{k=0}^{\infty} \left(\frac{\beta}{c}\right)^{k} \frac{1}{c^{1}} G^{k} \mathbf{1},$$
+      with decay parameter $\beta/c$. Smaller $\beta/c$ weights immediate neighbors; larger $\beta/c$ pulls weight outward into deeper-network nodes. The minimum cost to clear $\bar T$ is then $C^*(\bar T) = (\bar T - v^\top b) / \max_i v_i$.</p>
+
+      <noscript>
+        <p><code>v = M*1 = sum_{k&gt;=0} (beta/c)^k * G^k * 1 / c</code> — Katz-Bonacich centrality vector.</p>
+        <p><code>C*(Tbar) = (Tbar - v^T b) / max_i v_i</code> — minimum lobbying cost to clear threshold.</p>
+      </noscript>
+
+      <p>The smooth-aggregator extension is what gives the slope-weighted result. Replacing the linear rule with $\sum_i f(a_i^*) \geq K$ for any $C^2$ increasing $f$ and linearizing around the no-lobbying equilibrium $a^0 = Mb$, the LP perturbation yields a passage constraint $w^\top t \geq \Delta$ where $w_j = \sum_i f'(a_i^0) M_{ij}$ and $\Delta = K - F(a^0)$. The corner solution targets $\arg\max_j w_j$. Two natural cases collapse this back to plain Katz–Bonacich: (i) $f$ is linear, so $f' \equiv 1$ and $w = M\mathbf{1}$; (ii) $b = 0$, so all members share the same slope $f'(0)$. Outside these, slope and centrality can disagree: a concave $f$ paired with asymmetric baselines makes a peripheral fence-sitter cheaper to flip than a central but already-saturated member.</p>
+
+      <p>We close with a probabilistic-vote companion model where actions live in $(0,1)$ and best responses are sigmoidal. The marginal return from targeting member $i$ factors into a network term times a swing-voter term $\sigma'(a_i^*) = a_i^*(1 - a_i^*)$ — the same slope-weighting force evaluated at the post-lobbying equilibrium. A small numerical example with asymmetric beliefs shows the swing term flipping the centrality ranking: a peripheral leaf on the fence beats a central member who is already opposed. Figures (network diagrams, equilibrium plots) are illustrated in the source paper but not reproduced here.</p>
+
+      <h3>Key relations</h3>
+      <p>For reference, the central quantities are:</p>
+      <p>$$M = (cI - \beta G)^{-1}, \qquad a^0 = Mb, \qquad a^* = M(b + t).$$</p>
+      <p>$$w_j = \sum_{i} f'(a_i^0)\, M_{ij}, \qquad \arg\max_j w_j \in \arg\min_t \sum_i t_i \text{ s.t. passage.}$$</p>
+
+      <noscript>
+        <p><code>M = (cI - beta*G)^{-1}; a^0 = M*b; a* = M*(b+t)</code></p>
+        <p><code>w_j = sum_i f'(a_i^0) * M_{ij}; argmax_j w_j is the cheapest lobbying target.</code></p>
+      </noscript>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Galeotti, A., Golub, B. &amp; Goyal, S.</span>
+          <span class="references__year">(2020).</span>
+          <span class="references__title">Targeting Interventions in Networks.</span>
+          <span class="references__venue"><em>Econometrica</em>, 88(6), 2445–2471.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Ballester, C., Calvó-Armengol, A. &amp; Zenou, Y.</span>
+          <span class="references__year">(2006).</span>
+          <span class="references__title">Who's Who in Networks. Wanted: The Key Player.</span>
+          <span class="references__venue"><em>Econometrica</em>, 74(5), 1403–1417.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Bonacich, P.</span>
+          <span class="references__year">(1987).</span>
+          <span class="references__title">Power and Centrality: A Family of Measures.</span>
+          <span class="references__venue"><em>American Journal of Sociology</em>, 92(5), 1170–1182.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Katz, L.</span>
+          <span class="references__year">(1953).</span>
+          <span class="references__title">A New Status Index Derived from Sociometric Analysis.</span>
+          <span class="references__venue"><em>Psychometrika</em>, 18(1), 39–43.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Shleifer, A. &amp; Vishny, R. W.</span>
+          <span class="references__year">(1993).</span>
+          <span class="references__title">Corruption.</span>
+          <span class="references__venue"><em>Quarterly Journal of Economics</em>, 108(3), 599–617.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Morris, S.</span>
+          <span class="references__year">(2000).</span>
+          <span class="references__title">Contagion.</span>
+          <span class="references__venue"><em>Review of Economic Studies</em>, 67(1), 57–78.</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
