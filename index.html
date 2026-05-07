@@ -3,12 +3,160 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Samir Kadariya — Portfolio (under construction)</title>
-  <meta name="description" content="Samir Kadariya — MIT '26, Artificial Intelligence and Decision Making + Mathematics. Portfolio site under construction.">
+  <title>Samir Kadariya — MIT '26, AI + Mathematics</title>
+  <meta name="description" content="Samir Kadariya is a senior at MIT studying AI + Decision Making and Mathematics. CS and math research projects, experience, and resume.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-  <h1>Samir Kadariya</h1>
-  <p>MIT '26 — Artificial Intelligence and Decision Making + Mathematics.</p>
-  <p>Portfolio under construction. Live homepage lands in Phase 2.</p>
+  <a class="skip-link" href="#about">Skip to content</a>
+
+  <!-- 1. HERO ============================================================ -->
+  <section class="hero" id="hero">
+    <picture class="hero__bg" aria-hidden="true">
+      <img src="/assets/img/hero/hero-himalayas.jpeg" alt="" width="1920" height="1280" fetchpriority="high" decoding="async">
+    </picture>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="hero__content">
+      <h1 class="hero__name">Samir Kadariya</h1>
+      <p class="hero__identifier">MIT '26 · BS Artificial Intelligence and Decision Making + BS Mathematics</p>
+      <p class="hero__focus">Currently working on NLP for U.S. tariff history at the MIT Political Science department, and quantitative research on offer-curve generation at SESCO.</p>
+      <div class="hero__cta">
+        <a class="btn btn--ghost" href="#about">About</a>
+        <a class="btn btn--ghost" href="#projects">Projects</a>
+        <a class="btn btn--ghost" href="#experience">Experience</a>
+        <a class="btn btn--ghost" href="#contact">Contact</a>
+        <a class="btn btn--solid" href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a>
+      </div>
+    </div>
+    <span class="hero__cue" aria-hidden="true">↓</span>
+  </section>
+
+  <main id="main">
+
+    <!-- 2. ABOUT ========================================================= -->
+    <section class="about" id="about">
+      <h2 class="reveal">About</h2>
+      <div class="about__layout">
+        <picture class="about__photo">
+          <img src="/assets/img/about/headshot.jpeg" alt="Samir Kadariya" width="400" height="400" loading="lazy" decoding="async">
+        </picture>
+        <div class="about__bio">
+          <p>I'm a senior at MIT studying AI + Decision Making and Mathematics, with a focus on statistical inference and applied data science.</p>
+          <p>My work spans NLP for political-economy research, deep-learning models for clinical time-series, and game-theoretic analysis of network voting.</p>
+          <p>Outside of coursework I speak Nepali, English, Hindi, and Spanish.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PROJECTS ====================================================== -->
+    <section class="projects" id="projects">
+      <h2 class="reveal">Projects</h2>
+
+      <h3 class="projects__sub reveal">CS Projects</h3>
+      <div class="card-grid" id="cs-projects-grid"><!-- populated by js/render-projects.js --></div>
+
+      <h3 class="projects__sub reveal">Math Projects</h3>
+      <div class="card-grid" id="math-projects-grid"><!-- populated by js/render-projects.js --></div>
+
+      <template id="project-card">
+        <article class="card reveal">
+          <span class="card__chip"></span>
+          <a class="card__link" href=""></a>
+          <h3 class="card__title"></h3>
+          <p class="card__teaser"></p>
+          <p class="card__meta"></p>
+          <ul class="tag-list"></ul>
+        </article>
+      </template>
+
+      <noscript>
+        <p>Card layout requires JavaScript. Direct links to projects:</p>
+        <ul>
+          <li><a href="/projects/nlp-tariff/">Concordance Mapping of U.S. Tariffs Over 250 Years</a></li>
+          <li><a href="/projects/encoding-attacks-llm/">Encoding-Based Attacks on Large Language Models</a></li>
+          <li><a href="/projects/soccer-clustering/">Clustering Soccer Playing Styles</a></li>
+          <li><a href="/projects/market-mood/">Market Mood — Reddit Sentiment Dashboard</a></li>
+          <li><a href="/projects/lobbying-networks/">Targeted Lobbying on Council Networks</a></li>
+          <li><a href="/projects/taxicab-numbers/">Properties of Taxicab Numbers</a></li>
+          <li><a href="/projects/branching-cancer/">Branching Process Models for Cancer (Survey)</a></li>
+          <li><a href="/projects/sepsis-prediction/">Early Sepsis Prediction with Deep Learning</a></li>
+          <li><a href="/projects/decimal-expansions/">Decimal Expansions of Rational Numbers</a></li>
+        </ul>
+      </noscript>
+    </section>
+
+    <!-- 4. EXPERIENCE ==================================================== -->
+    <section class="experience" id="experience">
+      <h2 class="reveal">Experience</h2>
+      <ol class="timeline">
+        <li class="timeline__entry reveal">
+          <p class="timeline__when">May 2025 – Present</p>
+          <p class="timeline__what"><strong>SESCO Enterprises</strong> · Quantitative Research Analyst Intern · Pittsburgh, PA</p>
+          <p class="timeline__desc">Built and deployed a FastMCP server that plugs into Claude Code to auto-reconstruct and edit generator offer curves on demand, cutting policy-revision time from hours to minutes.</p>
+        </li>
+        <li class="timeline__entry reveal">
+          <p class="timeline__when">May 2024 – Aug 2024</p>
+          <p class="timeline__what"><strong>SESCO Enterprises</strong> · Quantitative Research Analyst Intern · Pittsburgh, PA</p>
+          <p class="timeline__desc">Developed an offer-policy generation tool using Markov decision models and Bayesian inference, transforming a previously manual process.</p>
+        </li>
+        <li class="timeline__entry reveal">
+          <p class="timeline__when">May 2023 – May 2024</p>
+          <p class="timeline__what"><strong>MIT Political Science</strong> · Undergraduate Researcher · Cambridge, MA</p>
+          <p class="timeline__desc">Engineered an NLP algorithm using HuggingFace and the GPT API to match historical tariff items with HS codes (~90% accuracy), and shipped a front-end that takes an image and outputs the matched HS code with confidence.</p>
+        </li>
+        <li class="timeline__entry reveal">
+          <p class="timeline__when">Jan 2023 – May 2023</p>
+          <p class="timeline__what"><strong>MIT CSAIL</strong> · Undergraduate Researcher · Cambridge, MA</p>
+          <p class="timeline__desc">Closed the simulation-to-reality gap in robot behavior by training reinforcement-learning policies in PyTorch using OpenAI's PPO on Nvidia Isaac Gym and MIT SuperCloud.</p>
+        </li>
+        <li class="timeline__entry reveal">
+          <p class="timeline__when">Jan 2022 – Aug 2022</p>
+          <p class="timeline__what"><strong>Eachday.health</strong> · Data Analyst Intern · Pittsburgh, PA</p>
+          <p class="timeline__desc">Built forecasting models from historical data; presented insights to SOSV's CFO that supported a $225K capital raise.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 5. CONTACT ======================================================= -->
+    <section class="contact" id="contact">
+      <h2 class="reveal">Contact</h2>
+      <ul class="contact__list">
+        <li>
+          <a class="contact__row" href="mailto:samirk08@mit.edu">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span>samirk08@mit.edu</span>
+          </a>
+        </li>
+        <li>
+          <a class="contact__row" href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            <span>github.com/samirk08</span>
+          </a>
+        </li>
+        <li>
+          <a class="contact__row" href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+            <span>linkedin.com/in/samir-kadariya</span>
+          </a>
+        </li>
+        <li>
+          <a class="contact__row" href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            <span>Resume (PDF)</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
 </body>
 </html>

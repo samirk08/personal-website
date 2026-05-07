@@ -1,0 +1,32 @@
+/* css/motion.css — additive motion (hero entrance + scroll cue bob), suppressed under reduced-motion.
+   The universal reduced-motion kill switch lives in css/base.css from Plan 02-01.
+   The .reveal opacity/transform skeleton lives in css/layout.css from Plan 02-01. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero h1/identifier/focus — one-time fade-in fired on DOMContentLoaded.
+     Plan 02-02 Task 2's main.js → animations.js → initAnimations() adds .is-loaded after first paint. */
+  .hero__name, .hero__identifier, .hero__focus {
+    opacity: 0; transform: translateY(12px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+  }
+  .hero__name.is-loaded,
+  .hero__identifier.is-loaded,
+  .hero__focus.is-loaded {
+    opacity: 1; transform: none;
+  }
+  .hero__identifier { transition-delay: 80ms; }
+  .hero__focus      { transition-delay: 160ms; }
+
+  /* Hero scroll-cue chevron bob (UI-SPEC §Section Transitions) */
+  .hero__cue { animation: bob 1600ms ease-in-out infinite alternate; }
+  @keyframes bob {
+    from { transform: translateY(0); }
+    to   { transform: translateY(6px); }
+  }
+}
+
+/* Reduced-motion users: ship in final visible state, no cue. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__name, .hero__identifier, .hero__focus { opacity: 1; transform: none; }
+  .hero__cue { display: none; }
+}
