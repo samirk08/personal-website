@@ -5,11 +5,13 @@
 import { renderProjects } from './render-projects.js';
 import { initAnimations } from './animations.js';
 import { initNav } from './nav.js';
+import { initArticleToc } from './article-toc.js';
 
 function start() {
   initNav();          // Hamburger toggle for persistent .site-nav
   renderProjects();   // Populate #cs-projects-grid + #math-projects-grid from projects-data.js
   initAnimations();   // Observe .reveal elements, trigger hero entrance
+  initArticleToc();   // Scroll-spy for left-rail TOC on /projects/<slug>/ pages
 }
 
 if (document.readyState === 'loading') {
