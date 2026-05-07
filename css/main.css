@@ -6,3 +6,5 @@
 @import url("./layout.css") layer(layout);
 @import url("./components.css") layer(components);
 @import url("./motion.css")     layer(components);
+@import url("./nav.css")        layer(components);
+@import url("./page.css")       layer(components);
