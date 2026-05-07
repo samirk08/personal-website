@@ -4,8 +4,10 @@
 
 import { renderProjects } from './render-projects.js';
 import { initAnimations } from './animations.js';
+import { initNav } from './nav.js';
 
 function start() {
+  initNav();          // Hamburger toggle for persistent .site-nav
   renderProjects();   // Populate #cs-projects-grid + #math-projects-grid from projects-data.js
   initAnimations();   // Observe .reveal elements, trigger hero entrance
 }
