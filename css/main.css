@@ -1,5 +1,8 @@
-@layer reset, tokens, base, layout, components, utilities;
-/* css/main.css — single <link> from index.html. Locked @layer order. */
+@layer reset, tokens, base, layout, components, utilities, article;
+/* css/main.css — single <link> from index.html. Locked @layer order.
+ * `article` is the bottom layer; rules in css/article.css only match elements
+ * inside /projects/<slug>/ detail-page markup, so there is no bleed onto
+ * the homepage or section pages. */
 
 @import url("./tokens.css");
 @import url("./base.css")   layer(base);
@@ -8,3 +11,4 @@
 @import url("./motion.css")     layer(components);
 @import url("./nav.css")        layer(components);
 @import url("./page.css")       layer(components);
+@import url("./article.css")    layer(article);
