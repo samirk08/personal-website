@@ -29,7 +29,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" class="article-page">
     <header class="article-header">
       <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
       <h1 class="article-header__title">Decimal Expansions of Rational Numbers</h1>
@@ -44,11 +44,36 @@
       </div>
     </header>
 
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Decimal Expansions of Rational</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#abstract" data-toc-target="abstract">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Abstract</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#key-results" data-toc-target="key-results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Key results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
     <article class="article">
-      <h2>Abstract</h2>
+      <h2 id="abstract">Abstract</h2>
       <p>I study the period of the decimal expansion of a rational number <code>a/b</code> in lowest terms — the smallest positive integer <code>k</code> such that the digits of <code>a/b</code> are eventually periodic with block length <code>k</code>. The starting question is: given <code>b</code>, how long can the period be? A short pigeonhole argument shows the period exists and is at most <code>b</code>; a sharper application restricted to remainders coprime to <code>b</code> shows that whenever <code>b</code> and 10 are coprime, the period is at most <code>phi(b)</code>, where <code>phi</code> is Euler's totient function. The bulk of the paper develops the prime-power machinery that pins down the exact period rather than just a bound.</p>
 
-      <h2>Key results</h2>
+      <h2 id="key-results">Key results</h2>
       <p>The first observation is that the period of <code>a/b</code> is governed entirely by the long-division remainder sequence <code>r_0, r_1, r_2, ...</code>, where <code>r_0 = a mod b</code> and <code>r_(j+1) = 10 * r_j mod b</code>. Two consecutive remainders that coincide force the digit sequence to repeat from that point on, and pigeonhole on the finite set of possible remainders is what gives existence of the period in the first place.</p>
 
       <p>When <code>b</code> and 10 are coprime, every remainder lies in the multiplicative group of units mod <code>b</code>, which has exactly <code>phi(b)</code> elements. Pigeonhole there gives the cleaner bound: period of <code>a/b</code> is at most <code>phi(b)</code>. The bound is rarely tight — for example, <code>1/13</code> has period 6 even though <code>phi(13) = 12</code>, and <code>1/21</code> has period 6 even though <code>phi(21) = 12</code>. Both are proper divisors of <code>phi(b)</code>, which is the typical case rather than the exception.</p>
@@ -58,8 +83,8 @@
       <p>The closing sections of the paper take a group-theoretic view: the period of <code>1/b</code> equals the order of 10 in the multiplicative group mod <code>b</code>, and many of the divisor-of-<code>phi(b)</code> patterns drop out cleanly from that observation. There is also a probabilistic perspective on which fraction of denominators below a given size attain various periods, which connects the elementary results to the heuristics of Artin-style conjectures for primitive roots.</p>
     </article>
 
-    <section class="references" aria-labelledby="references-heading">
-      <h2 id="references-heading">References</h2>
+    <section class="references" aria-labelledby="references">
+      <h2 id="references">References</h2>
       <ol class="references__list">
         <li class="references__item">
           <span class="references__authors">Hardy, G. H. &amp; Wright, E. M.</span>
@@ -81,6 +106,8 @@
         </li>
       </ol>
     </section>
+      </div>
+    </div>
   </main>
 
   <footer class="site-footer">

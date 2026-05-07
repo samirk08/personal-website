@@ -36,7 +36,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" class="article-page">
     <header class="article-header">
       <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
       <h1 class="article-header__title">Properties of Taxicab Numbers</h1>
@@ -52,15 +52,40 @@
       </div>
     </header>
 
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Properties of Taxicab Numbers</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#abstract" data-toc-target="abstract">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Abstract</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#key-results" data-toc-target="key-results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Key results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
     <article class="article">
-      <h2>Abstract</h2>
+      <h2 id="abstract">Abstract</h2>
       <p>Taxicab numbers are a unique category of integers that can be represented as the sum of two cubes in multiple distinct ways. By analyzing taxicab numbers, we can illuminate many properties of cubic sums and the structure of modular cubes. Within this paper, we will analyze some of the properties of taxicab numbers, including determining the second taxicab number, proving that infinitely many taxicab numbers exist, creating a generating formula for taxicab numbers, and putting bounds on the growth rate and density of the set of taxicab numbers. In doing so we form a clearer understanding of the structure of the set of taxicab numbers.</p>
 
       <aside class="my-role">
         <strong>My role:</strong> Co-authored class project (3-person team). Proved a mod-63 sieve result and identified a parametric family of non-trivial taxicab numbers.
       </aside>
 
-      <h2>Key results</h2>
+      <h2 id="key-results">Key results</h2>
       <p>A taxicab number is a positive integer $N$ expressible as a sum of two positive cubes in at least two distinct ways: there exist $a, b, c, d \in \mathbb{Z}^+$ with $a^3 + b^3 = N = c^3 + d^3$ and $\{a, b\} \neq \{c, d\}$. The canonical example, due to Ramanujan, is
       $$1729 = 1^3 + 12^3 = 9^3 + 10^3.$$
       We start by verifying that $4104 = 2^3 + 16^3 = 9^3 + 15^3$ is the second taxicab number — no integer strictly between $1729$ and $4104$ admits two cube-sum decompositions — and then turn to existence and density questions.</p>
@@ -102,8 +127,8 @@
       <p>Together, the parametric family and the mod-63 sieve give us both an existence and an obstruction picture: infinitely many taxicab numbers exist (and we can write them down), but more than half of all residue classes modulo 63 are forbidden — so taxicab numbers are abundant but sparse, and their distribution carries strong modular structure.</p>
     </article>
 
-    <section class="references" aria-labelledby="references-heading">
-      <h2 id="references-heading">References</h2>
+    <section class="references" aria-labelledby="references">
+      <h2 id="references">References</h2>
       <ol class="references__list">
         <li class="references__item">
           <span class="references__authors">Hardy, G. H. &amp; Wright, E. M.</span>
@@ -137,6 +162,8 @@
         </li>
       </ol>
     </section>
+      </div>
+    </div>
   </main>
 
   <footer class="site-footer">

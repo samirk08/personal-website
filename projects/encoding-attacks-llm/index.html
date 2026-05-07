@@ -29,7 +29,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" class="article-page">
     <header class="article-header">
       <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
       <h1 class="article-header__title">Encoding-Based Attacks on Large Language Models</h1>
@@ -46,13 +46,38 @@
       </div>
     </header>
 
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Encoding-Based Attacks on Large</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#abstract" data-toc-target="abstract">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Abstract</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#key-results" data-toc-target="key-results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Key results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
     <article class="article">
-      <h2>Abstract</h2>
+      <h2 id="abstract">Abstract</h2>
       <p>Large language models are powerful tools, but their vulnerabilities to adversarial attacks present significant risks to safety and ethical AI deployment. Our research investigates encoding-based red-teaming techniques, leveraging custom ciphers to jailbreak LLMs and bypass safety protocols. By combining in-context learning and dynamic encoding schemes, we successfully tested attacks on models like GPT-4 and Claude 3.5, using the HarmBench dataset for evaluation. Our results indicate high attack success particularly for larger models with advanced reasoning abilities, highlighting critical vulnerabilities in the current safety mechanisms. We propose a layered defense strategy with static filters, dynamic detection systems, and real-time monitoring to mitigate these threats. Our findings illustrate the importance of incorporating encoding-based attacks in safety training pipelines to ensure robust and ethical AI deployment.</p>
 
       <aside class="my-role"><strong>My role:</strong> Co-authored class project (3-person team). Designed and tested in-context cipher prompts on Claude 3.5 Sonnet using HarmBench — purely prompt-level attacks, no model modification.</aside>
 
-      <h2>Key results</h2>
+      <h2 id="key-results">Key results</h2>
       <p>The team's central finding is that the attack success rate (ASR) is sharply controlled by the number of "quiet" fixed-point terms left untouched in the cipher prompt. With only five quiet terms the ciphered prompts succeeded on roughly 80% of harmful queries in categories such as Drug Production, and around 70% in Cyber Attacks, against Claude 3.5 Sonnet. Pushing the quiet-term count up to 15 cuts those rates roughly in half — Drug Production drops to 40%, Cyber Attacks to 55% — and at 25 quiet terms the ASR collapses essentially to zero. The pattern is consistent: more recognizable structure in the cipher gives the safety classifier more surface to work with.</p>
 
       <figure class="figure">
@@ -74,8 +99,8 @@
       <p>The defensive recommendation that comes out of the work is straightforward: encoding-style adversarial prompts should be folded into safety-training pipelines explicitly, and runtime defenses should be layered rather than monolithic. A single static input filter is brittle against in-context cipher schemes; a static filter combined with a dynamic detection system and an output-side classifier is much harder to slip through.</p>
     </article>
 
-    <section class="references" aria-labelledby="references-heading">
-      <h2 id="references-heading">References</h2>
+    <section class="references" aria-labelledby="references">
+      <h2 id="references">References</h2>
       <ol class="references__list">
         <li class="references__item">
           <span class="references__authors">Wei, A., Haghtalab, N. &amp; Steinhardt, J.</span>
@@ -109,6 +134,8 @@
         </li>
       </ol>
     </section>
+      </div>
+    </div>
   </main>
 
   <footer class="site-footer">

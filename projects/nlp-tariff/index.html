@@ -29,7 +29,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" class="article-page">
     <header class="article-header">
       <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
       <h1 class="article-header__title">Concordance Mapping of U.S. Tariffs Over 250 Years</h1>
@@ -49,11 +49,36 @@
       </div>
     </header>
 
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Concordance Mapping of U.S. Tariffs</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#abstract" data-toc-target="abstract">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Abstract</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#key-results" data-toc-target="key-results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Key results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
     <article class="article">
-      <h2>Abstract</h2>
+      <h2 id="abstract">Abstract</h2>
       <p>Modern economic analyses often require linking centuries-old U.S. tariff schedules — written in archaic prose and coded under multiple, now-obsolete systems — to today's eight-digit Harmonized System (HS). I present the first fully automated concordance that threads every tariff line from the 1789 Tariff Act through four major coding overhauls into the 2023 HS vocabulary. The pipeline "walks" backwards one calendar year at a time: each description is (i) modernized with a GPT-4 prompt, (ii) embedded with the sentence-transformer MPNet, and (iii) matched to its nearest neighbor in the previous year using a composite similarity score. When that score dips below a specified threshold, I first apply a hierarchical HS fallback — matching at the 2-, 4-, or 6-digit level appropriate to the historical regime — before any remaining low-confidence records trigger a Selenium-based query to the U.S. Census HS-Classifier, with GPT selecting among the most probable codes the website outputs. On three public schedules — 1789 (free text), 1963 (TSUS-8), and 1989 (HS-8) — the method attains 65%, 75%, and 90% similarity scores respectively. The resulting open-source concordance and Python package let researchers map any historical description to a ranked list of 2023 HS codes with confidence scores, enabling consistent long-run trade analyses without manual recoding.</p>
 
-      <h2>Key results</h2>
+      <h2 id="key-results">Key results</h2>
       <p>Across the 1989–2022 window where modern HS codes are directly comparable, my pipeline retains the original HS-6 code in roughly 79% of cases. The remaining 21% concentrate in years immediately following major schedule rewrites: in 1995 and 1996, between 23.5% and 28.2% of mappings fall below my composite-similarity threshold of 0.5, reflecting the textual reorganizations the HS underwent that decade.</p>
 
       <figure class="figure figure--breakout">
@@ -84,8 +109,8 @@
       <p>The deliverable is an open-source concordance plus a Python package that exposes the full mapping behind a single function call: feed in any tariff description from any year between 1789 and 2023, get back a ranked list of 2023 HS codes with confidence scores. The intended downstream use is long-run trade-policy work that would otherwise require months of hand-coded historical alignment.</p>
     </article>
 
-    <section class="references" aria-labelledby="references-heading">
-      <h2 id="references-heading">References</h2>
+    <section class="references" aria-labelledby="references">
+      <h2 id="references">References</h2>
       <ol class="references__list">
         <li class="references__item">
           <span class="references__authors">de Santana, M. A. et al.</span>
@@ -107,6 +132,8 @@
         </li>
       </ol>
     </section>
+      </div>
+    </div>
   </main>
 
   <footer class="site-footer">

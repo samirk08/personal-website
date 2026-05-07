@@ -29,7 +29,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" class="article-page">
     <header class="article-header">
       <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
       <h1 class="article-header__title">Clustering Soccer Playing Styles</h1>
@@ -46,12 +46,37 @@
       </div>
     </header>
 
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Clustering Soccer Playing Styles</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#abstract" data-toc-target="abstract">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Abstract</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#key-results" data-toc-target="key-results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Key results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
     <article class="article">
-      <h2>Abstract</h2>
+      <h2 id="abstract">Abstract</h2>
       <p>I investigate whether identifiable clusters of soccer team playing styles are significantly associated with match outcomes such as win rate, goal difference, and expected goals difference. In other words, do teams with certain tactical profiles tend to achieve better results? This question is motivated by ongoing debates in soccer analytics about the impact of play style (e.g., possession-based vs. counterattacking) on success.</p>
       <p>Prior research suggests that high-performing teams often exhibit distinct styles — for example, domestic-league champions tend to favor possession, dominating field areas and producing most goals via built-up attacks, while teams capable of adapting their style dynamically have been found to outperform those sticking to a single rigid style. By clustering team playing styles in major tournaments and analyzing their outcomes, I aim to provide new evidence on how tactical approach correlates with performance. The data span the FIFA World Cup 2022, UEFA Euro 2024, CONMEBOL Copa America 2024, and FC Barcelona's La Liga seasons from 2006/07 through 2020/21, all scraped minute-by-minute from the public StatsBomb Python package.</p>
 
-      <h2>Key results</h2>
+      <h2 id="key-results">Key results</h2>
       <p>Across all four cases — World Cup, Euros, Copa America, and a single elite club across seasons — I find a consistent relationship between playing-style clusters and match outcomes. Teams categorized in the most attacking/proactive cluster (Cluster 2) generally achieved the best results: highest win rates and positive goal differences. Teams in the most defensive/reactive cluster (Cluster 0) had the poorest outcomes. These differences were statistically significant in every tournament (ANOVA p-values ranging from 0.001 to 0.011; chi-square tests significant in two of four cases).</p>
 
       <figure class="figure">
@@ -82,8 +107,8 @@
       <p>The Barcelona-across-seasons case is the interesting outlier. There, Cluster 2 corresponds cleanly to the Guardiola-style high-press/positional-play seasons (2008/09–2013/14), with mean goal difference +2.10 and a 75.5% win rate across 204 league matches. The early-Rijkaard era (Cluster 0) and the post-peak transitional years (Cluster 1) win at similar rates, but with markedly smaller score-line dominance. Even within a single elite club, tactical evolution materially changes how decisively wins arrive.</p>
     </article>
 
-    <section class="references" aria-labelledby="references-heading">
-      <h2 id="references-heading">References</h2>
+    <section class="references" aria-labelledby="references">
+      <h2 id="references">References</h2>
       <ol class="references__list">
         <li class="references__item">
           <span class="references__authors">Gollan, S. et al.</span>
@@ -105,6 +130,8 @@
         </li>
       </ol>
     </section>
+      </div>
+    </div>
   </main>
 
   <footer class="site-footer">

@@ -29,7 +29,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" class="article-page">
     <header class="article-header">
       <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
       <h1 class="article-header__title">Market Mood — Reddit Sentiment Dashboard</h1>
@@ -49,17 +49,38 @@
       </div>
     </header>
 
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Market Mood — Reddit Sentiment</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#overview" data-toc-target="overview">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Overview</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#what-we-built" data-toc-target="what-we-built">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">What we built</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
     <article class="article">
-      <h2>Overview</h2>
+      <h2 id="overview">Overview</h2>
       <p>Market Mood is a Reddit-sentiment dashboard for stock tickers, built in 36 hours at HackMIT 2024 by a 4-person team. The team wired together the Reddit API for ingest of recent posts and comments mentioning a given ticker, the OpenAI API for sentiment scoring on each post, and a React frontend for the dashboard view that aggregates the scores into a per-ticker mood signal.</p>
 
       <aside class="my-role"><strong>My role:</strong> Hackathon team project (4-person team). I built parts of the Reddit sentiment-ingestion pipeline and the OpenAI sentiment-scoring loop during HackMIT 2024 — specifically the ticker-keyed Reddit query layer and the batched scoring calls that feed the dashboard.</aside>
 
-      <h2>What we built</h2>
+      <h2 id="what-we-built">What we built</h2>
       <p>The pipeline starts from a user-supplied ticker symbol. Our team's Reddit ingestion layer pulls the most recent N posts and top-level comments from a curated set of investing subreddits matching that ticker. Each item is sent through the OpenAI API with a sentiment-scoring prompt that returns a normalized score in [–1, +1]. The React dashboard aggregates those scores by time-window and renders a per-ticker mood line plus the underlying source posts so users can verify the signal isn't being driven by a handful of outliers.</p>
 
       <p>Code, README, and run instructions are open source on GitHub at the link above. The project was built as a hackathon submission rather than a production service, so rate-limit handling and persistence are deliberately minimal.</p>
     </article>
+      </div>
+    </div>
   </main>
 
   <footer class="site-footer">

@@ -36,7 +36,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" class="article-page">
     <header class="article-header">
       <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
       <h1 class="article-header__title">Early Sepsis Prediction with Deep Learning</h1>
@@ -56,15 +56,40 @@
       </div>
     </header>
 
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Early Sepsis Prediction with Deep</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#abstract" data-toc-target="abstract">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Abstract</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#key-results" data-toc-target="key-results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Key results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
     <article class="article">
-      <h2>Abstract</h2>
+      <h2 id="abstract">Abstract</h2>
       <p>Early prediction of sepsis is critical for reducing mortality but remains difficult due to the heterogeneous and sparse nature of clinical time-series data. Using the 2019 PhysioNet Challenge framework — which evaluates models using a utility function emphasizing timely alerts — we compare three approaches for early sepsis detection against a logistic regression baseline: an autoencoder with k-nearest neighbors, an LSTM, and a Transformer. The challenge's preprocessing pipeline includes forward-fill and population-mean imputation, missingness indicators, and optional temporal feature augmentations. Using a dataset of 11,000 patients, models with strong temporal inductive biases substantially outperform static or representation-learning methods. The Transformer achieved the highest normalized utility (0.578) with strong early-warning capability but a high false-positive rate, followed by the LSTM (0.261), while the autoencoder + k-NN model performed poorly (0.04). These results underscore the importance of modeling long-range physiological trajectories and highlight attention-based architectures as particularly effective for clinically meaningful early sepsis prediction.</p>
 
       <aside class="my-role">
         <strong>My role:</strong> Group project (6-person team). My contribution: built the LSTM model (utility 0.261). The Transformer (utility 0.578) and Autoencoder+kNN (utility 0.04) were built by other team members.
       </aside>
 
-      <h2>Key results</h2>
+      <h2 id="key-results">Key results</h2>
       <p>The team evaluated three deep approaches against a logistic-regression baseline on the 2019 PhysioNet Challenge dataset of 11,000 patients (5,000 train / 1,000 validation / 5,000 test), with hourly measurements over 40 clinical features (vital signs, blood pressure, oxygenation, lab values). The challenge metric is a normalized utility function $U$ that rewards alerts in the optimal 6-hour window before sepsis onset and penalizes both late detections and false positives, summed across timesteps and normalized to $[0, 1]$ via best-possible / no-alert anchors. The headline result: the three temporal architectures span a wide utility range. The Transformer reached normalized utility $0.578$ — the strongest score, with high recall but a non-trivial false-positive rate. The LSTM reached $0.261$, demonstrating that bidirectional recurrence captures most of the per-patient temporal signal but lacks the long-range cross-patient pattern matching attention provides. The Autoencoder + k-NN baseline came in at $0.04$, only slightly above the no-alert floor, confirming that representation-learning without inductive bias toward temporal structure under-performs on this task.</p>
 
       <figure class="figure">
@@ -118,8 +143,8 @@
       <p>The team's takeaway is unsurprising in hindsight but worth stating: temporal inductive bias matters more than parameter count or representation cleverness for this task. Attention-based architectures dominate the leaderboard and, by separately tuning recall (via threshold) and precision (via post-processing), can be pushed to clinically meaningful early-warning lead times of 6–12 hours, the window where the literature shows antibiotic timing actually moves mortality.</p>
     </article>
 
-    <section class="references" aria-labelledby="references-heading">
-      <h2 id="references-heading">References</h2>
+    <section class="references" aria-labelledby="references">
+      <h2 id="references">References</h2>
       <ol class="references__list">
         <li class="references__item">
           <span class="references__authors">Reyna, M. A. et al.</span>
@@ -159,6 +184,8 @@
         </li>
       </ol>
     </section>
+      </div>
+    </div>
   </main>
 
   <footer class="site-footer">
