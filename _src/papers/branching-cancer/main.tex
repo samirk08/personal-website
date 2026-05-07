@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[most]{tcolorbox}
+\usepackage{amsthm}           % <— for theorem environments
+\newtheorem{theorem}{Theorem} % <— numbered 
+
+\usepackage{doi}      % simplest
+% or, if you already load hyperref, do this instead:
+% \usepackage{hyperref}
+% \usepackage{doi}
+
+\title{A Survey of Branching Process Models for Mutation and Evolution in Cancer}
+\author{Samir Kadariya, Jonathan Song}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+Mathematical models based on branching processes have become essential for understanding how tumors accumulate mutations over time. In these models, cells proliferate and can acquire new mutations during division, which can be classified as \emph{driver} mutations (conveying a growth advantage) or \emph{passenger} mutations (neutral). Classic work by Luria and Delbruck on bacterial mutation rates introduced a two--type branching process (wild--type vs.~mutant) to describe the emergence of resistant mutants in an exponentially growing colony\footnote{See, e.g., \url{https://arxiv.org/abs/1806.02478}.}. This stochastic model (often called the \emph{Luria--Delbruck model}) was later adapted by Kendall to a fully stochastic birth--death process and has since become foundational in cancer evolution theory. Modern cancer sequencing data present new challenges: tumors often contain billions of cells with a great diversity of mutations, and distinguishing drivers from passengers or inferring evolutionary history from mutation frequency data requires refined probabilistic results.
+
+In this survey, we review and synthesize results from two recent branching--process models of tumor evolution: (1) the two--type birth--death branching process model of Cheek\,\&\,Antal (2018), which provides rigorous results on mutation frequencies including multiple mutation sites without assuming each mutation is unique; and (2) the multitype infinite--allele Galton--Watson model of McDonald\,\&\,Kimmel (2015), which allows an unlimited number of possible distinct mutations (alleles) and distinguishes between multiple cell types (e.g.~driver mutation classes). We also incorporate a third perspective, exemplified by Durrett (2013), which uses branching--process theory to derive the site frequency spectrum of neutral mutations in an exponentially growing tumor. Rather than simply summarizing each paper, we compare their approaches to common challenges in modeling tumor evolution, highlight their contributions and limitations, and discuss how these techniques connect to broader themes (e.g.~statistical inference of evolutionary dynamics, and analogies to information--theoretic or combinatorial models). We also provide intuitive expositions of core results (including alternative derivations for classical results) and identify open problems and future directions in this field.
+
+\section{Branching Process Frameworks for Tumor Evolution}
+\subsection{Two--Type Birth--Death Model (Cheek \& Antal)}
+The model revisited by Cheek and Antal is essentially a stochastic version of the Luria--Delbruck setup cast as a continuous--time birth--death process. Cells of type $A$ (e.g.~wild--type tumor cells) can divide or die, and upon division they may produce a mutated offspring of type $B$ (e.g.~a cell with a specific mutation). Formally, each $A$ cell divides into two cells at rate $\alpha_A$, dies at rate $\beta_A$, and with some probability can produce a $B$ mutant; similarly, $B$ cells have their own birth and death rates $(\alpha_B,\,\beta_B)$. One formulation is
+\begin{align*}
+A &\xrightarrow{\alpha_A} AA, & A &\xrightarrow{\nu} AB, & A &\xrightarrow{\beta_A} \varnothing,\\
+B &\xrightarrow{\alpha_B} BB, & B &\xrightarrow{\beta_B} \varnothing. & &
+\end{align*}
+The total number of type $B$ mutant cells in the population is a random variable of great interest, as it represents, for instance, the count of drug--resistant cells or cells with a particular driver mutation. Cheek\,\&\,Antal provide a \emph{mathematically rigorous account} of this two--type birth--death process, deriving both previously known and new results for the distribution of key quantities: the number of mutants $B(t)$ at time~$t$ or at a given population size, the time of each mutation event, and the sizes of mutant clones (i.e.~the number of progeny descended from each original mutation). In particular, they prove limit theorems describing the behavior as time becomes large or mutation rates become small, and they obtain some \emph{exact distributions} in special cases (notably when neglecting cell death, recovering the classical Luria--Delbruck distribution). For example, in the case $\beta_A=\beta_B=0$ (pure birth process), their results yield closed--form expressions for the mutant count distribution, which coincides with the Luria--Delbruck distribution. They also establish almost sure convergence results as $t\to\infty$, which describe the eventual proportions of mutant and wild--type cells under various scenarios.
+
+A significant extension in Cheek\,\&\,Antal (2018) is the introduction of a \emph{neutral multi--site model} for cancer evolution. Instead of considering only one mutation type~$B$, they track mutations at $S$ independent sites on the genome. Each cell is labeled by a binary sequence $(z_1,\dots,z_S)\in\{0,1\}^S$, where $z_i=1$ if the cell has a mutation at site~$i$. All mutations are assumed neutral in this extended model (no fitness difference between cells with or without a given mutation), so the cell’s birth/death rates do not depend on $z_i$. Importantly, they \emph{do not} assume the \emph{infinite--sites} model—i.e.~they allow for the possibility that the same site might be mutated independently in different lineages. In the Cheek--Antal multi--site model, the mutations at different sites accumulate essentially independently: for each specific site $i$, the process of cells without vs.~with a mutation at $i$ follows the same two--type branching dynamics as the single--site model. This implies that many results from the two--type model carry over to each site in the multi--site setting. However, by considering many such sites, one can ask new questions about the \emph{site frequency spectrum} (SFS), defined as the number of mutation sites that are present in $k$ cells ($k=0,1,2,\ldots$) in the tumor population. Cheek\,\&\,Antal show that the \emph{mean} SFS can be approximated by a generalization of the Luria--Delbruck distribution. In particular, they predict a heavy--tailed distribution—roughly a power--law decay $\propto k^{-2}$ for large $k$—consistent with empirical cancer genomic data. Indeed, previous studies (e.g.~Williams \emph{et~al.}~2016 using a deterministic model, and Bozic \emph{et~al.}~2016 using a branching process) had also reported an $x^{-2}$ power--law for the density of mutation frequencies in tumors. Cheek\,\&\,Antal’s work rigorously supports this heavy--tail result and refines it by accounting for repeat mutations at the same site.
+
+\subsection{Multitype Infinite--Allele Galton--Watson Model (McDonald \& Kimmel)}
+A different but closely related modeling framework is the \emph{multitype Bienaym\'e--Galton--Watson (Galton–Watson model) process} with infinitely many possible alleles introduced by McDonald and Kimmel. In their model, cells progress through a discrete--generation branching process, and there are $K$ possible cell \emph{types} which represent distinct driver mutation states. Each type $i$ cell produces a random offspring distribution according to a probability generating function (PGF) $f_i(s_1,\ldots,s_K)$ that can include probabilities of generating offspring of other types (this encodes driver mutation events that change the type). The process is characterized by a mean offspring matrix $M$ whose entries $M_{ij}$ give the expected number of type--$j$ offspring from a type--$i$ individual. If the spectral radius $\rho$ of $M$ exceeds~1, the process is supercritical, and with nonzero probability the population will grow indefinitely; $\rho$ captures the exponential growth rate per generation for the entire population.
+
+Within this multitype framework, McDonald\,\&\,Kimmel incorporate \emph{passenger mutations} as follows: with probability $\mu$ each new offspring (regardless of type) carries a brand--new mutation that labels it with a unique ``allele.'' Crucially, every such passenger mutation is assumed to be unique (the \emph{infinite--allele} assumption)—meaning whenever a mutation occurs, it produces a novel label that has never been seen before in the population. This corresponds to the classical infinite--allele model in population genetics (as in Ewens’s sampling formula).
+
+The McDonald--Kimmel model thus tracks two things simultaneously: the \emph{type composition} of the population (driven by selective differences between types via the matrix $M$) and the \emph{accumulation of distinct mutations} over time (the infinite--allele aspect). In the long run ($n\to\infty$) and conditioned on non--extinction, the proportions of types converge almost surely to fixed values given by the Perron--Frobenius eigenvector of~$M$ (a version of the Kesten--Stigum theorem for multitype processes). On top of this, McDonald\,\&\,Kimmel quantify the \emph{frequency spectrum of alleles} in the population: for each type~$i$ and each $j\ge1$, let $\alpha_i(j,n)$ be the number of distinct mutation labels of type~$i$ that are present in exactly $j$ individuals at generation~$n$. They derive explicit formulas for the expected spectrum $\mathbb{E}[\alpha_i(j,n)]$ and obtain limiting curves $\varphi_i(j)=\lim_{n\to\infty}\mathbb{E}[\alpha_i(j,n)]$. While the closed--form expressions are involved, an important qualitative result is that the spectrum exhibits a heavy tail for large clone sizes $j$---again approximately $\propto j^{-2}$.
+
+\subsection{Comparative Remarks}
+Both models aim to describe the distribution of mutation frequencies in an exponentially growing cell population, but they approach the problem differently. The Cheek--Antal model uses a continuous--time branching process with explicit birth and death rates and focuses on one (or many independent) mutation \emph{sites}. They emphasize obtaining exact or asymptotic distributions for mutant counts and times, and \emph{do not} assume each mutation is unique—so the same site can mutate independently in different lineages. In contrast, the McDonald--Kimmel model uses a discrete--generation branching process with \emph{types} and assumes each mutation event produces a new distinct allele. One can view the Cheek--Antal scheme as a \emph{finite--sites} neutral model, whereas McDonald--Kimmel is an \emph{infinite--sites} model with selection. Despite differences, both predict a heavy--tailed clone--size distribution and produce similar site/allele frequency spectra.
+
+\section{Mutation Frequency Distributions and Heavy--Tailed Spectra}
+Heavy tails arise because mutations occurring early during tumor growth generate large clonal descendants, whereas late mutations remain rare. In the two--type model, Cheek--Antal show that mutation arrival times converge to a Poisson process whose rate grows exponentially with time; analyzing this process recovers the Luria--Delbruck distribution with tail $\Pr(B>k)\sim C/k$. In the neutral multi--site extension, the mean site frequency spectrum obeys $\mathbb{E}[X_k]\approx Ck^{-2}$ for large~$k$, consistent with empirical tumor sequencing data.
+
+Durrett (2013) derived a closely related spectrum using a coalescent approach. In an exponentially growing population, the genealogy of a sample is ``star--like'': almost all coalescent events occur near the root, implying a large number of singletons and a fat tail of high--frequency variants. Durrett’s refinements correct the over--prediction of singletons often seen in naive infinite--sites models.
+
+McDonald--Kimmel’s multitype model shows that, with selection, the total spectrum is a mixture of heavy--tailed spectra from each type, weighted by their eventual share of the tumor. If one driver type dominates, the overall spectrum again has tail near $k^{-2}$; multiple coexisting drivers can create multimodal or skewed spectra.
+
+Collectively, these results establish that heavy--tailed frequency distributions are intrinsic to exponential growth with rare mutations. Observing significant deviations from the $k^{-2}$ law can therefore signal non--neutral evolutionary forces.
+
+\section{Modeling Assumptions, Biological Relevance, and Extensions}
+\subsection{Infinite--Sites vs.~Repeat Mutations}
+Many models adopt the \emph{infinite--sites} assumption (every mutation is unique). Cheek--Antal drop this assumption, arguing that for realistic tumor sizes and mutation rates, repeat hits to the same site are likely. They provide a Poisson criterion based on tumor size $n$, per--site mutation rate $\nu$, and net growth rate $\lambda_A$: when $n\nu/\lambda_A\gg1$, repeat mutations matter and the infinite--sites assumption underestimates low--frequency variants.
+
+\subsection{Neutral vs.~Selective Mutations}
+Cheek--Antal’s multi--site results are neutral, whereas McDonald--Kimmel explicitly handle selection among finitely many driver types. An important open direction is combining both: a handful of selected driver types with many neutral passenger sites. This hybrid would better reflect real tumor evolution but poses analytical challenges due to the enormous state space.
+
+\subsection{Exponential Growth and Carrying Capacity}
+All reviewed models assume unbounded exponential growth. Real tumors eventually slow (Gompertzian growth) or are treated. Introducing a time--dependent birth/death rate or a carrying capacity remains largely open; it may truncate the heavy tail or shift its exponent.
+
+\subsection{Spatial Structure and Heterogeneity}
+Spatial branching processes and heterogeneous mutation or division rates could alter predicted spectra by limiting mixing or introducing regional variation. Extending analytical results to spatial settings is challenging but crucial for realistic modeling.
+
+\subsection{Applications Beyond Cancer}
+Similar branching ideas apply to bacterial, viral, and epidemiological evolution, as well as to problems in information theory and machine learning (e.g.~Chinese restaurant processes). The heavy--tail phenomenon has parallels in data science where power--law behavior arises in growing combinatorial structures.
+
+\begin{tcolorbox}[title={Concrete Example: HIV Within--Host Mutation Spectrum},
+                  coltitle=black,colback=gray!5,colframe=gray!50,
+                  fonttitle=\bfseries]
+
+\textbf{Setting.}  HIV--1 in a single infected patient typically achieves an
+effective population size of $N \sim 10^{8}$ RNA copies within
+months of infection, with a per--replication mutation rate
+$\nu \approx 3\times10^{-5}$\,per nucleotide (Mansky \& Temin, 1995).
+
+\textbf{Branching--process analogue.}  Treat each virion as an
+individual in a pure--birth process with rate $\alpha\approx1/\text{day}$.
+Mutations accumulate during reverse transcription; assume neutral
+fitness for passenger mutations.
+
+\textbf{Plug–in numbers.}  The expected number of independent hits to a
+single nucleotide by the time the viral load reaches $N$ copies is
+\[
+\mathbb{E}[\text{hits/site}]
+      \;=\; \frac{N \,\nu}{\alpha}
+      \;\approx\;
+      \frac{10^{8}\times 3\!\times\!10^{-5}}{1}
+      \;=\; 3{,}000,
+\]
+far exceeding~1, so the infinite--sites assumption is clearly violated.
+Applying the Poisson repeat–mutation correction of Cheek--Antal yields
+a $\operatorname{Poi}(3{,}000)$ distribution for the number of independent
+occurrences at any given site.
+
+\textbf{Predicted spectrum.}  Using the two--type derivation with these parameters, we expect
+the site–frequency spectrum to follow
+$\mathbb{E}[X_k]\approx C k^{-2}$ for $1\ll k\ll N$
+with
+$C\approx \nu \log N \approx 3\times10^{-5}\times\ln(10^{8})\approx3.5\times10^{-4}$,
+a curve that aligns with deep–sequencing observations (Pennings
+\textit{et al.}, 2014).
+
+\textbf{Take‑away.}  Even with an enormous repeat–mutation rate,
+the heavy‑tailed $k^{-2}$ law persists; however, low‑frequency counts
+are inflated relative to the strict infinite‐sites prediction,
+matching empirical HIV data.
+
+\end{tcolorbox}
+
+
+\section{Alternative Proof Techniques and Simplified Derivations}
+
+
+
+\subsection{Detailed Proof: Power--Law Site Frequency Spectrum ($\mathbb{E}[X_k]\propto k^{-2}$)}
+\begin{theorem}[Heavy‑tail SFS for a neutral two‑type Galton--Watson process]
+\label{thm:SFS-k2}
+Let $(A_g)_{g\ge0}$ be a super‑critical Galton--Watson process with
+mean offspring $m>1$ and finite variance, started from one wild‑type
+cell.  Independently, each child mutates to a new type~$B$ with
+probability $p\ll1$.  Let $G$ be the first generation at which the
+population size exceeds $n\gg1$, and condition on non‑extinction.
+For an intermediate clone size $1\ll k=o(n)$, let $X_k$ denote the
+number of distinct mutation sites that are present in exactly $k$
+individuals at generation~$G$.  Then
+\[
+\mathbb{E}[X_k]\;=\;C\,k^{-2}\bigl(1+o(1)\bigr), \qquad
+C=\frac{p\,m}{m-1}\,,
+\qquad k\to\infty.
+\]
+\end{theorem}
+
+\begin{proof}
+
+\paragraph{Setup.}
+Start with one wild‑type ($A$) cell in generation $0$.  
+Each $A$ cell produces a random number of children with mean $m>1$ and finite variance; independently, each child mutates to type $B$ with probability $p\ll1$ (otherwise it is $A$).  
+Let $G$ be the generation when the total population size first reaches or exceeds $n\gg1$; coarse asymptotics give
+\[
+n\approx m^{G}\quad\Longrightarrow\quad G\approx\frac{\log n}{\log m}.
+\]
+
+
+\paragraph{Step 1: Poisson arrival of mutations.}
+Because $p$ is small, mutations are rare.  
+Conditioned on the (random) population path, the number of mutation \emph{events} in generation $g$ is binomial with mean $p\,\mathbb{E}[A_g]\approx p\,m^{g}$.  
+Standard Poisson thinning implies that, as $p\to0$ with $p\,n$ fixed, mutation times form an (approximate) Poisson process on $\{0,\dots ,G\}$ whose mean measure satisfies
+\[
+\Lambda(g):=\sum_{h=0}^{g} p\,m^{h}\;\approx\;\frac{p\,m^{g+1}}{m-1}\; .
+\]
+
+
+\paragraph{Step 2: Size of a single mutant clone.}
+A mutation that occurs in generation $g$ enjoys $G-g$ further generations of neutral growth, so its expected clone size at generation $G$ is $m^{G-g}$.  
+(The actual size is geometric with that mean, but using the mean suffices for tail behaviour.)
+
+\paragraph{Step 3: Distribution of clone sizes.}
+Fix $k$ with $1\ll k\ll n$.  
+A mutation produces a clone of size exceeding $k$ iff it occurs no later than generation
+\[
+g_k:=G-\frac{\log k}{\log m}.
+\]
+Hence
+\[
+\mathbb{P}\!\bigl(Z>k\bigr)
+   \approx\frac{\Lambda(g_k)}{\Lambda(G)}
+   \;\approx\;
+   \frac{p\,m^{g_k+1}/(m-1)}{p\,m^{G+1}/(m-1)}
+   \;=\;\frac{m^{-\log k/\log m}}{1}
+   \;=\;\frac{1}{k}\; .
+\]
+
+
+\paragraph{Step 4: Expected site‑frequency spectrum.}
+Let $X_k$ be the number of distinct mutation \emph{sites} that appear in exactly $k$ cells at generation $G$.  
+The expected number of sites with frequency $>k$ is $\Lambda(G)\,\mathbb{P}(Z>k)$.  
+As in continuous time, differentiate in $k$ (treating $k$ as a continuous proxy) to obtain
+\[
+\mathbb{E}[X_k]
+   \;=\; -\frac{d}{dk}\bigl[\Lambda(G)\,\mathbb{P}(Z>k)\bigr]
+   \;\asymp\; \frac{p}{k^{2}}\,(1+o(1)),
+\]
+so $\mathbb{E}[X_k]\propto k^{-2}$ for large~$k$.
+\end{proof}
+
+
+\paragraph{Remarks.}
+\begin{itemize}\setlength\itemsep{2pt}
+  \item Galton--Watson offspring means, Poisson thinning, and geometric growth $m^{g}$.
+  \item Replacing pure‑birth by net mean $\mu>1$ (i.e.\ allowing deaths) or adding finite variance changes constants but not the exponent$2$.
+  \item The same steps applied site‑wise give the multi‑site SFS used.
+  \item Alternative viewpoints: (i) Luria--Delbrück generating‑function derivation; (ii) coalescent “star–tree’’ argument; (iii) Tauberian analysis of the mutant generating function. All yield the same $k^{-2}$ tail.
+\end{itemize}
+
+
+\section{Open Problems and Future Directions}
+\begin{itemize}
+ \item Integrating selection and extensive neutral diversity in one tractable model.
+ \item Robust statistical inference of tumor evolutionary parameters from sequencing data.
+ \item Finite--time corrections for realistic tumor sizes and mutation rates.
+ \item Spatial and environmental structure, including treatment effects and dormancy.
+ \item Hierarchical (stem vs.~differentiated) branching models and their impact on mutation spectra.
+ \item Leveraging machine learning and large cancer genomic datasets to test and refine branching models.
+\end{itemize}
+
+\section{Conclusion}
+Branching process models have proven powerful for modeling tumor evolution, illuminating phenomena such as the heavy--tailed distribution of mutation frequencies and clonal diversity. Cheek\,\&\,Antal (2018) and McDonald\,\&\,Kimmel (2015) exemplify state--of--the--art extensions that accommodate multiple sites and multiple types, respectively. As models incorporate additional biological realism---selection, spatial structure, finite growth---maintaining analytical tractability will be challenging, yet the insights offered by these models remain invaluable for interpreting cancer genomic data.
+
+
+\begin{thebibliography}{12}
+
+\bibitem{CheekAntal2018}
+D.~Cheek and T.~Antal.
+\newblock Mutation frequencies in a birth--death branching process.
+\newblock \emph{Annals of Applied Probability}, 28(6):3922--3947, 2018.
+\newblock \doi{10.1214/17-AAP1386}.
+
+\bibitem{McDonaldKimmel2015}
+T.~O. McDonald and M.~Kimmel.
+\newblock A multitype infinite-allele branching process with applications to cancer evolution.
+\newblock \emph{Journal of Applied Probability}, 52(3):864--876, 2015.
+\newblock \doi{10.1239/jap/1435069065}.
+
+\bibitem{Durrett2013}
+R.~Durrett.
+\newblock Population genetics of neutral mutations in exponentially growing cancer cell populations.
+\newblock \emph{Annals of Applied Probability}, 23(1):230--250, 2013.
+
+\bibitem{ManskyTemin1995}
+L.~M. Mansky and H.~M. Temin.
+\newblock Lower in vivo mutation rate of human immunodeficiency virus type~1 than that predicted from the fidelity of purified reverse transcriptase.
+\newblock \emph{Journal of Virology}, 69(8):5087--5094, 1995.
+
+\bibitem{Pennings2014}
+P.~S. Pennings, S.~Kryazhimskiy, and J.~Wakeley.
+\newblock Loss and recovery of genetic diversity in adapting populations of HIV.
+\newblock \emph{PLoS Genetics}, 10(1):e1004000, 2014.
+\newblock \doi{10.1371/journal.pgen.1004000}.
+
+\end{thebibliography}
+
+\end{document}
