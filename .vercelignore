@@ -1,0 +1,43 @@
+# Editing-only sources — never deployed
+_src/
+*.tex
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.nav
+*.snm
+*.vrb
+
+# Raw figure sources (deploy webp/avif under assets/img/ in Phase 4)
+*.psd
+*.sketch
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Tooling / planning artifacts (kept in git, not deployed)
+.planning/
+.git/
+.gitignore
+.vercelignore
+README.md
+
+# Personal notes / non-deployable root files
+flow.txt
+18821S2026 Course info-1.pdf
+linkedinphoto.jpeg
+resume.tex
+
+# Node / Vercel runtime
+node_modules/
+.vercel/
+.env
+.env.*

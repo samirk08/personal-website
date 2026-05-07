@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+Thumbs.db
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.nav
+*.snm
+*.vrb
+
+# Editor / OS
+*.swp
+*.swo
+*~
+
+# Node (in case anyone ever runs an experiment)
+node_modules/
+
+# Vercel
+.vercel/
+
+# Env / secrets (defense in depth — no .env planned for v1)
+.env
+.env.*
+
+# Build artifacts (none expected, but safe to ignore)
+dist/
+build/
