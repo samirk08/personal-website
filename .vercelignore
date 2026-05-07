@@ -30,6 +30,10 @@ Thumbs.db
 .vercelignore
 README.md
 
+# Test files (kept in git, not deployed — keeps GPA/4.8 regex assertions off the deploy surface)
+*.test.mjs
+*.test.js
+
 # Personal notes / non-deployable root files
 flow.txt
 18821S2026 Course info-1.pdf

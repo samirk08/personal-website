@@ -1,0 +1,11 @@
+⏺ For a portfolio site built from reference templates, the natural GSD flow is:                                                               
+                                                                                                                                  
+  1. /gsd-new-project — kicks off gsd-project-researcher (surveys the portfolio-site ecosystem: Astro/Next.js/Eleventy templates, common      
+  patterns) → gsd-roadmapper breaks it into phases (scaffold, content, polish, deploy).                                                       
+  2. /gsd-ingest-docs — if you have a brief, reference URLs, or notes about the portfolios you want to mimic, drop them in .planning/inbox/   
+  first so the researcher/roadmapper consume them as locked context instead of guessing.                                                      
+  3. /gsd-ui-phase — this is the big one for your use case. gsd-ui-researcher reads your reference sites (you give it URLs) and produces a    
+  UI-SPEC.md design contract (typography scale, spacing, motion, layout grid) before any code gets written. gsd-ui-checker then gates the     
+  spec.                                                 
+  4. /gsd-plan-phase then /gsd-execute-phase per phase — planner + executor with atomic commits.                                              
+  5. /gsd-ui-review at the end — gsd-ui-auditor does a 6-pillar visual audit against the spec.     
