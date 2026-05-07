@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Clustering Soccer Playing Styles — Samir Kadariya</title>
+  <meta name="description" content="MIT 6.3732 project — PCA + K-means + ANOVA on StatsBomb event data spanning World Cup 2022, Euro 2024, Copa America 2024, and Barcelona 2006-21.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Clustering Soccer Playing Styles</h1>
+      <p class="article-header__meta">
+        <span class="chip">class project</span>
+        <span class="article-header__course">MIT 6.3732</span>
+      </p>
+      <p class="article-header__role">Solo class project · MIT 6.3732</p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Python</span>
+        <span class="chip chip--tech">scikit-learn</span>
+        <span class="chip chip--tech">PCA</span>
+        <span class="chip chip--tech">t-SNE</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>I investigate whether identifiable clusters of soccer team playing styles are significantly associated with match outcomes such as win rate, goal difference, and expected goals difference. In other words, do teams with certain tactical profiles tend to achieve better results? This question is motivated by ongoing debates in soccer analytics about the impact of play style (e.g., possession-based vs. counterattacking) on success.</p>
+      <p>Prior research suggests that high-performing teams often exhibit distinct styles — for example, domestic-league champions tend to favor possession, dominating field areas and producing most goals via built-up attacks, while teams capable of adapting their style dynamically have been found to outperform those sticking to a single rigid style. By clustering team playing styles in major tournaments and analyzing their outcomes, I aim to provide new evidence on how tactical approach correlates with performance. The data span the FIFA World Cup 2022, UEFA Euro 2024, CONMEBOL Copa America 2024, and FC Barcelona's La Liga seasons from 2006/07 through 2020/21, all scraped minute-by-minute from the public StatsBomb Python package.</p>
+
+      <h2>Key results</h2>
+      <p>Across all four cases — World Cup, Euros, Copa America, and a single elite club across seasons — I find a consistent relationship between playing-style clusters and match outcomes. Teams categorized in the most attacking/proactive cluster (Cluster 2) generally achieved the best results: highest win rates and positive goal differences. Teams in the most defensive/reactive cluster (Cluster 0) had the poorest outcomes. These differences were statistically significant in every tournament (ANOVA p-values ranging from 0.001 to 0.011; chi-square tests significant in two of four cases).</p>
+
+      <figure class="figure">
+        <img src="/assets/img/soccer-clustering/wcpca.jpeg"
+             alt="PCA projection of World-Cup-2022 team play-style features showing 3 clusters (possession, transition, defense-led) separated along the first two principal components."
+             width="600" height="500" loading="lazy" decoding="async">
+        <figcaption>Figure 1: PCA projection of WC 2022 team play styles. Three clusters separate cleanly on the first two principal components.</figcaption>
+      </figure>
+
+      <p>The pipeline is the standard one: per-minute team features (pressure, interceptions, tackles, passes, carries, goalkeeper line, etc.) are aggregated per match, standardized, projected via PCA, and clustered with K-means. I cross-checked the resulting cluster structure with t-SNE to make sure I wasn't an artifact of the linear projection.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/soccer-clustering/wctsne.jpeg"
+             alt="t-SNE projection of the same WC 2022 features confirming the 3-cluster structure visible in PCA, with tighter cluster separation."
+             width="1200" height="900" loading="lazy" decoding="async">
+        <figcaption>Figure 2: t-SNE projection of WC 2022 team play styles. The same three clusters are visible with tighter separation.</figcaption>
+      </figure>
+
+      <p>Outcome inference uses both ANOVA on cluster membership against goal-difference and a bootstrap-resampled win-rate per cluster. The bootstrap CIs are wide enough to take seriously — possession-led teams (Cluster 2) show the highest mean win rate but with the largest interval, indicating that style-based predictions still leave a lot of variance on the table. The Euros result is the cleanest: ultra-defensive teams (Cluster 0) won 11% of their matches and ran a –0.74 average goal difference, while the proactive cluster (Cluster 2) won 54% with a +0.69 average.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/soccer-clustering/bootstrapwc.jpeg"
+             alt="Bootstrap-resampled match-outcome win-rates per cluster with 95% confidence intervals — possession-led teams show highest mean win rate but largest CI."
+             width="1394" height="597" loading="lazy" decoding="async">
+        <figcaption>Figure 3: Cluster outcomes with bootstrap CIs. Cluster 2 (proactive/attacking) is best on average; Cluster 0 (ultra-defensive) is worst.</figcaption>
+      </figure>
+
+      <p>The Barcelona-across-seasons case is the interesting outlier. There, Cluster 2 corresponds cleanly to the Guardiola-style high-press/positional-play seasons (2008/09–2013/14), with mean goal difference +2.10 and a 75.5% win rate across 204 league matches. The early-Rijkaard era (Cluster 0) and the post-peak transitional years (Cluster 1) win at similar rates, but with markedly smaller score-line dominance. Even within a single elite club, tactical evolution materially changes how decisively wins arrive.</p>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Gollan, S. et al.</span>
+          <span class="references__year">(2018).</span>
+          <span class="references__title">Characterizing Game Styles in the English Premier League Using a Clustering Approach.</span>
+          <span class="references__venue"><em>International Journal of Performance Analysis in Sport</em>.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">He, Q., Zhang, S. &amp; Mao, L.</span>
+          <span class="references__year">(2023).</span>
+          <span class="references__title">Playing-Style Flexibility and Imposition: Two New Constructs in Performance Analysis of Football.</span>
+          <span class="references__venue"><em>Frontiers in Psychology</em>.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">StatsBomb</span>
+          <span class="references__year">(2024).</span>
+          <span class="references__title">StatsBomb Open Data &amp; statsbombpy Python package.</span>
+          <span class="references__venue">github.com/statsbomb/statsbombpy.</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

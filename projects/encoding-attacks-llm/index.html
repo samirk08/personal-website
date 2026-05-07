@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Encoding-Based Attacks on Large Language Models — Samir Kadariya</title>
+  <meta name="description" content="Co-authored MIT 6.3950 final project — in-context cipher prompts on Claude 3.5 Sonnet via HarmBench, measuring ASR shift as quiet-term count varies.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Encoding-Based Attacks on Large Language Models</h1>
+      <p class="article-header__meta">
+        <span class="chip">class project</span>
+        <span class="article-header__course">MIT 6.3950</span>
+      </p>
+      <p class="article-header__role">Co-authored class project · 3-person team · MIT 6.3950</p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Python</span>
+        <span class="chip chip--tech">LLM</span>
+        <span class="chip chip--tech">Claude 3.5</span>
+        <span class="chip chip--tech">HarmBench</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>Large language models are powerful tools, but their vulnerabilities to adversarial attacks present significant risks to safety and ethical AI deployment. Our research investigates encoding-based red-teaming techniques, leveraging custom ciphers to jailbreak LLMs and bypass safety protocols. By combining in-context learning and dynamic encoding schemes, we successfully tested attacks on models like GPT-4 and Claude 3.5, using the HarmBench dataset for evaluation. Our results indicate high attack success particularly for larger models with advanced reasoning abilities, highlighting critical vulnerabilities in the current safety mechanisms. We propose a layered defense strategy with static filters, dynamic detection systems, and real-time monitoring to mitigate these threats. Our findings illustrate the importance of incorporating encoding-based attacks in safety training pipelines to ensure robust and ethical AI deployment.</p>
+
+      <aside class="my-role"><strong>My role:</strong> Co-authored class project (3-person team). Designed and tested in-context cipher prompts on Claude 3.5 Sonnet using HarmBench — purely prompt-level attacks, no model modification.</aside>
+
+      <h2>Key results</h2>
+      <p>The team's central finding is that the attack success rate (ASR) is sharply controlled by the number of "quiet" fixed-point terms left untouched in the cipher prompt. With only five quiet terms the ciphered prompts succeeded on roughly 80% of harmful queries in categories such as Drug Production, and around 70% in Cyber Attacks, against Claude 3.5 Sonnet. Pushing the quiet-term count up to 15 cuts those rates roughly in half — Drug Production drops to 40%, Cyber Attacks to 55% — and at 25 quiet terms the ASR collapses essentially to zero. The pattern is consistent: more recognizable structure in the cipher gives the safety classifier more surface to work with.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/encoding-attacks-llm/architecture.jpeg"
+             alt="System architecture diagram showing prompt construction with quiet-term injection feeding Claude 3.5 Sonnet, with a HarmBench evaluator measuring attack success rate."
+             width="2926" height="1254" loading="lazy" decoding="async">
+        <figcaption>Figure 1: Encoding-attack pipeline. Prompts are constructed via in-context cipher templates, sent to the target model, and graded by a HarmBench-aligned evaluator.</figcaption>
+      </figure>
+
+      <p>The team kept the architecture deliberately static: the attack does not adapt to intermediate model output, which makes ASR a clean measurement rather than a moving target across runs. We red-teamed Claude 3.5 Sonnet specifically because it represents the upper end of commercially deployed safety hardening; the same harness can be pointed at smaller open-weight models given enough compute and API credits. Across all categories — cyber attacks, chemical-weapon synthesis instructions, drug production, and other HarmBench-curated harm types — the trend with quiet-term count holds.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/encoding-attacks-llm/layered_defense_strategy.jpeg"
+             alt="Layered defense strategy with input-side filtering, instruction-tuning hardening, and output-side classifier — attack success rate falls at each successive layer."
+             width="1144" height="390" loading="lazy" decoding="async">
+        <figcaption>Figure 2: Layered defense strategy. Static input filters, dynamic detection on intermediate state, and real-time output monitoring stack to drive residual ASR toward zero.</figcaption>
+      </figure>
+
+      <p>The defensive recommendation that comes out of the work is straightforward: encoding-style adversarial prompts should be folded into safety-training pipelines explicitly, and runtime defenses should be layered rather than monolithic. A single static input filter is brittle against in-context cipher schemes; a static filter combined with a dynamic detection system and an output-side classifier is much harder to slip through.</p>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Wei, A., Haghtalab, N. &amp; Steinhardt, J.</span>
+          <span class="references__year">(2023).</span>
+          <span class="references__title">Jailbroken: How Does LLM Safety Training Fail?</span>
+          <span class="references__venue">arXiv:2307.02483.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Zou, A., Wang, Z., Carlini, N., Nasr, M., Kolter, J. Z. &amp; Fredrikson, M.</span>
+          <span class="references__year">(2023).</span>
+          <span class="references__title">Universal and Transferable Adversarial Attacks on Aligned Language Models.</span>
+          <span class="references__venue">arXiv:2307.15043.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Mazeika, M. et al.</span>
+          <span class="references__year">(2024).</span>
+          <span class="references__title">HarmBench: A Standardized Evaluation Framework for Automated Red Teaming and Robust Refusal.</span>
+          <span class="references__venue">arXiv:2402.04249.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Jiang, F. et al.</span>
+          <span class="references__year">(2024).</span>
+          <span class="references__title">ArtPrompt: ASCII Art-based Jailbreak Attacks against Aligned LLMs.</span>
+          <span class="references__venue">arXiv:2402.11753.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Yong, Z.-X., Menghini, C. &amp; Bach, S. H.</span>
+          <span class="references__year">(2024).</span>
+          <span class="references__title">Low-Resource Languages Jailbreak GPT-4.</span>
+          <span class="references__venue">arXiv:2310.02446.</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

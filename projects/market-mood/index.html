@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Market Mood — Reddit Sentiment Dashboard — Samir Kadariya</title>
+  <meta name="description" content="HackMIT 2024 hackathon project — Reddit sentiment dashboard for stock tickers using OpenAI API, Reddit API, and a React frontend. Open source on GitHub.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Market Mood — Reddit Sentiment Dashboard</h1>
+      <p class="article-header__meta">
+        <span class="chip">hackathon</span>
+        <span class="article-header__course">HackMIT 2024</span>
+      </p>
+      <p class="article-header__role">Hackathon team project · 4-person team · HackMIT 2024</p>
+      <p class="article-header__links">
+        <a href="https://github.com/samirk08/market-mood" target="_blank" rel="noopener noreferrer">View source on GitHub ↗</a>
+      </p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Python</span>
+        <span class="chip chip--tech">OpenAI API</span>
+        <span class="chip chip--tech">Reddit API</span>
+        <span class="chip chip--tech">React</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Overview</h2>
+      <p>Market Mood is a Reddit-sentiment dashboard for stock tickers, built in 36 hours at HackMIT 2024 by a 4-person team. The team wired together the Reddit API for ingest of recent posts and comments mentioning a given ticker, the OpenAI API for sentiment scoring on each post, and a React frontend for the dashboard view that aggregates the scores into a per-ticker mood signal.</p>
+
+      <aside class="my-role"><strong>My role:</strong> Hackathon team project (4-person team). I built parts of the Reddit sentiment-ingestion pipeline and the OpenAI sentiment-scoring loop during HackMIT 2024 — specifically the ticker-keyed Reddit query layer and the batched scoring calls that feed the dashboard.</aside>
+
+      <h2>What we built</h2>
+      <p>The pipeline starts from a user-supplied ticker symbol. Our team's Reddit ingestion layer pulls the most recent N posts and top-level comments from a curated set of investing subreddits matching that ticker. Each item is sent through the OpenAI API with a sentiment-scoring prompt that returns a normalized score in [–1, +1]. The React dashboard aggregates those scores by time-window and renders a per-ticker mood line plus the underlying source posts so users can verify the signal isn't being driven by a handful of outliers.</p>
+
+      <p>Code, README, and run instructions are open source on GitHub at the link above. The project was built as a hackathon submission rather than a production service, so rate-limit handling and persistence are deliberately minimal.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

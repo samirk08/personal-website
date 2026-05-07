@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Concordance Mapping of U.S. Tariffs Over 250 Years — Samir Kadariya</title>
+  <meta name="description" content="NLP pipeline mapping every U.S. tariff line from 1789 to the modern HS code system using GPT-4 + MPNet — ~79% HS-6 retention.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Concordance Mapping of U.S. Tariffs Over 250 Years</h1>
+      <p class="article-header__meta">
+        <span class="chip">research</span>
+        <span class="article-header__course">MIT Political Science · SuperUROP</span>
+      </p>
+      <p class="article-header__role">Solo research project · MIT Political Science · SuperUROP</p>
+      <p class="article-header__links">
+        <a href="https://github.com/samirk08/NLP-Tariff" target="_blank" rel="noopener noreferrer">View source on GitHub ↗</a>
+      </p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Python</span>
+        <span class="chip chip--tech">GPT-4</span>
+        <span class="chip chip--tech">MPNet</span>
+        <span class="chip chip--tech">Selenium</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>Modern economic analyses often require linking centuries-old U.S. tariff schedules — written in archaic prose and coded under multiple, now-obsolete systems — to today's eight-digit Harmonized System (HS). I present the first fully automated concordance that threads every tariff line from the 1789 Tariff Act through four major coding overhauls into the 2023 HS vocabulary. The pipeline "walks" backwards one calendar year at a time: each description is (i) modernized with a GPT-4 prompt, (ii) embedded with the sentence-transformer MPNet, and (iii) matched to its nearest neighbor in the previous year using a composite similarity score. When that score dips below a specified threshold, I first apply a hierarchical HS fallback — matching at the 2-, 4-, or 6-digit level appropriate to the historical regime — before any remaining low-confidence records trigger a Selenium-based query to the U.S. Census HS-Classifier, with GPT selecting among the most probable codes the website outputs. On three public schedules — 1789 (free text), 1963 (TSUS-8), and 1989 (HS-8) — the method attains 65%, 75%, and 90% similarity scores respectively. The resulting open-source concordance and Python package let researchers map any historical description to a ranked list of 2023 HS codes with confidence scores, enabling consistent long-run trade analyses without manual recoding.</p>
+
+      <h2>Key results</h2>
+      <p>Across the 1989–2022 window where modern HS codes are directly comparable, my pipeline retains the original HS-6 code in roughly 79% of cases. The remaining 21% concentrate in years immediately following major schedule rewrites: in 1995 and 1996, between 23.5% and 28.2% of mappings fall below my composite-similarity threshold of 0.5, reflecting the textual reorganizations the HS underwent that decade.</p>
+
+      <figure class="figure figure--breakout">
+        <img src="/assets/img/nlp-tariff/tariff-evolution.jpeg"
+             alt="Timeline showing four U.S. tariff coding regimes since 1789: pre-TSUS (paragraph codes only), TSUS adopted 1963, TSUSA from 1972, HTSUS from 1989."
+             width="1920" height="1080" loading="lazy" decoding="async">
+        <figcaption>Figure 1: Evolution of U.S. tariff coding systems, 1789–present. Before 1963 tariff acts listed goods without a standardized numeric scheme; the TSUS was introduced in 1963, the TSUSA in 1972, and the HTSUS in 1989.</figcaption>
+      </figure>
+
+      <p>The pipeline is built around four cooperating components: a Selenium scraper that pulls historical schedules from the U.S. International Trade Commission and Census archives; a GPT-4 prompt that modernizes archaic phrasing one year at a time so the back-walk never has to bridge more than ~12 months of linguistic drift; an MPNet sentence-transformer that produces embeddings for every description; and a composite similarity score that combines cosine similarity with hierarchical HS-digit retention. The whole chain is deterministic given fixed temperature and a frozen embedding model.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/nlp-tariff/mean_similarity_1789_2022.jpeg"
+             alt="Mean composite similarity score declines from ~1.0 in 2022 to ~0.45 by 1789, with sharp drops at 1930 and 1963 marking schedule rewrites."
+             width="1389" height="790" loading="lazy" decoding="async">
+        <figcaption>Figure 2: Mean composite similarity by source year, 1789–2022. The two visible cliffs at 1930 (Smoot-Hawley) and 1963 (TSUS adoption) match the years U.S. tariff law was rewritten from scratch.</figcaption>
+      </figure>
+
+      <p>For low-confidence matches, the system falls through to a hierarchical HS backoff — matching at the 6-, 4-, or 2-digit level depending on which regime the source year predates — and only escalates to live Selenium queries against the Census HS-Classifier when none of those layers pass the similarity threshold. Empirically, this two-stage fallback resolves the majority of edge cases without any human in the loop.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/nlp-tariff/H.S.digitdistribution.jpeg"
+             alt="Distribution of HS6 digit-retention across the 1989–2022 NLP-Tariff matches, peaking at 6/6 retention with ~79% of items."
+             width="1180" height="980" loading="lazy" decoding="async">
+        <figcaption>Figure 3: HS-6 digit-retention distribution across the 1989–2022 mapping. The mode at 6/6 retention contains ~79% of items.</figcaption>
+      </figure>
+
+      <p>The deliverable is an open-source concordance plus a Python package that exposes the full mapping behind a single function call: feed in any tariff description from any year between 1789 and 2023, get back a ranked list of 2023 HS codes with confidence scores. The intended downstream use is long-run trade-policy work that would otherwise require months of hand-coded historical alignment.</p>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">de Santana, M. A. et al.</span>
+          <span class="references__year">(2023).</span>
+          <span class="references__title">Using Machine Learning and NLP for the Product Matching Problem.</span>
+          <span class="references__venue"><em>Lecture Notes in Networks and Systems</em>, vol. 450, pp. 123–137. Springer.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Bollmann, M.</span>
+          <span class="references__year">(2019).</span>
+          <span class="references__title">A Large-Scale Comparison of Historical Text Normalization Systems.</span>
+          <span class="references__venue"><em>Proceedings of EMNLP 2019</em>, pp. 327–342.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Viji, D. &amp; Revathy, S.</span>
+          <span class="references__year">(2022).</span>
+          <span class="references__title">A Hybrid Approach of Weighted Fine-Tuned BERT Extraction with Deep Siamese Bi-LSTM Model for Semantic Text Similarity Identification.</span>
+          <span class="references__venue"><em>Multimedia Tools and Applications</em>, vol. 81, no. 9, pp. 12013–12033. Springer.</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Decimal Expansions of Rational Numbers — Samir Kadariya</title>
+  <meta name="description" content="MIT 18.821 paper — period-bound proofs for the decimal expansion of a/b via pigeonhole and Euler's totient function.">
+  <meta name="theme-color" content="#0F4C81">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <h1 class="article-header__title">Decimal Expansions of Rational Numbers</h1>
+      <p class="article-header__meta">
+        <span class="chip">class project</span>
+        <span class="article-header__course">MIT 18.821</span>
+      </p>
+      <p class="article-header__role">Solo class project · MIT 18.821</p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">Number Theory</span>
+        <span class="chip chip--tech">Modular Arithmetic</span>
+      </div>
+    </header>
+
+    <article class="article">
+      <h2>Abstract</h2>
+      <p>I study the period of the decimal expansion of a rational number <code>a/b</code> in lowest terms — the smallest positive integer <code>k</code> such that the digits of <code>a/b</code> are eventually periodic with block length <code>k</code>. The starting question is: given <code>b</code>, how long can the period be? A short pigeonhole argument shows the period exists and is at most <code>b</code>; a sharper application restricted to remainders coprime to <code>b</code> shows that whenever <code>b</code> and 10 are coprime, the period is at most <code>phi(b)</code>, where <code>phi</code> is Euler's totient function. The bulk of the paper develops the prime-power machinery that pins down the exact period rather than just a bound.</p>
+
+      <h2>Key results</h2>
+      <p>The first observation is that the period of <code>a/b</code> is governed entirely by the long-division remainder sequence <code>r_0, r_1, r_2, ...</code>, where <code>r_0 = a mod b</code> and <code>r_(j+1) = 10 * r_j mod b</code>. Two consecutive remainders that coincide force the digit sequence to repeat from that point on, and pigeonhole on the finite set of possible remainders is what gives existence of the period in the first place.</p>
+
+      <p>When <code>b</code> and 10 are coprime, every remainder lies in the multiplicative group of units mod <code>b</code>, which has exactly <code>phi(b)</code> elements. Pigeonhole there gives the cleaner bound: period of <code>a/b</code> is at most <code>phi(b)</code>. The bound is rarely tight — for example, <code>1/13</code> has period 6 even though <code>phi(13) = 12</code>, and <code>1/21</code> has period 6 even though <code>phi(21) = 12</code>. Both are proper divisors of <code>phi(b)</code>, which is the typical case rather than the exception.</p>
+
+      <p>The main theorem of the paper takes the prime factorization of <code>b</code> as input and returns both the period and the pre-period exactly. Write <code>b = 2^a * 5^c * p_1^(e_1) * ... * p_r^(e_r)</code>, where the primes <code>p_i</code> are distinct and coprime to 10. Then the decimal expansion has exactly <code>L = max(a, c)</code> non-repeating digits, followed by a purely repeating block of length <code>lcm(lambda(p_1^(e_1)), ..., lambda(p_r^(e_r)))</code>, where <code>lambda(p^e) = lambda(p) * p^(max(e - 1 - s, 0))</code> and <code>s</code> is determined by the <code>p</code>-adic valuation of <code>10^(lambda(p)) - 1</code>. The decomposition reduces the period question for any <code>b</code> to the case of a single prime power, which is then handled with a valuation-lifting lemma.</p>
+
+      <p>The closing sections of the paper take a group-theoretic view: the period of <code>1/b</code> equals the order of 10 in the multiplicative group mod <code>b</code>, and many of the divisor-of-<code>phi(b)</code> patterns drop out cleanly from that observation. There is also a probabilistic perspective on which fraction of denominators below a given size attain various periods, which connects the elementary results to the heuristics of Artin-style conjectures for primitive roots.</p>
+    </article>
+
+    <section class="references" aria-labelledby="references-heading">
+      <h2 id="references-heading">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Hardy, G. H. &amp; Wright, E. M.</span>
+          <span class="references__year">(2008).</span>
+          <span class="references__title">An Introduction to the Theory of Numbers (6th ed.).</span>
+          <span class="references__venue">Oxford University Press.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Niven, I., Zuckerman, H. S. &amp; Montgomery, H. L.</span>
+          <span class="references__year">(1991).</span>
+          <span class="references__title">An Introduction to the Theory of Numbers (5th ed.).</span>
+          <span class="references__venue">Wiley.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Ireland, K. &amp; Rosen, M.</span>
+          <span class="references__year">(1990).</span>
+          <span class="references__title">A Classical Introduction to Modern Number Theory (2nd ed.).</span>
+          <span class="references__venue">Springer Graduate Texts in Mathematics 84.</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
