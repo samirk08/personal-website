@@ -1,9 +1,14 @@
 // js/projects-data.js
-// Single source of truth for every project's metadata, authorship, and links.
+// Single source of truth for every project's metadata, role, and links.
 // Cards on the homepage (Phase 2) and detail-page headers (Phase 3) both read from this array.
 // Schema documented in .planning/phases/01-repo-plumbing-authorship-data/01-02-PLAN.md (interfaces section).
 //
-// Authorship verified against LaTeX paper cover pages (D-05) and CONTEXT.md decisions D-01..D-12.
+// PRIVACY OVERRIDE (D-13): third-party collaborator names are NOT included anywhere in this file.
+// The repo is public on GitHub; naming collaborators without their explicit consent is avoided here.
+// Group / co-authored / hackathon-team designations + optional `groupSize` convey scale honestly
+// without identifying individuals. See `.planning/phases/01-repo-plumbing-authorship-data/01-CONTEXT.md`
+// D-13 for the full override + rationale.
+//
 // D-03 verified numerics ("ship the numbers") REQUIRED for nlp-tariff, sepsis-prediction, encoding-attacks-llm.
 // Academic-credentials suppression per D-04 — no credential figures appear here.
 // PDF hosting suppressed per D-06 — every links.paper is null; HTML renditions land in Phase 3.
@@ -19,6 +24,7 @@ export const projects = [
     course: null,
     affiliation: 'MIT Political Science · SuperUROP',
     role: 'solo',
+    groupSize: 1,
     coauthors: [],
     myContribution: null,
     techChips: ['Python', 'GPT-4', 'MPNet', 'Selenium'],
@@ -42,8 +48,9 @@ export const projects = [
     course: 'MIT 6.3950',
     affiliation: 'MIT 6.3950 (final project)',
     role: 'co-authored',
-    coauthors: ['Aryan Jain', 'Arko Ghosh'],
-    myContribution: 'Designed and tested in-context cipher prompts on Claude 3.5 Sonnet using HarmBench (joint work with Aryan Jain and Arko Ghosh; no model modification — purely prompt-level attacks).',
+    groupSize: 3,
+    coauthors: [],
+    myContribution: 'Co-authored class project (3-person team). Designed and tested in-context cipher prompts on Claude 3.5 Sonnet using HarmBench — purely prompt-level attacks, no model modification.',
     techChips: ['Python', 'LLM', 'Claude 3.5', 'HarmBench'],
     claims: [
       { text: 'ASR drops from ~80% (5 quiet terms) to 0% (25 quiet terms) on Claude 3.5 Sonnet / HarmBench',
@@ -66,6 +73,7 @@ export const projects = [
     course: 'MIT 6.3732',
     affiliation: 'MIT 6.3732 (project report)',
     role: 'solo',
+    groupSize: 1,
     coauthors: [],
     myContribution: null,
     techChips: ['Python', 'scikit-learn', 'PCA', 't-SNE'],
@@ -86,9 +94,10 @@ export const projects = [
     type: 'hackathon',
     course: null,
     affiliation: 'HackMIT 2024',
-    role: 'co-authored',
-    coauthors: ['Pyae Sone Nyo Hmine', 'Cole Ruehle', 'Sriram Sethuraman'],
-    myContribution: 'Joint hackathon work; built parts of the Reddit sentiment ingestion + dashboard with the team (specifics scoped in Phase 3 detail page).',
+    role: 'hackathon-team',
+    groupSize: 4,
+    coauthors: [],
+    myContribution: 'Hackathon team project (4-person team). Built parts of the Reddit sentiment ingestion + dashboard during HackMIT 2024 (specifics scoped in Phase 3 detail page).',
     techChips: ['Python', 'OpenAI API', 'Reddit API', 'React'],
     claims: [],
     figures: [],
@@ -106,8 +115,9 @@ export const projects = [
     course: 'MIT 14.18',
     affiliation: 'MIT 14.18',
     role: 'co-authored',
-    coauthors: ['Bryce Roberts'],
-    myContribution: 'Joint with Bryce Roberts. Applied the existing Katz-Bonacich centrality framework to a council-network voting setting; under linear voting the optimal lobbying target is the Katz-Bonacich-maximizing node with decay beta-over-c.',
+    groupSize: 2,
+    coauthors: [],
+    myContribution: 'Co-authored class project (2-person team). Applied the existing Katz-Bonacich centrality framework to a council-network voting setting; under linear voting the optimal lobbying target is the Katz-Bonacich-maximizing node with decay beta-over-c.',
     techChips: ['Game Theory', 'Network Centrality', 'Katz-Bonacich'],
     claims: [],
     figures: [
@@ -127,8 +137,9 @@ export const projects = [
     course: 'MIT 18.821',
     affiliation: 'MIT 18.821 (paper 2)',
     role: 'co-authored',
-    coauthors: ['Jovani Pitterson', 'Skyler Pulling'],
-    myContribution: 'Joint with Jovani Pitterson and Skyler Pulling. Proved a mod-63 sieve result and identified a parametric family of non-trivial taxicab numbers.',
+    groupSize: 3,
+    coauthors: [],
+    myContribution: 'Co-authored class project (3-person team). Proved a mod-63 sieve result and identified a parametric family of non-trivial taxicab numbers.',
     techChips: ['Number Theory', 'Modular Arithmetic', 'Diophantine'],
     claims: [],
     figures: [
@@ -143,13 +154,14 @@ export const projects = [
     slug: 'branching-cancer',
     section: 'math',
     title: 'Branching Process Models for Cancer (Survey)',
-    oneLiner: 'Survey of branching-process models applied to cancer growth: Cheek-Antal, McDonald-Kimmel, and Durrett.',
+    oneLiner: 'Co-authored survey of branching-process models applied to cancer growth: Cheek-Antal, McDonald-Kimmel, and Durrett.',
     type: 'survey',
     course: 'MIT 18.619',
     affiliation: 'MIT 18.619',
     role: 'co-authored',
-    coauthors: ['Jonathan Song'],
-    myContribution: 'Joint survey with Jonathan Song summarizing Cheek-Antal, McDonald-Kimmel, and Durrett models — no original mathematical contribution; this is explicitly a survey paper.',
+    groupSize: 2,
+    coauthors: [],
+    myContribution: 'Co-authored survey paper (2-person team) summarizing Cheek-Antal, McDonald-Kimmel, and Durrett branching-process models applied to cancer evolution. No original mathematical contribution — this is explicitly a survey.',
     techChips: ['Branching Processes', 'Probability', 'Mathematical Biology'],
     claims: [],
     figures: [
@@ -164,18 +176,19 @@ export const projects = [
     slug: 'sepsis-prediction',
     section: 'math',
     title: 'Early Sepsis Prediction with Deep Learning',
-    oneLiner: '6-author group project on the 2019 PhysioNet Challenge comparing Transformer, LSTM, and Autoencoder+kNN approaches for early sepsis prediction.',
+    oneLiner: 'Group project on the 2019 PhysioNet Challenge comparing Transformer, LSTM, and Autoencoder+kNN approaches for early sepsis prediction.',
     type: 'class project',
     course: 'MIT (AI for Medicine)',
     affiliation: 'MIT (AI for Medicine)',
     role: 'group',
-    coauthors: ['Lee Chen', 'Shauna Kwag', 'Pari Latawa', 'Phoenix Wu', 'Richard Zhu'],
-    myContribution: '6-author group project. My contribution: built the LSTM model (utility 0.261) with Shauna Kwag. The Transformer (utility 0.578) and Autoencoder+kNN (utility 0.04) were built by other group members.',
+    groupSize: 6,
+    coauthors: [],
+    myContribution: 'Group project (6-person team). My contribution: built the LSTM model (utility 0.261). The Transformer (utility 0.578) and Autoencoder+kNN (utility 0.04) were built by other team members.',
     techChips: ['PyTorch', 'LSTM', 'Time-Series', 'Healthcare'],
     claims: [
       { text: 'Transformer model achieved utility 0.578 on the sepsis prediction task',
         source: '_src/papers/sepsis-prediction/main.tex' },
-      { text: 'LSTM model (Samir + Shauna Kwag) achieved utility 0.261 on the sepsis prediction task',
+      { text: 'LSTM model (my contribution) achieved utility 0.261 on the sepsis prediction task',
         source: '_src/papers/sepsis-prediction/main.tex' },
       { text: 'Autoencoder + kNN baseline achieved utility 0.04 on the sepsis prediction task',
         source: '_src/papers/sepsis-prediction/main.tex' }
@@ -197,6 +210,7 @@ export const projects = [
     course: 'MIT 18.821',
     affiliation: 'MIT 18.821 (paper 1)',
     role: 'solo',
+    groupSize: 1,
     coauthors: [],
     myContribution: null,
     techChips: ['Number Theory', 'Modular Arithmetic'],

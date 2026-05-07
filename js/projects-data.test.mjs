@@ -1,8 +1,13 @@
 // Self-test for js/projects-data.js
 // Run: `node js/projects-data.test.mjs` from repo root.
 // Exits 0 on success, non-zero on first failed invariant.
-// 19 invariants total (15 original + 4 added per checker findings: WARNING-1 folded into INV-7;
-// WARNING-2 = INV-16/17/18 D-03 verified-numeric claims; WARNING-3 = INV-19 per-name coauthor map).
+//
+// 19 invariants total. Updated per CONTEXT.md D-13 (third-party-name suppression):
+//   - INV-7 / INV-8 / INV-9 / INV-19 no longer assert specific names; they assert role + groupSize +
+//     contribution-shape so honesty (group nature, scale, and Samir's specific role) is preserved
+//     without naming individuals.
+//   - INV-19 is now the no-third-party-names guard: scans dataSrc for any of the 14 known
+//     collaborator names and asserts none appear.
 
 import { strictEqual, ok, deepStrictEqual } from 'node:assert';
 import { readFileSync } from 'node:fs';
@@ -43,11 +48,16 @@ check('INV-4 Math section has exactly 5 entries', () => {
   strictEqual(projects.filter(p => p.section === 'math').length, 5);
 });
 
-// INV-5
-check('INV-5 every non-solo project has at least one co-author', () => {
+// INV-5 — every non-solo project declares a non-trivial groupSize and an empty coauthors array (D-13)
+check('INV-5 non-solo projects have role !== solo, groupSize >= 2, empty coauthors (D-13)', () => {
   for (const p of projects) {
     if (p.role !== 'solo') {
-      ok(Array.isArray(p.coauthors) && p.coauthors.length >= 1, `${p.slug} (role=${p.role}) has empty coauthors`);
+      ok(typeof p.groupSize === 'number' && p.groupSize >= 2,
+         `${p.slug} (role=${p.role}) must have groupSize >= 2, got ${p.groupSize}`);
+      ok(Array.isArray(p.coauthors) && p.coauthors.length === 0,
+         `${p.slug} (role=${p.role}) must have empty coauthors per D-13, got ${JSON.stringify(p.coauthors)}`);
+    } else {
+      strictEqual(p.groupSize, 1, `${p.slug} (role=solo) must have groupSize === 1, got ${p.groupSize}`);
     }
   }
 });
@@ -62,39 +72,36 @@ check('INV-6 every non-solo project has non-empty myContribution', () => {
   }
 });
 
-// INV-7 (HON-03 — name pinned in test per checker WARNING-1)
-check('INV-7 branching-cancer is survey, oneLiner mentions survey, Jonathan Song coauthor', () => {
+// INV-7 (HON-03 — branching-cancer is a co-authored survey)
+check('INV-7 branching-cancer is a co-authored survey, oneLiner mentions survey', () => {
   const e = projects.find(p => p.slug === 'branching-cancer');
   ok(e, 'branching-cancer entry missing');
   strictEqual(e.type, 'survey');
+  strictEqual(e.role, 'co-authored');
   ok(/survey/i.test(e.oneLiner), `branching-cancer oneLiner missing word "survey": "${e.oneLiner}"`);
-  ok(Array.isArray(e.coauthors) && e.coauthors.includes('Jonathan Song'),
-     `branching-cancer coauthors missing "Jonathan Song" (HON-03)`);
+  strictEqual(e.groupSize, 2);
 });
 
-// INV-8
-check('INV-8 sepsis-prediction group of 6, names + LSTM contribution with Shauna Kwag', () => {
+// INV-8 (HON-04 — sepsis-prediction is a 6-person group, Samir built the LSTM)
+check('INV-8 sepsis-prediction is a 6-person group; myContribution names the LSTM role', () => {
   const e = projects.find(p => p.slug === 'sepsis-prediction');
   ok(e, 'sepsis-prediction entry missing');
   strictEqual(e.role, 'group');
-  for (const required of ['Lee Chen','Shauna Kwag','Pari Latawa','Phoenix Wu','Richard Zhu']) {
-    ok(e.coauthors.includes(required), `sepsis-prediction coauthors missing "${required}"`);
-  }
+  strictEqual(e.groupSize, 6);
   ok(/LSTM/.test(e.myContribution), `sepsis-prediction myContribution missing "LSTM"`);
-  ok(/Shauna Kwag/.test(e.myContribution), `sepsis-prediction myContribution missing "Shauna Kwag"`);
+  ok(/group/i.test(e.myContribution), `sepsis-prediction myContribution missing "group" indicator`);
 });
 
-// INV-9
-check('INV-9 market-mood coauthors include all 3 named teammates', () => {
+// INV-9 (HON-06 — Market Mood is a 4-person hackathon team)
+check('INV-9 market-mood is a 4-person hackathon-team project', () => {
   const e = projects.find(p => p.slug === 'market-mood');
   ok(e, 'market-mood entry missing');
-  for (const required of ['Pyae Sone Nyo Hmine','Cole Ruehle','Sriram Sethuraman']) {
-    ok(e.coauthors.includes(required), `market-mood coauthors missing "${required}"`);
-  }
+  strictEqual(e.role, 'hackathon-team');
+  strictEqual(e.groupSize, 4);
 });
 
-// INV-10
-check('INV-10 source file has no GPA / 4.8 leaks', () => {
+// INV-10 — academic-credentials suppression (D-04)
+check('INV-10 source file has no GPA / 4.8 leaks (D-04)', () => {
   ok(!/4\.8/.test(dataSrc), 'projects-data.js contains forbidden substring "4.8"');
   ok(!/GPA/.test(dataSrc), 'projects-data.js contains forbidden substring "GPA"');
 });
@@ -131,7 +138,7 @@ check('INV-15 every entry has detailPage === /projects/<slug>/', () => {
   }
 });
 
-// INV-16 (D-03 — NLP-Tariff retention claim pinned per checker WARNING-2)
+// INV-16 (D-03 — NLP-Tariff retention claim pinned)
 check('INV-16 nlp-tariff claims include verified retention claim with .tex source', () => {
   const e = projects.find(p => p.slug === 'nlp-tariff');
   ok(e, 'nlp-tariff entry missing');
@@ -140,7 +147,7 @@ check('INV-16 nlp-tariff claims include verified retention claim with .tex sourc
   ok(match, 'nlp-tariff.claims missing entry with text /79\\s*%|HS-6/i AND source /nlp-tariff.*\\.tex/');
 });
 
-// INV-17 (D-03 — sepsis utility scores pinned per checker WARNING-2)
+// INV-17 (D-03 — sepsis utility scores pinned; D-13 strips the partner name from the LSTM claim)
 check('INV-17 sepsis-prediction claims include Transformer 0.578 / LSTM 0.261 / Autoencoder 0.04 with .tex source', () => {
   const e = projects.find(p => p.slug === 'sepsis-prediction');
   ok(e, 'sepsis-prediction entry missing');
@@ -156,7 +163,7 @@ check('INV-17 sepsis-prediction claims include Transformer 0.578 / LSTM 0.261 / 
   }
 });
 
-// INV-18 (D-03 — encoding-attacks ASR claim pinned per checker WARNING-2)
+// INV-18 (D-03 — encoding-attacks ASR claim pinned)
 check('INV-18 encoding-attacks-llm claims include ASR finding with .tex source', () => {
   const e = projects.find(p => p.slug === 'encoding-attacks-llm');
   ok(e, 'encoding-attacks-llm entry missing');
@@ -165,27 +172,20 @@ check('INV-18 encoding-attacks-llm claims include ASR finding with .tex source',
   ok(match, 'encoding-attacks-llm.claims missing entry with text /ASR|attack success/i AND source /encoding-attacks-llm.*\\.tex/');
 });
 
-// INV-19 (HON-01 — per-name coauthor map enforced per checker WARNING-3)
-check('INV-19 expected coauthor names appear in every co-authored entry', () => {
-  const expectedCoauthors = {
-    'encoding-attacks-llm': ['Aryan Jain', 'Arko Ghosh'],
-    'lobbying-networks':   ['Bryce Roberts'],
-    'taxicab-numbers':     ['Jovani Pitterson', 'Skyler Pulling'],
-    'branching-cancer':    ['Jonathan Song'],
-    'sepsis-prediction':   ['Lee Chen', 'Shauna Kwag', 'Pari Latawa', 'Phoenix Wu', 'Richard Zhu'],
-    'market-mood':         ['Pyae Sone Nyo Hmine', 'Cole Ruehle', 'Sriram Sethuraman'],
-  };
-  const missing = {};
-  for (const [slug, names] of Object.entries(expectedCoauthors)) {
-    const e = projects.find(p => p.slug === slug);
-    ok(e, `${slug} entry missing`);
-    const absent = names.filter(n => !e.coauthors.includes(n));
-    if (absent.length > 0) missing[slug] = absent;
-  }
-  if (Object.keys(missing).length > 0) {
-    const lines = Object.entries(missing).map(([s, ns]) => `  ${s}: missing ${ns.join(', ')}`);
-    ok(false, `INV-19 coauthor map violations:\n${lines.join('\n')}`);
-  }
+// INV-19 (D-13 — no third-party names anywhere in the data file source)
+check('INV-19 no third-party collaborator names appear in dataSrc (D-13)', () => {
+  // Exhaustive list of collaborator names previously embedded (now suppressed).
+  const forbidden = [
+    'Pyae Sone Nyo Hmine','Cole Ruehle','Sriram Sethuraman',
+    'Aryan Jain','Arko Ghosh',
+    'Bryce Roberts',
+    'Jovani Pitterson','Skyler Pulling',
+    'Jonathan Song',
+    'Lee Chen','Shauna Kwag','Pari Latawa','Phoenix Wu','Richard Zhu',
+  ];
+  const hits = forbidden.filter(name => dataSrc.includes(name));
+  ok(hits.length === 0,
+    `D-13 violation — projects-data.js contains forbidden third-party name(s): ${hits.join(', ')}`);
 });
 
 // Run
