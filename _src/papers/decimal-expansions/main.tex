@@ -1,0 +1,1051 @@
+\documentclass[12pt]{amsart}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{hyperref}
+\setlength{\textheight}{8.5in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textwidth}{6.5in}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\lcm}{\operatorname{lcm}}
+\newcommand{\ind}{\operatorname{ind}}
+
+\title{Decimal Expansions of Rational Numbers}
+
+\begin{document}
+\maketitle
+\section*{Introduction}
+
+We define the period of a fraction precisely as follows.
+
+\begin{definition}\label{def:period}
+Let $a/b$ be a rational number. The period of $a/b$ is the
+smallest positive integer $k$ such that the decimal expansion of $a/b$
+is eventually periodic with block length $k$. The pre-period is
+the length of the non-repeating initial segment of the expansion.
+\end{definition}
+
+Definition~\ref{def:period} is not yet known to be well-posed: it
+asserts the existence of a smallest $k$ for which the decimal is
+periodic with that block length, but we have not established that any
+such $k$ exists at all. Before proceeding, we close this gap with two
+short propositions whose proofs rest on the pigeonhole principle
+applied to the long-division algorithm. Both arguments are based on
+the following object, which records the state of long division after
+each step.
+
+\begin{definition}\label{def:remainder-sequence}
+For integers $a$ and $b$ with $b \ge 2$, the
+\emph{long-division remainder sequence} of $a/b$ is the sequence
+$(r_j)_{j \ge 0}$ defined by
+\[
+  r_0 = a \bmod b, \qquad r_{j+1} = 10\, r_j \bmod b
+  \quad \text{for all } j \ge 0.
+\]
+\end{definition}
+
+The remainder sequence is exactly what grade-school long division
+produces: $r_j$ is the remainder carried into the $(j+1)$-st step, and
+the next digit of the decimal expansion is $d_{j+1} =
+\lfloor 10\, r_j / b \rfloor$. In particular, two consecutive digits
+$d_{j+1}$ and $d_{j'+1}$ are equal whenever $r_j = r_{j'}$.
+
+\begin{proposition}\label{prop:periodic-existence}
+For every rational $a/b$ with $b \ge 1$, the decimal expansion of $a/b$
+is eventually periodic. In particular, the period of $a/b$ in the
+sense of Definition~\ref{def:period} exists.
+\end{proposition}
+
+\begin{proof}
+If $b = 1$ the expansion terminates, so assume $b \ge 2$ and consider
+the long-division remainder sequence $(r_j)_{j \ge 0}$ from
+Definition~\ref{def:remainder-sequence}. Each $r_j$ takes a value in
+the finite set $\{0, 1, \ldots, b - 1\}$, which has $b$ elements. Among
+the first $b + 1$ terms $r_0, r_1, \ldots, r_b$, the pigeonhole
+principle guarantees that two must coincide: $r_i = r_j$ for some
+$0 \le i < j \le b$. The recursion $r_{k+1} = 10 r_k \bmod b$ depends
+only on $r_k$, so $r_i = r_j$ forces $r_{i+t} = r_{j+t}$ for every
+$t \ge 0$. Since each digit $d_{k+1}$ is determined by $r_k$, the
+digits from position $i + 1$ onward repeat with block length at most
+$j - i \le b$. Thus the decimal expansion is eventually periodic, and
+Definition~\ref{def:period} yields a well-defined smallest $k$.
+\end{proof}
+
+A more careful application of pigeonhole — restricted to remainders
+that are coprime to $b$ — yields a quantitative bound involving
+Euler's totient function $\varphi$, defined by
+$\varphi(b) = |(\Z/b\Z)^*|$.
+
+\begin{proposition}\label{prop:phi-bound}
+Let $a/b$ be in lowest terms with $\gcd(b, 10) = 1$ and $b \ge 2$.
+Then the period of $a/b$ is at most $\varphi(b)$.
+\end{proposition}
+
+\begin{proof}
+We first show that every term of the long-division remainder sequence
+$(r_j)$ lies in the multiplicative group $(\Z/b\Z)^*$, i.e.\ is
+coprime to $b$. Since $a/b$ is in lowest terms, $\gcd(a, b) = 1$, and
+reducing $a$ modulo $b$ preserves coprimality, so $\gcd(r_0, b) = 1$.
+Suppose inductively that $\gcd(r_j, b) = 1$. Because
+$\gcd(10, b) = 1$, we have $\gcd(10\, r_j, b) = 1$, and reducing
+$10\, r_j$ modulo $b$ once again preserves coprimality, giving
+$\gcd(r_{j+1}, b) = 1$. By induction, every $r_j$ is a unit modulo
+$b$.
+
+The sequence $(r_j)$ therefore takes values in the set $(\Z/b\Z)^*$,
+which has exactly $\varphi(b)$ elements. Among the first
+$\varphi(b) + 1$ terms, the pigeonhole principle forces two to
+coincide, say $r_i = r_j$ with $0 \le i < j \le \varphi(b)$. The same
+argument as in the proof of Proposition~\ref{prop:periodic-existence}
+shows that the digit sequence from position $i + 1$ onward repeats
+with block length at most $j - i \le \varphi(b)$, so the period is at
+most $\varphi(b)$.
+\end{proof}
+
+\begin{example}\label{ex:phi-not-tight}
+Proposition~\ref{prop:phi-bound} is rarely tight. For $b = 13$,
+$\varphi(13) = 12$, but
+\[
+  \frac{1}{13} = 0.\overline{076923}
+\]
+has period $6$, exactly half the bound. For $b = 21 = 3 \cdot 7$,
+$\varphi(21) = 12$, yet
+\[
+  \frac{1}{21} = 0.\overline{047619}
+\]
+also has period $6$. In both cases the true period is a proper divisor
+of $\varphi(b)$.
+\end{example}
+
+Proposition~\ref{prop:phi-bound} gives the right order of magnitude
+but can be loose by a factor of $2$ or more, and offers no insight
+into \emph{which} divisor of $\varphi(b)$ the period equals. The goal
+of this paper is to give a complete formula that
+takes the prime factorization of $b$ as input and returns the period and
+pre-period of any fraction in the lowest terms $a/b$. The result is the following.
+
+\medskip
+\begin{theorem}\label{lem:main-formula}
+Let $a/b$ be a fraction in lowest terms with
+\[
+  b = 2^\alpha \cdot 5^\beta \cdot p_1^{e_1} \cdots p_r^{e_r},
+\]
+where the $p_i$ are distinct primes coprime to $10$. Then the decimal
+expansion of $a/b$ has exactly $L = \max(\alpha, \beta)$ non-repeating
+digits, followed by a purely repeating block of length
+\[
+  \lcm\!\bigl(\lambda(p_1^{e_1}),\, \ldots,\, \lambda(p_r^{e_r})\bigr),
+\]
+where each
+\[
+  \lambda(p_i^{e_i}) \;=\; \lambda(p_i)\cdot p_i^{\max(e_i - 1 - s_i,\; 0)},
+  \qquad s_i = \nu_{p_i}(10^{\lambda(p_i)} - 1) - 1.
+\]
+\end{theorem}
+\medskip
+
+\section{The Period as a Multiplicative Order}\label{sec:order}
+
+Our first task is to reduce the definition of the period, a statement about decimal digits, into a statement about divisibility, and then into a statement about multiplicative order in $\Z / b \Z$. We carry out this reduction 
+in two steps. The first step, valid for any numerator, reformulates the 
+period as the smallest $k$ for which $b \mid a(10^k - 1)$. The second 
+step uses the coprimality of $a$ and $b$ to further to a
+condition on $10^k$ alone. This reveals that the period of $a/b$ is 
+equal to $\ord_b(10)$, and in particular does not depend on $a$.
+
+Before connecting the period to a divisibility condition, we note that 
+the assumption $\gcd(b, 10) = 1$ rules out any non-repeating prefix: 
+the decimal expansion of $a/b$ is purely periodic, with the repeating 
+block beginning immediately after the decimal point.
+
+\begin{lemma}\label{lem:purely-periodic}
+Let $a/b$ be a fraction in lowest terms with $\gcd(b, 10) = 1$ and 
+$b \ge 2$. Then the decimal expansion of $a/b$ is purely periodic with pre-period length 0.
+\end{lemma}
+
+\begin{proof}
+Suppose for contradiction that the expansion of $a/b$ has a 
+non-repeating prefix of length $s \ge 1$, followed by a repeating block 
+of some length $k$. So we may write
+\[
+  \frac{a}{b} = 0.d_1 d_2 \cdots d_s \,\overline{d_{s+1} \cdots d_{s+k}},
+\]
+where the digits $d_1, \ldots, d_s$ form the non-repeating prefix and 
+$d_{s+1} \cdots d_{s+k}$ is the block that repeats forever.
+
+Consider what happens when we multiply the fraction by $10^s$. In general, 
+multiplying a decimal by $10^s$ shifts the decimal point $s$ places to 
+the right, so the digits to the left of the new decimal point become the 
+integer part, and everything to the right becomes the new fractional 
+part. Applied to $a/b$,
+\[
+  10^s \cdot \frac{a}{b} 
+  = d_1 d_2 \cdots d_s . \,\overline{d_{s+1} \cdots d_{s+k}}.
+\]
+The integer part is $d_1 d_2 \cdots d_s$, and the fractional part 
+consumes exactly the non-repeating prefix: what remains after the new 
+decimal point begins with $d_{s+1}$, which by assumption is the start 
+of the repeating block. So the fractional part of $10^s \cdot (a/b)$ is 
+purely periodic with period $k$. 
+
+Now, a number with a purely periodic decimal of period $k$ is fixed in 
+its fractional part when we shift by a further $k$ places: multiplying 
+by $10^k$ and subtracting the original leaves an integer, because the 
+fractional parts cancel. Applying this to $10^s \cdot (a/b)$:
+\[
+  (10^k - 1) \cdot 10^s \cdot \frac{a}{b} 
+  = 10^{s+k} \cdot \frac{a}{b} - 10^s \cdot \frac{a}{b} \in \Z.
+\]
+From this, we see that $b \mid 10^s(10^k - 1)\,a$. Since 
+$\gcd(a, b) = 1$, we may cancel $a$ to obtain $b \mid 10^s(10^k - 1)$, 
+and since $\gcd(b, 10) = 1$ gives $\gcd(b, 10^s) = 1$, we conclude 
+$b \mid (10^k - 1)$.
+
+However, from this last statement we can derive $(10^k - 1)(a/b) \in \Z$, thus, multiplying $a/b$ itself (no preliminary shift by $10^s$) by 
+$10^k - 1$ gives an integer. Using our previous argument's logic in 
+reverse, this means the fractional part of $a/b$ is already purely 
+periodic with period $k$, with no non-repeating prefix at all. This 
+contradicts the assumption $s \ge 1$.
+\end{proof}
+
+Now that we have a condition for pure periodicity in hand, we can now translate the period into a 
+divisibility condition.
+
+\subsection{Connecting the period to a congruence condition}
+
+The following lemma is the bridge between decimal expansions and 
+congruence conditions. It follows from the observation that shifting the decimal 
+point by $k$ positions corresponds to multiplication by $10^k$, and that for a fraction that has period of length $k$, this shift
+preserves the repeating fractional part.
+
+\begin{lemma}\label{lem:period-as-divisibility}
+Let $a/b$ be a fraction with $\gcd(b, 10) = 1$. The period of $a/b$ is 
+the smallest positive integer $k$ such that $b \mid a(10^k - 1)$.
+\end{lemma}
+
+\begin{proof}
+The decimal expansion of $a/b$ repeats with block length $k$ if and only 
+if shifting by $k$ decimal places reproduces the fractional part as such:
+\[
+  10^k \cdot \frac{a}{b} - \frac{a}{b} \in \Z.
+\]
+Factoring the left-hand side yields $(10^k - 1)\,a/b \in \Z$, which 
+holds if and only if $b \mid a(10^k - 1)$. The period is by definition 
+the smallest $k$ for which this holds.
+\end{proof}
+
+\subsection{The multiplicative order and canceling the numerator}
+
+To remove the numerator from the condition $b \mid a(10^k - 1)$ we 
+need a basic fact: when $a$ and $b$ are coprime, $a$ is a unit in 
+$\Z/b\Z$ and can be cancelled from any divisibility statement in which 
+it appears as a factor. Before formalizing this, we introduce the following definition that will be used throughout the proofs of this paper.
+
+\begin{definition}\label{def:order}
+For integers $n$ and $m$ with $\gcd(n, m) = 1$ and $m \ge 2$, the 
+\emph{multiplicative order} of $n$ modulo $m$, written $\ord_m(n)$, 
+is the smallest positive integer $k$ such that $n^k \equiv 1 \pmod{m}$.
+\end{definition}
+
+That $\ord_m(10)$ exists whenever $\gcd(10, m) = 1$ requires brief 
+justification. The condition $\gcd(10, m) = 1$ says that $10$ is a unit 
+in $\Z/m\Z$, and hence belongs to the multiplicative group 
+$(\Z/m\Z)^*$, which is finite of order $\varphi(m)$. Every element of a 
+finite group has finite order, so there is some positive integer $k$ 
+with $10^k \equiv 1 \pmod{m}$, and the smallest such $k$ is well-defined. 
+We note that this argument applies to any $m$ coprime to $10$, not only 
+prime values.
+
+The following divisibility property follows from Definition~\ref{def:order} and 
+will be invoked repeatedly in Sections~\ref{sec:reduction} 
+and~\ref{sec:prime-power}.
+
+\begin{lemma}\label{lem:order-divides}
+If $10^k \equiv 1 \pmod{m}$, then $\ord_m(10) \mid k$.
+\end{lemma}
+
+\begin{proof}
+Let $d = \ord_m(10)$. By the division algorithm, write $k = qd + r$ with 
+$0 \le r < d$. Then
+\[
+  10^r = 10^{k - qd} = 10^k \cdot (10^d)^{-q} \equiv 1 \cdot 1^{-q} = 1 
+  \pmod{m}.
+\]
+If $r > 0$, this would contradict the minimality of $d$, since $r$ 
+would be a smaller positive integer satisfying the same congruence. 
+Hence $r = 0$, thus, $d \mid k$.
+\end{proof}
+
+We are now ready to combine the two steps. 
+Lemma~\ref{lem:period-as-divisibility} reformulates the period as a 
+divisibility condition, and the coprimality of $a$ and $b$ allows us to reduce to a pure congruence on $10^k$. The minimal such $k$ is 
+then $\ord_b(10)$.
+
+\begin{theorem}\label{thm:period-equals-order}
+Let $a/b$ be in lowest terms with $\gcd(b, 10) = 1$ and $b \ge 2$. 
+Then the period of $a/b$ equals $\ord_b(10)$. In particular, the period 
+depends only on $b$, not on the numerator $a$.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:period-as-divisibility}, the period is the smallest 
+positive integer $k$ such that $b \mid a(10^k - 1)$. Since 
+$\gcd(a, b) = 1$, the residue of $a$ is a unit in $\Z/b\Z$, so
+\[
+  b \mid a(10^k - 1) 
+  \;\;\Longleftrightarrow\;\; b \mid (10^k - 1) 
+  \;\;\Longleftrightarrow\;\; 10^k \equiv 1 \pmod{b}.
+\]
+The smallest positive $k$ satisfying the right-hand condition is 
+$\ord_b(10)$, which depends only on $b$.
+\end{proof}
+
+\begin{corollary}\label{cor:numerator-irrelevant}
+If $a, a'$ are both coprime to $b$ and $\gcd(b, 10) = 1$, then $a/b$ 
+and $a'/b$ have the same period.
+\end{corollary}
+
+This corollary explains the coincidence noted in the introduction: $2/7$, 
+$3/7$, and $6/7$ all have period $6$ because the period depends only on 
+the denominator. Theorem~\ref{thm:period-equals-order} requires 
+$\gcd(b, 10) = 1$; the next section handles the general case.
+
+\section{Reducing the Period of Any Fraction to Prime Powers}
+\label{sec:reduction}
+
+We now remove the restriction $\gcd(b, 10) = 1$ and allow arbitrary 
+denominators. The result is a two-stage reduction: factors of $2$ and 
+$5$ in $b$ produce a non-repeating prefix, and the remaining coprime-to-$10$ 
+part $m$ determines the periodic portion. Moreover, if $m$ is composite, 
+the Chinese Remainder Theorem further reduces $\ord_m(10)$ to a least 
+common multiple of prime-power orders, so that the full computation is 
+controlled by the values $\ord_{p^e}(10)$ for prime powers $p^e$ with 
+$p \nmid 10$. Those values are the subject of Section~\ref{sec:prime-power}.
+
+\subsection{The pre-period: stripping out factors of 2 and 5}
+
+Throughout the remainder of the paper we adopt the following notation. 
+For any integer $b \ge 2$, write
+\[
+  b = 2^\alpha \cdot 5^\beta \cdot m, \qquad \gcd(m, 10) = 1,
+\]
+where $\alpha = \nu_2(b)$, $\beta = \nu_5(b)$, and $m$ is the 
+coprime-to-$10$ part of $b$. Define $L = \max(\alpha, \beta)$.
+
+\begin{theorem}\label{thm:preperiod}
+Let $a/b$ be in lowest terms with $b = 2^\alpha \cdot 5^\beta \cdot m$ 
+and $\gcd(m, 10) = 1$. Then the decimal expansion of $a/b$ has exactly 
+$L = \max(\alpha, \beta)$ non-repeating digits. If $m = 1$ the expansion 
+terminates after $L$ digits; if $m > 1$, these $L$ digits are followed 
+by a purely periodic block of length $\ord_m(10)$.
+\end{theorem}
+
+\begin{proof}
+\textbf{Upper bound ($L$ steps suffice).} Compute
+\[
+  10^L \cdot \frac{a}{b} 
+  = \frac{2^L \cdot 5^L \cdot a}{2^\alpha \cdot 5^\beta \cdot m}
+  = \frac{a \cdot 2^{L - \alpha} \cdot 5^{L - \beta}}{m}.
+\]
+Both exponents $L - \alpha$ and $L - \beta$ are non-negative by the 
+definition of $L$, so the numerator $a' = a \cdot 2^{L-\alpha} \cdot 
+5^{L-\beta}$ is a positive integer. The denominator is $m$, which is 
+coprime to $10$. Moreover $\gcd(a', m) = 1$: since $a/b$ is in lowest 
+terms we have $\gcd(a, m) = 1$ (because $m \mid b$), and 
+$\gcd(2, m) = \gcd(5, m) = 1$ by the definition of $m$, so the extra 
+factors of $2$ and $5$ introduce no common factor with $m$. Thus 
+$a'/m$ is in lowest terms with denominator coprime to $10$. If $m = 1$, 
+the fraction $a'/m$ is an integer and the decimal of $a/b$ terminates; 
+if $m > 1$, Theorem~\ref{thm:period-equals-order} gives that $a'/m$ is 
+purely periodic with period $\ord_m(10)$. In either case, multiplying 
+by $10^L$ shifts the decimal point $L$ places to the right and produces 
+a number whose fractional part is purely periodic, so the pre-period of 
+$a/b$ is at most $L$.
+
+\smallskip
+
+\textbf{Lower bound (fewer than $L$ steps cannot work).} Suppose for 
+contradiction that the expansion of $a/b$ becomes purely periodic 
+starting at position $s + 1$ for some $s < L$. Then $10^s \cdot (a/b)$ 
+has a purely periodic fractional part with some period $k$, which means
+\[
+  (10^k - 1) \cdot 10^s \cdot \frac{a}{b} \in \Z,
+\]
+so $b \mid 10^s (10^k - 1)\, a$. Since $\gcd(a, b) = 1$, we may cancel 
+$a$ to obtain $b \mid 10^s(10^k - 1)$. In particular $2^\alpha \mid 
+10^s(10^k - 1)$; but $10^k - 1$ is odd (every power of $10$ ends in $0$, 
+so $10^k - 1$ ends in $9$), so $\nu_2(10^k - 1) = 0$, and all 
+$\alpha$ factors of $2$ must come from $10^s$. This forces $s \ge 
+\alpha$. An analogous argument can be made with the prime $5$: since $10 \equiv 0 
+\pmod{5}$, we have $10^k - 1 \equiv -1 \equiv 4 \pmod{5}$, so 
+$5 \nmid (10^k - 1)$, and thus $s \ge \beta$. Combining, 
+$s \ge \max(\alpha, \beta) = L$, contradicting $s < L$. 
+
+Therefore the pre-period is at least $L$, and combined with the upper 
+bound just proved, it must be exactly $L$.
+\end{proof}
+
+We illustrate the theorem with the following example.
+
+\begin{example}\label{ex:1-over-56}
+For $1/56$, we have $b = 56 = 2^3 \cdot 7$, so $\alpha = 3$, $\beta = 0$, 
+$m = 7$, and $L = 3$. The theorem predicts three non-repeating digits 
+followed by a block of length $\ord_7(10) = 6$. Indeed, 
+$1/56 = 0.017\overline{857142}$.
+\end{example}
+
+\subsection{Decomposing $\ord_m(10)$ over prime powers}
+
+Theorem~\ref{thm:preperiod} reduces the computation of periods to 
+understanding $\ord_m(10)$ for integers $m$ coprime to $10$. When 
+$m$ is itself a prime power this is a single quantity, computed 
+explicitly in Section~\ref{sec:prime-power}. When $m$ is composite, 
+the Chinese Remainder Theorem reduces the problem to its prime-power 
+factors.
+
+\begin{lemma}\label{lem:ord-lcm}
+Let $m = p_1^{e_1} \cdots p_r^{e_r}$ be a factorization into distinct 
+prime powers, each coprime to $10$. Then
+\[
+  \ord_m(10) = \lcm\!\bigl(\ord_{p_1^{e_1}}(10),\, \ldots,\, 
+  \ord_{p_r^{e_r}}(10)\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Let $k = \ord_m(10)$ and $L = \lcm(\ord_{p_1^{e_1}}(10), \ldots, 
+\ord_{p_r^{e_r}}(10))$.
+
+To show $k \mid L$: each $\ord_{p_i^{e_i}}(10)$ divides $L$ by 
+definition of $\lcm$, so $10^L \equiv 1 \pmod{p_i^{e_i}}$ for every 
+$i$. We want to combine these $r$ separate congruences into a single 
+congruence modulo $m = p_1^{e_1} \cdots p_r^{e_r}$. This is exactly 
+what the Chinese Remainder Theorem lets us do: when the moduli 
+$p_1^{e_1}, \ldots, p_r^{e_r}$ are pairwise coprime, an integer $N$ 
+satisfies $N \equiv 0 \pmod{p_i^{e_i}}$ for every $i$ if and only if 
+$N \equiv 0 \pmod{m}$. Applying this with $N = 10^L - 1$, the 
+congruences $10^L \equiv 1 \pmod{p_i^{e_i}}$ for all $i$ combine to 
+give $10^L \equiv 1 \pmod{m}$. By Lemma~\ref{lem:order-divides}, 
+$k \mid L$.
+
+To show $L \mid k$: $10^k \equiv 1 \pmod{m}$ implies $10^k \equiv 1 
+\pmod{p_i^{e_i}}$ for every $i$, so by Lemma~\ref{lem:order-divides} 
+each $\ord_{p_i^{e_i}}(10)$ divides $k$. Their least common multiple 
+$L$ then also divides $k$.
+
+Since $k \mid L$ and $L \mid k$ are both positive integers, $k = L$.
+\end{proof}
+
+Lemma~\ref{lem:ord-lcm} reduces the computation of the period for any 
+fraction to the computation of $\ord_{p^e}(10)$ for each prime power 
+$p^e$ in the factorization of the denominator, which will be discussed in Section~\ref{sec:prime-power}.
+
+\begin{example}\label{ex:1-over-42}
+For $1/42$, we have $b = 42 = 2 \cdot 3 \cdot 7$, so $\alpha = 1$, 
+$\beta = 0$, $m = 21$, and $L = 1$. By Lemma~\ref{lem:ord-lcm},
+\[
+  \ord_{21}(10) = \lcm(\ord_3(10), \ord_7(10)) = \lcm(1, 6) = 6,
+\]
+taking the prime-power values as given here; 
+Section~\ref{sec:prime-power} justifies them. So $1/42$ has one 
+non-repeating digit followed by a block of length $6$. Indeed, 
+$1/42 = 0.0\overline{238095}$.
+\end{example}
+
+
+%%-------------------------------------------------
+\section{The Period of $1/p^n$}\label{sec:prime-power}
+%%-------------------------------------------------
+
+The remaining computation is that of $\ord_{p^n}(10)$ for a single 
+prime power $p^n$ with $p \nmid 10$. For brevity, write 
+$\lambda(m) = \ord_m(10)$ throughout this section, and set 
+$\lambda = \lambda(p) = \ord_p(10)$. We also need the $p$-adic 
+valuation, which is defined as follows:
+
+\begin{definition}\label{def:p-adic}
+For a prime $p$ and a nonzero integer $m$, the \emph{$p$-adic valuation} 
+$\nu_p(m)$ is the largest non-negative integer $k$ such that $p^k \mid m$.
+\end{definition}
+Define $s = \nu_p(10^\lambda - 1) - 1$, which is non-negative since 
+$p \mid (10^\lambda - 1)$ by definition of $\lambda$.
+We now show the following.
+
+\begin{theorem}\label{thm:prime-power-period}
+For any prime $p$ with $p \nmid 10$, and with $\lambda = \ord_p(10)$ 
+and $s = \nu_p(10^\lambda - 1) - 1$,
+\[
+  \lambda(p^n) = \lambda \cdot p^{\max(n - 1 - s,\, 0)} 
+  \qquad \text{for all } n \ge 1.
+\]
+\end{theorem}
+
+The proof proceeds in two stages. Section~\ref{subsec:form} shows that 
+$\lambda(p^n)$ must take the form $\lambda \cdot p^e$ for some 
+$0 \le e \le n - 1$, using Fermat's Little Theorem and a binomial 
+expansion to establish divisibility in both directions. 
+Section~\ref{subsec:lifting} introduces a lemma on how $\nu_p(a^p - 1)$ 
+grows with iteration, and Section~\ref{subsec:pinning} combines these to 
+pin down the value of $e$ exactly. 
+
+
+\subsection{Proving $\lambda(p^n)$ has form $\lambda \cdot p^e$}\label{subsec:form}
+
+We now constrain $\lambda(p^n)$ for $n \ge 1$. The argument has two 
+halves: $\lambda$ divides $\lambda(p^n)$ because any period modulo 
+$p^n$ is also a period modulo $p$; and $\lambda(p^n)$ divides 
+$\lambda \cdot p^{n-1}$ by a standard binomial expansion.
+
+\begin{lemma}\label{lem:form-lambda-pe}
+For every $n \ge 1$, $\lambda(p^n) = \lambda \cdot p^e$ for some integer 
+$0 \le e \le n - 1$.
+\end{lemma}
+
+\begin{proof}
+Let $d = \lambda(p^n)$. 
+
+\smallskip
+
+First, we show $\lambda \mid d$. Since $10^d \equiv 1 \pmod{p^n}$ and 
+$p \mid p^n$, reducing modulo $p$ gives $10^d \equiv 1 \pmod{p}$. By 
+Lemma~\ref{lem:order-divides} applied at $m = p$, $\lambda \mid d$. 
+
+We will now show that $d \mid \lambda \cdot p^{n-1}$. The strategy is 
+to prove that $10^{\lambda \cdot p^{n-1}} \equiv 1 \pmod{p^n}$; 
+Lemma~\ref{lem:order-divides} then gives the divisibility.
+
+Since $p \mid (10^\lambda - 1)$ by definition of $\lambda$, we may 
+write $10^\lambda = 1 + cp$ for some integer $c$. Raising both sides 
+to the power $p^{n-1}$,
+\[
+  10^{\lambda \cdot p^{n-1}} = (1 + cp)^{p^{n-1}},
+\]
+and expanding the right-hand side by the binomial theorem,
+\[
+  (1 + cp)^{p^{n-1}} = 1 + \sum_{k=1}^{p^{n-1}} \binom{p^{n-1}}{k} 
+  (cp)^k.
+\]
+To establish that this equals $1$ modulo $p^n$, it suffices to show 
+that every term in the sum is divisible by $p^n$, which is equivalent to showing that 
+$\nu_p\!\bigl(\binom{p^{n-1}}{k}(cp)^k\bigr) \ge n$ for each 
+$1 \le k \le p^{n-1}$.
+
+Each term has two sources of $p$-divisibility: the binomial coefficient 
+and the power $(cp)^k$. We analyze each in turn.
+
+For the binomial coefficient, a standard identity (derived by direct manipulation of factorials) states that 
+for any prime $p$ and any $1 \le k \le p^{n-1}$,
+\[
+  \nu_p\!\binom{p^{n-1}}{k} = (n-1) - \nu_p(k).
+\]
+Intuitively: $\binom{p^{n-1}}{k}$ carries a factor of $p^{n-1}$ from 
+the numerator $p^{n-1}!$, partially cancelled by the $p$-divisibility 
+of $k!$ in the denominator. The $p$-adic valuation of $k!$ accounts 
+for exactly $\nu_p(k)$ of those $p$'s (this is where $k$'s own 
+divisibility by $p$ enters), so $n - 1 - \nu_p(k)$ factors of $p$ 
+survive in the binomial coefficient.
+
+For the power $(cp)^k$, we simply have $\nu_p\!\bigl((cp)^k\bigr) \ge 
+k$, with equality when $p \nmid c$.
+
+Combining, the $p$-adic valuation of the $k$-th term is at least
+\[
+  \bigl(n - 1 - \nu_p(k)\bigr) + k.
+\]
+We now show this is at least $n$, mainly, that $k - \nu_p(k) \ge 1$ for 
+every positive integer $k$. Writing $k = p^{\nu_p(k)} \cdot k'$ with 
+$\gcd(k', p) = 1$, we have $k \ge p^{\nu_p(k)} \ge \nu_p(k) + 1$, where 
+the second inequality is the familiar fact that $p^j \ge j + 1$ for 
+every $j \ge 0$ and every prime $p \ge 2$ (by induction: $p^{j+1} \ge 
+2 p^j \ge 2(j + 1) \ge j + 2$). Therefore $k - \nu_p(k) \ge 1$, and 
+the $k$-th term has $\nu_p \ge n$ as claimed.
+
+Every term in the sum is thus divisible by $p^n$, so
+\[
+  10^{\lambda \cdot p^{n-1}} = 1 + \sum_{k=1}^{p^{n-1}} 
+  \binom{p^{n-1}}{k}(cp)^k \equiv 1 \pmod{p^n}.
+\]
+By Lemma~\ref{lem:order-divides} applied at $m = p^n$, 
+$d \mid \lambda \cdot p^{n-1}$.
+
+% We will now show that $d \mid \lambda \cdot p^{n-1}$. Write $10^\lambda = 1 + cp$ 
+% for some integer $c$, which is possible since $p \mid (10^\lambda - 1)$. 
+% Then
+% \[
+%   10^{\lambda \cdot p^{n-1}} = (1 + cp)^{p^{n-1}},
+% \]
+% and expanding by the binomial theorem gives
+% \[
+%   (1 + cp)^{p^{n-1}} = 1 + \sum_{k=1}^{p^{n-1}} \binom{p^{n-1}}{k} 
+%   (cp)^k.
+% \]
+% For $1 \le k \le p^{n-1}$, the binomial coefficient $\binom{p^{n-1}}{k}$ 
+% is divisible by $p^{n-1 - \nu_p(k)}$ (a standard fact: 
+% $\nu_p\!\binom{p^{n-1}}{k} = n - 1 - \nu_p(k)$ whenever $1 \le k \le 
+% p^{n-1}$), and $(cp)^k$ contributes another factor of $p^k$. Thus each 
+% term has $\nu_p \ge (n - 1 - \nu_p(k)) + k$, and since 
+% $k \ge \nu_p(k) + 1$ for any positive integer $k$, this is at least 
+% $(n - 1) + 1 = n$. Therefore every term in the sum is divisible by 
+% $p^n$, and
+% \[
+%   10^{\lambda \cdot p^{n-1}} \equiv 1 \pmod{p^n}.
+% \]
+% By Lemma~\ref{lem:order-divides} applied at $m = p^n$, 
+% $d \mid \lambda \cdot p^{n-1}$.
+
+\smallskip
+
+Combining the two conclusions, $d / \lambda$ is a positive integer 
+dividing $p^{n-1}$, so $d / \lambda = p^e$ for some $0 \le e \le n - 1$.
+\end{proof}
+
+Lemma~\ref{lem:form-lambda-pe} restricts $\lambda(p^n)$ to one of the 
+$n$ candidate values $\lambda, \lambda p, \lambda p^2, \ldots, 
+\lambda p^{n-1}$. To determine which, we explore
+how divisibility by powers of $p$ changes when we raise $10^\lambda$ 
+to higher powers of $p$.
+
+\subsection{The valuation lifting lemma}\label{subsec:lifting}
+
+In this section, we prove that raising 
+an integer $a \equiv 1 \pmod{p}$ to the $p$-th power increases its 
+``distance from $1$'' in the $p$-adic sense by exactly one, provided 
+the starting distance is at least $1$.
+
+\begin{lemma}\label{lem:lifting}
+Let $p$ be an odd prime, and let $a$ be an integer with $a \equiv 1 
+\pmod{p}$ and $\nu_p(a - 1) = r \ge 1$. Then $\nu_p(a^p - 1) = r + 1$.
+\end{lemma}
+
+\begin{proof}
+Write $a = 1 + c p^r$ with $p \nmid c$. Then
+\[
+  a^p - 1 = (1 + c p^r)^p - 1 = \sum_{k=1}^{p} \binom{p}{k} c^k p^{rk}.
+\]
+We examine the contributions term by term.
+
+The $k = 1$ term is $\binom{p}{1} c \cdot p^r = c \cdot p^{r+1}$. 
+Since $p \nmid c$, this term has $\nu_p$ equal to exactly $r + 1$.
+
+For $2 \le k \le p - 1$, the binomial coefficient $\binom{p}{k}$ is 
+divisible by $p$ (a standard fact), contributing a factor of $p$, and 
+$p^{rk}$ contributes $p^{rk}$, so the term has $\nu_p \ge 1 + rk$. 
+Since $r \ge 1$ and $k \ge 2$, we have $1 + rk \ge 1 + 2r \ge r + 2 > 
+r + 1$.
+
+For $k = p$, the term is $c^p p^{rp}$, which has $\nu_p \ge rp$. Since 
+$p \ge 3$ (we assumed $p$ odd) and $r \ge 1$, $rp \ge 3 > r + 1$ when 
+$r = 1$, and more generally $rp \ge r + 2 > r + 1$ for all $r \ge 1$.
+
+So the $k = 1$ term has the uniquely lowest $p$-adic valuation among 
+all terms; all other terms have strictly higher $\nu_p$. Therefore 
+$\nu_p(a^p - 1) = r + 1$.
+\end{proof}
+
+The hypothesis $r \ge 1$ is essential: the argument collapses at 
+$r = 0$, and in fact the conclusion fails there. We will apply the 
+lemma only when $r \ge 1$, which is automatic from the 
+definition $s = \nu_p(10^\lambda - 1) - 1 \ge 0$, so that 
+$\nu_p(10^\lambda - 1) = 1 + s \ge 1$.
+
+\subsection{Finding the exact $e$}\label{subsec:pinning}
+
+We now apply Lemma~\ref{lem:lifting} iteratively to compute 
+$\nu_p(10^{\lambda p^j} - 1)$ for all $j \ge 0$. Combined with 
+Lemma~\ref{lem:form-lambda-pe}, this determines $\lambda(p^n)$ exactly.
+
+\begin{proof}[Proof of Theorem~\ref{thm:prime-power-period}]
+We claim that for all $j \ge 0$,
+\begin{equation}\label{eq:valuation-growth}
+  \nu_p\bigl(10^{\lambda p^j} - 1\bigr) = 1 + s + j.
+\end{equation}
+The case $j = 0$ is the definition of $s$. For the inductive step, 
+assume \eqref{eq:valuation-growth} holds for some $j \ge 0$. Setting 
+$a = 10^{\lambda p^j}$, we have $a \equiv 1 \pmod{p}$ and 
+$\nu_p(a - 1) = 1 + s + j \ge 1$, so Lemma~\ref{lem:lifting} applies 
+and gives $\nu_p(a^p - 1) = 2 + s + j$. Since 
+$a^p = 10^{\lambda p^{j+1}}$, this is the case $j+1$ of 
+\eqref{eq:valuation-growth}.
+
+By Lemma~\ref{lem:form-lambda-pe}, $\lambda(p^n) = \lambda \cdot p^e$ 
+for some $0 \le e \le n - 1$. The definition of $\lambda(p^n)$ 
+requires $10^{\lambda p^e} \equiv 1 \pmod{p^n}$, which by 
+\eqref{eq:valuation-growth} is equivalent to $1 + s + e \ge n$ and
+$e \ge n - 1 - s$. Minimality of $\lambda(p^n)$ forces $e$ to be the 
+smallest non-negative integer satisfying this, namely
+\[
+  e = \max(n - 1 - s,\; 0).
+\]
+Therefore $\lambda(p^n) = \lambda \cdot p^{\max(n-1-s,\, 0)}$.
+\end{proof}
+
+
+\subsection{Examples and exceptional primes}\label{subsec:examples}
+
+We illustrate the theorem with three examples: a generic case where 
+$s = 0$, and the two exceptional primes below $1000$ where $s = 1$.
+
+\begin{example}[$p = 7$, generic case]\label{ex:p-7}
+Here $\lambda = \ord_7(10) = 6$, and $\nu_7(10^6 - 1) = \nu_7(999999) 
+= 1$, so $s = 0$. Theorem~\ref{thm:prime-power-period} predicts 
+$\lambda(7^n) = 6 \cdot 7^{n-1}$. We verify the first few:
+\[
+  \lambda(7) = 6, \qquad \lambda(49) = 42, \qquad \lambda(343) = 294,
+\]
+matching $6 \cdot 7^0$, $6 \cdot 7^1$, $6 \cdot 7^2$ respectively.
+\end{example}
+
+\begin{example}[$p = 3$, exceptional case]\label{ex:p-3}
+Here $\lambda = \ord_3(10) = 1$ (since $10 \equiv 1 \pmod{3}$), and 
+$\nu_3(10^1 - 1) = \nu_3(9) = 2$, so $s = 1$. 
+Theorem~\ref{thm:prime-power-period} predicts $\lambda(3^n) = 
+1 \cdot 3^{\max(n - 2, 0)} = 3^{\max(n-2, 0)}$. The period stays at 
+$1$ for $n = 1$ and $n = 2$, then starts growing:
+\[
+  \lambda(3) = 1, \quad \lambda(9) = 1, \quad \lambda(27) = 3, \quad 
+  \lambda(81) = 9, \quad \lambda(243) = 27.
+\]
+This matches the formula exactly.
+\end{example}
+
+A search over all primes $p < 1000$ with $p \nmid 10$ found only 
+$p = 3$ and $p = 487$ with $\nu_p(10^\lambda - 1) \ne 1$; all others 
+have $s = 0$ and so obey the ``generic'' formula $\lambda(p^n) = 
+\lambda \cdot p^{n-1}$. Primes with $s \ge 1$ are known as 
+\emph{Wieferich-like primes with respect to base $10$}, and are 
+conjectured but not known to be infinite. The formula in 
+Theorem~\ref{thm:prime-power-period} handles both the generic and 
+exceptional cases uniformly, with the parameter $s$ absorbing the 
+anomaly.
+
+
+%%-------------------------------------------------
+\section{Proof of the Main Theorem}\label{sec:main-proof}
+%%-------------------------------------------------
+
+We now assemble the results of Sections~\ref{sec:order}, 
+\ref{sec:reduction}, and~\ref{sec:prime-power} into a proof of Theorem~\ref{lem:main-formula}, restated below.
+
+\textbf{Theorem~\ref{lem:main-formula}}. \textit{
+Let $a/b$ be a fraction in lowest terms with
+\[
+  b = 2^\alpha \cdot 5^\beta \cdot p_1^{e_1} \cdots p_r^{e_r},
+\]
+where the $p_i$ are distinct primes coprime to $10$. Then the decimal
+expansion of $a/b$ has exactly $L = \max(\alpha, \beta)$ non-repeating
+digits, followed by a purely repeating block of length
+\[
+  \lcm\!\bigl(\lambda(p_1^{e_1}),\, \ldots,\, \lambda(p_r^{e_r})\bigr),
+\]
+where each
+\[
+  \lambda(p_i^{e_i}) \;=\; \lambda(p_i)\cdot p_i^{\max(e_i - 1 - s_i,\; 0)},
+  \qquad s_i = \nu_{p_i}(10^{\lambda(p_i)} - 1) - 1.
+\]}
+
+\begin{proof}
+Write $m = p_1^{e_1} \cdots p_r^{e_r}$, so that $b = 2^\alpha \cdot 
+5^\beta \cdot m$ with $\gcd(m, 10) = 1$.
+
+\smallskip
+
+\emph{Pre-period.} By Theorem~\ref{thm:preperiod}, the decimal 
+expansion of $a/b$ has exactly $L = \max(\alpha, \beta)$ non-repeating 
+digits, after which it is purely periodic with period $\ord_m(10)$.
+
+\smallskip
+
+\emph{Period.} By Lemma~\ref{lem:ord-lcm},
+\[
+  \ord_m(10) = \lcm\!\bigl(\ord_{p_1^{e_1}}(10),\, \ldots,\, 
+  \ord_{p_r^{e_r}}(10)\bigr),
+\]
+and by Theorem~\ref{thm:prime-power-period}, each factor is
+\[
+  \ord_{p_i^{e_i}}(10) = \lambda(p_i^{e_i}) = \lambda(p_i) \cdot 
+  p_i^{\max(e_i - 1 - s_i,\, 0)}
+\]
+with $s_i = \nu_{p_i}(10^{\lambda(p_i)} - 1) - 1$.
+
+\smallskip
+
+\emph{Independence from $a$.} By Theorem~\ref{thm:period-equals-order} 
+and its corollary, $\ord_m(10)$ depends only on $m$ (and hence only on 
+$b$), not on the numerator $a$. The pre-period $L = \max(\alpha, \beta)$ 
+also depends only on $b$.
+
+\smallskip
+
+Combining these three observations yields the Main Theorem.
+\end{proof}
+
+We close with a worked example that exercises every component of the 
+theorem.
+
+\begin{example}[$13/1400$]\label{ex:1-over-1400}
+Factoring the denominator, $1400 = 2^3 \cdot 5^2 \cdot 7$, so 
+$\alpha = 3$, $\beta = 2$, $m = 7$, and $L = \max(3, 2) = 3$. The 
+pre-period is $3$ digits. For the period, the only prime power in $m$ 
+is $7$ itself, and by Example~\ref{ex:p-7} we have $\lambda(7) = 6$. 
+So the period is $\lcm(6) = 6$. Therefore, Theorem~\ref{lem:main-formula} therefore predicts 
+three non-repeating digits followed by a block of length $6$. Indeed,
+\[
+  \frac{13}{1400} = 0.009\overline{285714},
+\]
+confirming the prediction.
+\end{example}
+
+%%-------------------------------------------------
+\section{Group Theory Perspective on Periods} \label{sec:group_theory}
+%%-------------------------------------------------
+Following the previous sections, we have derived a method to determine the period of an arbitrary fraction by decomposing it into a product of prime-power fractions. This allows us to find the period of any fraction $\frac{a}{b}$ given that we know the period of $\frac{1}{p}$ for all prime natural numbers $p$ that divide $b$. In this section, we will utilize the results of Lemma \ref{lem:period-as-divisibility} and analyze the group theory implications of this lemma to create conditions for the values of the possible periods of $\frac{1}{p}$. Following this, we will also look how, as a consequence of this lemma, we can determine classes of natural numbers that certain to have specific periods.\\
+
+To begin, the condition proven in Lemma \ref{lem:period-as-divisibility}, when applied to a fraction $\frac{a}{b}=\frac{1}{p}$ reads that the period of $\frac{1}{p}$ is the smallest positive integer $k$ such that $p$ | $10^k-1$ for all $p\notin \{2,5\}$. This is equivalent to stating that $10^k=n*p+1$ for some arbitrary integer $n$. Redefining this as a statement in terms of modulo $p$, this condition is equivalent to stating that $k$ is the smallest positive integer $k$ such that $10^k=1\mod{p}$.\\
+
+By redefining Lemma \ref{lem:period-as-divisibility} in this way, we see an alternative representation of this problem of determining the period of $\frac{1}{p}$ in a group theory context. Namely, this problem is the same as determining the order of the subgroup generated by $10$ in the multiplicative group of integers modulo $p$, a group that we will refer to as $(\mathbb{Z}/p\mathbb{Z})^X$. Using this definition that $\lambda(\frac{1}{p})=\ord_p(10)$ allows us to apply various theorems relating to cyclic groups, like $(\mathbb{Z}/p\mathbb{Z})^X$, to limit the possible values of the size of this subgroup, and in turn the period of $\frac{1}{p}$. We will now prove some of the properties of $\lambda(\frac{1}{p})$ using the group structure established and Lagrange's Theorem.
+
+\begin{lemma} \label{lem:lagrange_divisibility}
+    For any prime $p$, $\lambda(\frac{1}{p}) | (p-1)$
+\end{lemma}
+\begin{proof}
+    By Lagrange's Theorem, since $10$ generates a subgroup of order $\ord_p(10)$ within $(\mathbb{Z}/p\mathbb{Z})^X$, the order of that subgroup must divide the order of $(\mathbb{Z}/p\mathbb{Z})^X$. The order of the multiplicative group of integers modulo $p$ is given by $\phi(p)$, the Euler totient function of $p$. However, since $p$ is prime $\phi(p)=p-1$, so $(\mathbb{Z}/p\mathbb{Z})^X$ has order $p-1$. As a result, it must be the case that $\lambda(\frac{1}{p})=\ord_p(10)|(p-1)$. Giving the desired conclusion that $$\lambda(\frac{1}{p}) | (p-1)$$
+\end{proof}
+
+This result allows us to drastically limit the possible values of $\lambda(\frac{1}{p})$ from essentially any positive integer being a candidate, to only the select few integers that divide $p-1$. This result also corroborates the proof that periods cannot be infinite, as $\ord_p(10)$ must be less than or equal to $p-1$ for Lagrange's Theorem to hold and in turn $\frac{1}{p}$ cannot have a period as large as or larger than its denominator. This places an upper bound on the period of $\frac{1}{p}$. Now, within this framework, we can also form a lower bound, proving that primes of a sufficient size can only have a certain range of period lengths.
+
+\begin{theorem} \label{thm:period_bounds}
+    $\log(p) < \lambda(\frac{1}{p})\leq p-1$
+\end{theorem}
+\begin{proof}
+    \underline{Upper Bound}: Follows directly from Lemma \ref{lem:lagrange_divisibility}. Since $\lambda(\frac{1}{p}) | (p-1)$, it follows that $\lambda(\frac{1}{p})\leq p-1$ \\
+    \underline{Lower Bound}: For the sake of contradiction, assume that $\log(p) \geq \lambda(\frac{1}{p})$, then that implies that $10^{\log(p)} \geq 10^{\lambda(\frac{1}{p})}=10^k$. Rearranging this inequality, we get that $10^k\leq p$. However, if $10^k\leq p$, then since $10^k$ is always divisible by 10, it cannot be prime, and so $ p\neq 10^k$. This means that the only possible case is that $10^k< p$ in which case $10^k=10^k\mod{p}$. However, since $k$ cannot equal $0$, $10^k\neq1\mod{p}$ which contradicts the definition of $k$. As such, it's impossible for $\log(p) \geq \lambda(\frac{1}{p})$, it must be that $\log(p) < \lambda(\frac{1}{p})$.\\
+    
+    Combining the two inequalities, we get the desired inequality that $$\log(p) < \lambda(\frac{1}{p})\leq p-1$$
+\end{proof}
+
+While this is a loose bound for large primes, it allows for us to eliminate certain potential period lengths on the lower end of the spectrum. For example, for any $p>100$, the lower bound establishes that even though $p-1$ must be even, and is therefore divisible by both $1$ and $2$, neither may be the period of $\frac{1}{p}$ since $log(p)>2$. As such, the lower bound allows for the elimination of many of the common small factors of $p-1$ as candidates for $\lambda(\frac{1}{p})$ once $p$ is sufficiently large. Another consequence of this is that the period of $\frac{1}{p}$ is generally increasing as $p$ gets larger as this lower bound increases the minimum value of the period.\\
+
+Having established an upper and lower bound for $\lambda(\frac{1}{p})$, along with the condition of needing to divide $p-1$, we have greatly reduced the possible values of the period for an arbitrary fraction $\frac{1}{p}$. Now that we have created a method to determine the period of an arbitrary fraction, we ask the opposite. Is it possible to find a fraction of an arbitrary period? To answer this question, we will look back on Lemma \ref{lem:period-as-divisibility} and see how by interpreting this condition differently, we can map out all fractions of the form $\frac{1}{b}$ with a desired period and determine a set of elements for which we can immediately determine their period just by inspection.\\
+
+\subsection{Determining all unit fractions of period $k$}
+Earlier in this section, we mentioned that another representation of Lemma \ref{lem:period-as-divisibility} is that $10^k=n*b+1$ for some arbitrary integer $n$. As the original lemma only mentions that $b$ must be coprime to 10, this condition also holds for not necessarily prime integers $b$, so long as $b$ does not have factors of $2$ or $5$. From this representation, we get that $\frac{1}{b}$ has period $k$ if and only if $k$ is the smallest positive integer, such that $(10^k-1)$ is divisible by $b$. We can use this definition to map out ever possible fraction of period $k$ recursively by taking $k=\gamma$, finding the prime factorization of $10^\gamma-1$ and then finding all combinations of prime factors that produce integers, $\tau_i$, not within the range of fractions of any shorter period. This will mean that $k=\gamma$ is the smallest case where the condition holds, and as a result, $\frac{1}{\tau_i}$ must have period $\gamma$ for all $i$. We will start with the $k=1$, $k=2$, and $k=3$ case, and then mention a pattern that can be noticed for any general value of $k$.
+
+\begin{example}[Unit fractions of period $k=1$] Set $k=1$, we get $10^1-1=n*b$ which becomes $9=n*b$. Now decomposing $9=3*3*1$, we find that the only values that can satisfy $9=n*b$ are the arbitrary products of this decomposition. As such, ignoring $1$, we get the values $\{3,9\}$ are the only possible values of $b$ for $k=1$. As such $\lambda(\frac{1}{3})=\lambda(\frac{1}{9})=1$. However, as shown in Theorem \ref{thm:preperiod}, an additional factor of $\frac{1}{2^\alpha \cdot5^\beta}$ only increases the number of non-repeating decimals without changing the period, we can represent all fractions with period $k=1$ as $\frac{1}{3\cdot2^\alpha \cdot5^\beta}$ or $\frac{1}{9\cdot2^\alpha \cdot5^\beta}$ for any natural number $\alpha,\beta$ including $0$.
+\end{example}
+
+\begin{example}[Unit fractions of period $k=2$] Now, set $k=2$, we get $10^2-1=n*b$ which becomes $99=n*b$, where $99=3*3*11$. All of the products of these prime factors are $\{3,9,11,33,99\}$. However, since we are searching for the minimum value of $k$ such that these factors divide $10^k-1$, we must remove the factors that appeared for $k=1$. As such, the list decreases to $\{11,33,99\}$. Similarly, we now know that all unit fractions with period $\lambda=2$ can be represented as one of $\{\frac{1}{11\cdot2^\alpha \cdot5^\beta},\frac{1}{33\cdot2^\alpha \cdot5^\beta},\frac{1}{99\cdot2^\alpha \cdot5^\beta}\}$
+\end{example}
+
+\begin{example}[Unit fractions of period $k=3$] For $k=3, 10^3-1=n*b$, so $n*b=999=3*3*111=3*3*3*37$. With these factors, we get that the new products of these factors are $\{27,111,333,999\}$. So all of the fractions of period $k=3$ can be written as $\{\frac{1}{27\cdot2^\alpha \cdot5^\beta},\frac{1}{111\cdot2^\alpha \cdot5^\beta},\frac{1}{333\cdot2^\alpha \cdot5^\beta},\frac{1}{999\cdot2^\alpha \cdot5^\beta}\}$
+\end{example}
+
+As we see from these examples, we are capable of determining every unit fraction of a given period by following this recursive method of taking the prime factorization of $10^k-1$ and finding the combination of products that have not appeared in any smaller values of $k$. However, this process still makes it difficult to find a fraction of a large value of $k$, like for example $k=493$. However, we can notice a pattern about this recursive process that allows us to identify infinitely many, though not necessarily all, unit fractions of any arbitrary period $k$ without the need for this recursive process. Specifically, we must look at what the value $10^k-1$ for an arbitrary $k$.\\
+
+By inspection, we see that taking $10^k-1$ for any arbitrary $k$ with give use a repetition of $9$ repeated $k$ times. Since all of the $9$s are divisible by both $3$ and $9$, we get that $10^k-1=3*3*\frac{10^k-1}{9}$, where since we've divided the repeated nines by $3*3=9$, we get that $\frac{10^k-1}{9}$ is equal to $1$ repeated $k$ times. These terms of repeated ones are known as a repunit, and we will denote the $k$th repunit as $R_k=\frac{10^k-1}{9}$. While we can't tell if $R_k$ can be further decomposed, we can now prove an important statement about these repunits. That is, that $\lambda(\frac{1}{R_k})=k$ for any $k>1$  
+\begin{theorem} \label{thm:Repunit_period}
+    $\lambda(\frac{1}{R_k})=k$ for all $k>1$ within the positive integers
+\end{theorem}
+
+\begin{proof}
+    To show that $\lambda(\frac{1}{R_k})=k$, we must show that $R_k$ divides $10^k-1$, and also that $R_k$ does not divide $10^{k'}-1$ for any $k'<k$. \\
+    The first point comes by the definition of the repunits. Since $R_k=\frac{10^k-1}{9}$, $\frac{10^k-1}{R_k}=9$ for all $k$. This already tells us that $\lambda(\frac{1}{R_k})\leq k$ for all $k$, so to prove that they are equal, we need to show that there exists no $k'<k$ such that $R^k | 10^{k'-1}$.\\
+    To do this, we can look at the structure of the repunits. By definition $R_{k'}=\frac{10^{k'}-1}{9}<10^{k'} $, where $10^k$ is equal to $1$ followed by $k'$ zeroes. While $R_k$ is equal to one repeated $k$ times, which is equivalent to one repeated $k$ times or 1 followed by $k-1$ ones. However if $k>k'$, then $k-1\geq k'$. If $k-1>k'$, then $R_k>10^{k'}$ since $R_k$ has more digits, and if $k-1=k'$, $R_k$ is still larger than $10^k$ since while the two may have the same number of digits, the repeated ones are larger than the repeated zeroes. So, in either case $R_k>10^{k'}$ and as a result, cannot divide $10^{k'}-1$ for any $k'<k$. \\
+
+    Since $R_k$ divides $10^k-1$ and does not divide $10^{k'}-1$ for any $k'<k$, it must be the case the $\frac{1}{R_k}$ has period $k$
+\end{proof}
+From this realization, we can create infinitely unit fractions with period $k$ by taking the $k$th repunit as using the fact the a $2^\alpha*5^\beta$ term does not affect the period, tho get that there are infinitely many unit fractions of the form $\{\frac{1}{R_k*2^\alpha*5^\beta},\frac{1}{3*R_k*2^\alpha*5^\beta},\frac{1}{9*R_k*2^\alpha*5^\beta}\}$ for any positive integer $\alpha,\beta$ including $0$. The times $\frac{1}{3}$ and times $\frac{1}{9}$ follows from the fact that the same logic can be used to show that $\lambda(\frac{1}{R_k})=\lambda(\frac{1}{3R_k})=\lambda(\frac{1}{9R_k})=k$\\
+
+While these are not necessarily all of the unit fractions of period $k$, they can all be found using the recursive method outlined in the previous examples. However, knowing that $\frac{1}{R_k}$ has period $k$ for all $k>1$, and that there are repunits of any positive integer values of $k$ allows us to find a fraction of any arbitrary period we desire. As such we have outlined a recursive method to determine all of the unit fractions of period $k$, while also determining that $\frac{1}{R_k}$ is guaranteed to have period $k$, for all $k>1$, allowing us to easily find a selection of fractions of arbitrary period.
+%%-------------------------------------------------
+\section{A Probabilistic Perspective on Periods}\label{sec:probabilistic}
+%%-------------------------------------------------
+
+Sections~\ref{sec:order}--\ref{sec:main-proof} give a complete formula for
+the period of any single fraction $a/b$. A natural next question is how
+those periods are distributed as the prime varies: of all primes
+$p \le X$, what fraction yield a period equal to $p - 1$? What fraction
+yield a period equal to $(p-1)/2$? In this section we recast the period
+as the index of $10$ in the cyclic group $(\Z/p\Z)^*$, derive the exact
+distribution of that index when one samples a uniformly random element of
+the group, and use it to predict the empirical distribution of periods
+across primes. The case of maximal period turns out to be classical: it is
+exactly the setting of Artin's conjecture.
+
+\subsection{The index of an element and its connection to $\lambda(p)$}
+\label{subsec:index}
+
+Throughout this section, $p$ denotes a prime with $p \neq 2$ and $p \neq 5$,
+and $G = (\Z/p\Z)^*$ denotes the multiplicative group of nonzero residues
+modulo $p$, which is cyclic of order $p - 1$. As before, $\lambda(p) =
+\ord_p(10)$, and $\varphi$ is Euler's totient function.
+
+\begin{definition}\label{def:index}
+For $g \in G$, the \emph{index} of $g$ is the positive integer
+\[
+    \ind(g) \;:=\; \frac{|G|}{\ord(g)} \;=\; \frac{p - 1}{\ord(g)}.
+\]
+\end{definition}
+
+By Lagrange's theorem applied to the cyclic subgroup $\langle g \rangle$,
+$\ord(g)$ divides $|G| = p - 1$, so $\ind(g)$ is always a positive divisor
+of $p - 1$. The index is the standard group-theoretic index of
+$\langle g \rangle$ inside $G$.
+
+Specializing to $g = 10$ and combining with
+Theorem~\ref{thm:period-equals-order},
+\[
+    \ind(10) \;=\; \frac{p - 1}{\lambda(p)},
+\]
+so the index of $10$ records exactly how the period of $1/p$ compares to
+the maximum possible value $p - 1$. Index $1$ corresponds to a
+\emph{full-reptend prime} (period $p - 1$); index $d$ in general
+corresponds to period $(p - 1)/d$.
+
+\subsection{Exact distribution of the index in $(\Z/p\Z)^*$}
+\label{subsec:distribution}
+
+For each prime $p$, take the probability space $\Omega_p = G$ with the
+uniform measure $\mathbb{P}(\{g\}) = 1/(p-1)$, and let $D_p$ denote the
+index of a uniformly random element of $G$. The following theorem gives
+the distribution of $D_p$ in closed form.
+
+\begin{theorem}\label{thm:index-distribution}
+Let $p$ be a prime with $p \neq 2$ and $p \neq 5$, and let $d$ be a
+positive divisor of $p - 1$. Then
+\[
+    \mathbb{P}(D_p = d) \;=\; \frac{\varphi\!\left((p-1)/d\right)}{p - 1}.
+\]
+If $d \nmid (p-1)$, then $\mathbb{P}(D_p = d) = 0$.
+\end{theorem}
+
+\begin{proof}
+Since $G$ is cyclic of order $p - 1$, fix a generator $g_0$. Every element
+of $G$ can be written uniquely as $g_0^k$ for some $k \in \{0, 1, \ldots,
+p - 2\}$. By Lagrange's theorem applied to cyclic groups,
+$\ord(g_0^k) = (p - 1)/\gcd(k, p - 1)$, so
+\[
+    D_p(g_0^k) = d
+    \;\Longleftrightarrow\;
+    \ord(g_0^k) = \frac{p - 1}{d}
+    \;\Longleftrightarrow\;
+    \gcd(k, p - 1) = d.
+\]
+The condition $\gcd(k, p - 1) = d$ forces $d \mid k$, so write $k = d\ell$
+with $\ell \in \{0, 1, \ldots, (p-1)/d - 1\}$. Factoring $d$ out of both
+arguments of the gcd,
+\[
+    \gcd(k, p - 1) \;=\; \gcd\!\left(d \ell,\, d \cdot \tfrac{p-1}{d}\right)
+    \;=\; d \cdot \gcd\!\left(\ell,\, \tfrac{p-1}{d}\right),
+\]
+so $\gcd(k, p - 1) = d$ if and only if $\gcd(\ell, (p-1)/d) = 1$. By the
+definition of Euler's totient, the number of such $\ell$ is
+$\varphi((p-1)/d)$. Dividing by $|G| = p - 1$ yields the stated
+probability. If $d \nmid (p-1)$, no element of $G$ has order $(p-1)/d$,
+so the probability is $0$.
+\end{proof}
+
+\begin{example}\label{ex:p-7-distribution}
+For $p = 7$ we have $p - 1 = 6$, with divisors $1, 2, 3, 6$.
+Theorem~\ref{thm:index-distribution} gives
+\[
+    \mathbb{P}(D_7 = 1) = \tfrac{\varphi(6)}{6} = \tfrac{2}{6}, \quad
+    \mathbb{P}(D_7 = 2) = \tfrac{\varphi(3)}{6} = \tfrac{2}{6}, \quad
+    \mathbb{P}(D_7 = 3) = \tfrac{\varphi(2)}{6} = \tfrac{1}{6}, \quad
+    \mathbb{P}(D_7 = 6) = \tfrac{\varphi(1)}{6} = \tfrac{1}{6},
+\]
+summing to $1$ as expected.
+\end{example}
+
+\subsection{Averaging over primes: a conjecture}\label{subsec:averaging}
+
+Theorem~\ref{thm:index-distribution} is a statement about a single prime
+$p$. To predict the distribution of periods $\lambda(p)$ as $p$ varies,
+we average the per-prime probability across primes.
+
+Let
+\[
+    \pi(X) \;:=\; |\{p \le X : p \text{ prime},\; p \neq 2,\; p \neq 5\}|,
+\]
+and let $p_d(X)$ denote the observed proportion of such primes whose
+period index $\ind(10) = (p-1)/\lambda(p)$ equals $d$. Define the
+\emph{predicted proportion} by averaging the per-prime probability from
+Theorem~\ref{thm:index-distribution}:
+\[
+    \widehat{p}_d(X)
+    \;:=\; \frac{1}{\pi(X)}
+    \sum_{\substack{p \le X \\ p \text{ prime},\; p \neq 2,\; p \neq 5 \\
+    d \mid p - 1}} \frac{\varphi((p-1)/d)}{p - 1}.
+\]
+Note that $\widehat{p}_d(X)$ is purely a cyclic-group quantity: it
+records, averaged over primes $p \le X$, the probability that a uniformly
+random element of $(\Z/p\Z)^*$ has index $d$. It does not refer to $10$
+in any way.
+
+\begin{conjecture}\label{conj:agreement}
+For every fixed positive integer $d$, both limits
+\[
+    p_d^\infty \;:=\; \lim_{X \to \infty} p_d(X), \qquad
+    \widehat{p}_d^{\,\infty} \;:=\; \lim_{X \to \infty} \widehat{p}_d(X)
+\]
+exist, and they are equal.
+\end{conjecture}
+
+We computed both quantities at $X = 10{,}000$ for the smallest values of
+$d$, and they agree to within $1$--$4\%$:
+
+\begin{center}
+\begin{tabular}{rrrr}
+\hline\hline
+Index $d$ & Observed $p_d(10{,}000)$ & Predicted $\widehat{p}_d(10{,}000)$
+& Ratio \\
+\hline
+1 & 38.1\% & 37.4\% & 1.02 \\
+2 & 29.3\% & 28.2\% & 1.04 \\
+3 & 6.9\%  & 6.6\%  & 1.03 \\
+4 & 6.9\%  & 7.0\%  & 0.98 \\
+6 & 5.0\%  & 5.0\%  & 0.99 \\
+8 & 1.7\%  & 1.7\%  & 1.00 \\
+\hline\hline
+\end{tabular}
+\end{center}
+
+The closeness of the two columns is strong empirical evidence for
+Conjecture~\ref{conj:agreement} in the range we can compute: the period
+of $1/p$ behaves, statistically, exactly as if $10$ were a uniformly
+random element of $(\Z/p\Z)^*$.
+
+\subsection{Connection to Artin's conjecture}\label{subsec:artin}
+
+The case $d = 1$ of Conjecture~\ref{conj:agreement} has a classical
+interpretation. The condition $\ind(10) = 1$ means $\langle 10 \rangle =
+(\Z/p\Z)^*$, i.e. $10$ is a primitive root modulo $p$, equivalently
+$\lambda(p) = p - 1$. Such primes are the \emph{full-reptend primes}
+for base $10$. Artin's conjecture (1927) predicts that for any fixed
+non-square integer base, a positive proportion of primes have that base
+as a primitive root; for base $10$, the predicted density is Artin's
+constant, approximately $0.3739$. Our computation in
+Section~\ref{subsec:averaging} gives $\widehat{p}_1(10{,}000) \approx
+0.38$, in striking agreement with this prediction, although Artin's
+conjecture itself remains open.
+\section{Acknowledgements}
+Sky Pulling is responsible for Sections 1-4\\
+Jovani Pitterson is responsible for Section 5\\
+Samir Kadariya is responsible for the Introduction and Section 6
+\end{document}

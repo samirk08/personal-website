@@ -1,0 +1,68 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{mathtools}
+\usepackage{natbib}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{subfig}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{setspace}
+
+\usetikzlibrary{arrows.meta, positioning, calc}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{conjecture}{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{example}{Example}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\title{\bfseries Targeted Lobbying on Council Networks\\[0.4em]
+{\large \emph{First Draft}}}
+\author{Samir Kadariya \and Bryce Roberts\\[0.4em]
+\small 14.18 Mathematical Economic Modeling \quad\textbar\quad MIT, Spring 2026}
+\date{April 29, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent A lobbyist with a limited budget must decide not only how hard to push a bill but \emph{whom} to push, since influence cascades through a council's network of party, committee, and personal ties. We model this as a static network game in the linear--quadratic tradition of \citet{ggg2020} and embed it in a voting institution that aggregates members' actions into a passage decision. Our main results are: (i) for a linear passage rule, the lobbyist optimally concentrates the entire budget on the member with the highest \emph{Katz--Bonacich centrality} with decay $\beta/c$, refining the eigenvector-centrality result of \citet{ggg2020}; and (ii) under any smooth strictly increasing vote-aggregation rule, the small-budget optimal target is the member with the largest \emph{slope-weighted Bonacich return} $w_j = \sum_i f'(a_i^0) M_{ij}$, where $a^0 = Mb$ is the no-lobbying equilibrium. When $f$ is linear or baseline actions are zero, $w$ collapses to Katz--Bonacich centrality; when baseline actions differ and $f$ is concave, the slope-weighting can overturn the Katz ranking, so a peripheral fence-sitter can be cheaper to target than a saturated central partisan. We illustrate both results on a three-member path network and discuss a probabilistic-vote companion model in which the swing-voter slope plays the same role as $f'(a^0)$.
+\end{abstract}
+
+\input{sections/01_intro}
+\input{sections/02_related_work}
+\input{sections/03_model_setup}
+\input{sections/04_council_eq}
+\input{sections/05_lobbyist_lp}
+\input{sections/06_theorem2}
+\input{sections/07_comparative_statics}
+\input{sections/08_theorem3}
+\input{sections/09_model_B}
+\input{sections/10_discussion}
+\input{sections/11_conclusion}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}
