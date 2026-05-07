@@ -1,0 +1,71 @@
+/* css/base.css — reset + element defaults + smooth-scroll + focus + reduced-motion + section rhythm */
+/* (Wrapped in @layer base via the @import layer() qualifier in main.css.) */
+
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter/inter-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter/inter-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* belt-and-suspenders against MOB-01 horizontal scroll */
+}
+h1, h2, h3 { line-height: 1.25; letter-spacing: -0.01em; }
+img, picture, svg { display: block; max-inline-size: 100%; height: auto; }
+a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { color: var(--accent-hover); }
+:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
+
+/* Skip link (A11Y-03) */
+.skip-link { position: absolute; left: -9999px; top: 0; }
+.skip-link:focus {
+  left: var(--space-4); top: var(--space-4);
+  background: var(--accent); color: var(--hero-text);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm); z-index: 10;
+}
+
+/* Section rhythm (UI-SPEC §Spacing — 64px → 96px clamp) */
+section {
+  padding-block: clamp(4rem, 4rem + 2vw, 6rem);
+  padding-inline: var(--space-4);
+  scroll-margin-top: var(--space-8);
+}
+@media (min-width: 600px)  { section { padding-inline: var(--space-6); } }
+@media (min-width: 1024px) { section { padding-inline: var(--space-8); } }
+
+section > h2 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-block-end: var(--space-6);
+  max-inline-size: var(--measure-wide);
+  margin-inline: auto;
+}
+
+/* Reduced-motion universal kill switch (VIS-04). Plan 02-02 wraps additive motion separately. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+  }
+  html { scroll-behavior: auto; }
+}

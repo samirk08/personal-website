@@ -1,0 +1,20 @@
+/* css/layout.css — reusable layout primitives consumed by Plan 02-02 */
+
+.container { max-inline-size: var(--measure-grid); margin-inline: auto; }
+.measure   { max-inline-size: var(--measure);      margin-inline: auto; }
+.measure-wide { max-inline-size: var(--measure-wide); margin-inline: auto; }
+
+/* Reveal skeleton — Plan 02-02 adds .is-visible toggle via IntersectionObserver. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { opacity: 0; transform: translateY(8px); transition: opacity 500ms ease-out, transform 500ms ease-out; }
+  .reveal.is-visible { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* Tap-target floor — every interactive element ships at 44x44 minimum (MOB-03) */
+.tap-target, .btn, .card, .contact__row, a.nav__link {
+  min-block-size: 44px;
+  min-inline-size: 44px;
+}
