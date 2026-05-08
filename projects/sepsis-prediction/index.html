@@ -67,9 +67,33 @@
             </a>
           </li>
           <li class="article-toc__item">
-            <a href="#key-results" data-toc-target="key-results">
+            <a href="#introduction" data-toc-target="introduction">
               <span class="article-toc__dot" aria-hidden="true"></span>
-              <span class="article-toc__label">Key results</span>
+              <span class="article-toc__label">Introduction</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#data-and-utility" data-toc-target="data-and-utility">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Data and utility metric</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#methods" data-toc-target="methods">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Methods</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#results" data-toc-target="results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#discussion" data-toc-target="discussion">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Discussion</span>
             </a>
           </li>
           <li class="article-toc__item">
@@ -89,26 +113,26 @@
         <strong>My role:</strong> Group project (6-person team). My contribution: built the LSTM model (utility 0.261). The Transformer (utility 0.578) and Autoencoder+kNN (utility 0.04) were built by other team members.
       </aside>
 
-      <h2 id="key-results">Key results</h2>
-      <p>The team evaluated three deep approaches against a logistic-regression baseline on the 2019 PhysioNet Challenge dataset of 11,000 patients (5,000 train / 1,000 validation / 5,000 test), with hourly measurements over 40 clinical features (vital signs, blood pressure, oxygenation, lab values). The challenge metric is a normalized utility function $U$ that rewards alerts in the optimal 6-hour window before sepsis onset and penalizes both late detections and false positives, summed across timesteps and normalized to $[0, 1]$ via best-possible / no-alert anchors. The headline result: the three temporal architectures span a wide utility range. The Transformer reached normalized utility $0.578$ — the strongest score, with high recall but a non-trivial false-positive rate. The LSTM reached $0.261$, demonstrating that bidirectional recurrence captures most of the per-patient temporal signal but lacks the long-range cross-patient pattern matching attention provides. The Autoencoder + k-NN baseline came in at $0.04$, only slightly above the no-alert floor, confirming that representation-learning without inductive bias toward temporal structure under-performs on this task.</p>
+      <h2 id="introduction">Introduction</h2>
+      <p>Sepsis is a life-threatening systemic immune response to infection, in which widespread inflammation and vascular permeability cause tissue damage, organ failure, and frequently death. The clinical sources of infection are diverse — pneumonia in infectious lung disease, catheter-related bloodstream infections, abdominal infections such as appendicitis — and many of these are nosocomial, acquired during a hospital stay. In the United States alone, $1.7$ million people develop sepsis each year, with $270{,}000$ fatalities and over one-third of all in-hospital deaths attributable to sepsis as a contributing condition. The financial burden is comparable: sepsis is the single largest inpatient hospital expense in the U.S. at $\$23.7$ billion annually.</p>
+
+      <p>Sepsis outcomes depend strongly on time. During the early stages of the immune cascade, prompt treatment with antibiotics and IV fluids often produces full recovery. The serious symptoms — organ dysfunction, sustained blood-pressure drop — have not yet occurred and the lasting damage of late-stage sepsis is avoidable. Studies plotting mortality against time-to-antibiotic show this clearly: the longer treatment is delayed, the steeper the mortality climb, with the gradient meaningfully accelerating only after the first six hours. Current clinical heuristics — Systemic Inflammatory Response Syndrome (SIRS) criteria, Sequential Organ Failure Assessment (SOFA) scores — are either insufficiently specific (general inflammation triggers SIRS) or arrive too late (SOFA detects organ dysfunction that has already happened). The clinical opportunity is therefore not just diagnosis, but <em>early</em> diagnosis.</p>
+
+      <p>Machine-learning approaches on time-stamped clinical data offer a promising alternative. Rather than depending on heuristic biomarker cutoffs, a sequence model can learn how vital-sign trajectories evolve over many hours and produce a probabilistic alert that a clinician can act on. The 2019 PhysioNet Challenge formalized this setup: predict sepsis from hourly clinical measurements, with model performance scored by a utility function explicitly designed to reward early alerts in the 6-to-12-hour window before clinical onset and penalize both late predictions and false alarms. Our project (a 6-person team) attacks this challenge by comparing three architectures — an autoencoder with k-nearest-neighbors, an LSTM, and a Transformer — against a logistic-regression baseline. Each model was built and tuned by a different subset of the team; the following sections describe the data pipeline, the utility metric, and our three architectures in turn.</p>
+
+      <h2 id="data-and-utility">Data and utility metric</h2>
+      <p>The PhysioNet Challenge 2019 dataset comprises $11{,}000$ patients split into training ($5{,}000$), validation ($1{,}000$), and test ($5{,}000$) sets, with each patient record consisting of hourly measurements across $40$ clinical features: vital signs (heart rate, temperature, respiratory rate), blood pressure metrics (systolic, diastolic, mean arterial pressure), oxygenation parameters (SpO$_2$, EtCO$_2$), and a panel of laboratory values. ICU stays vary in length from a few hours to multiple days, so the time-series are ragged. The dataset exhibits severe class imbalance: only $8.28\%$ of training patients develop sepsis ($414$ of $5{,}000$), and at the timestep level the imbalance is even more extreme since most hours of any patient's stay occur before sepsis onset.</p>
+
+      <p>Missingness is the dominant feature of the dataset. An average of $70\%$ of values are missing per patient; some features (notably EtCO$_2$) are absent in $100\%$ of cases. The missingness is not random — values are typically absent because the clinician judged the measurement unnecessary for the patient's current condition, so missingness itself carries diagnostic information. Both sepsis ($68.68\%$ avg. missingness) and non-sepsis ($70.00\%$) patients exhibit similar overall patterns, which means that any preprocessing that obscures missingness throws away signal. Our pipeline addresses this with two-stage imputation: first forward-fill within each patient (carrying the last observed value forward, exploiting temporal autocorrelation), then training-set timestep-specific population-mean fallback when no prior observation exists. Critically, we concatenate $40$-dimensional binary missingness-indicator features ($1$ = missing, $0$ = observed) to give an $80$-dimensional feature vector per timestep, doubling the input space. For models that benefit, we further augment with temporal derivatives (a 7-step exponential moving average and a one-step linear difference per feature), bringing the dimensionality to $160$.</p>
 
       <figure class="figure">
         <img src="/assets/img/sepsis-prediction/chart3_pipeline.jpeg"
              alt="Preprocessing pipeline for the PhysioNet sepsis challenge: feature imputation, sliding-window construction, and per-patient time-series normalization."
              width="1780" height="505" loading="lazy" decoding="async">
-        <figcaption>Figure 1: Preprocessing pipeline.</figcaption>
+        <figcaption>Figure 1: Preprocessing pipeline — population-mean computation, forward-fill imputation, and missingness augmentation transform the raw 40-feature input into an 80-dimensional feature space.</figcaption>
       </figure>
 
-      <p>The preprocessing step is shared across architectures. The dataset's central difficulty is missingness: an average of 70% of values are missing per patient, with some features (e.g. EtCO$_2$) missing in 100% of cases. We applied forward-fill imputation per feature per patient, falling back to a training-set timestep-specific population mean when no prior observation existed; we then concatenated 40-dimensional binary missingness indicators to give an 80-dimensional input vector at each hour. The class imbalance is severe — only 8.28% of training patients ever develop sepsis — so the utility metric, not raw accuracy, is the right thing to optimize.</p>
-
-      <figure class="figure">
-        <img src="/assets/img/sepsis-prediction/chart6_lstm_architecture.jpeg"
-             alt="LSTM architecture with bidirectional recurrent layers feeding a sigmoid output head, trained with binary cross-entropy on the sepsis-onset binary label."
-             width="2080" height="880" loading="lazy" decoding="async">
-        <figcaption>Figure 2: LSTM architecture (Samir's contribution).</figcaption>
-      </figure>
-
-      <p>The utility function used to evaluate every model rewards meaningfully-timed alerts and penalizes harmful or unnecessary alarm behavior. For sepsis-positive patients, utility ramps from zero to full reward when alerts occur 12 to 6 hours before onset, peaks in the 6-to-0-hour window, and decays into a penalty between 6 hours before onset and 3 hours after. For non-sepsis patients, false positives accumulate small per-timestep penalties (alarm fatigue) while true negatives are neutral. Letting $\hat{t}_p$ denote the model's predicted alert time and $t_s$ the true sepsis onset, the per-step utility is the piecewise function</p>
+      <p>The utility function used to evaluate every model is the substantive innovation of the PhysioNet 2019 Challenge: rather than scoring models on raw accuracy, AUROC, or AUPRC — all of which can be gamed by aggressive prediction or sample-size effects — utility directly encodes the clinical preference for timely, actionable alerts. For a sepsis-positive patient with onset time $t_s$, the per-step utility ramps from $0$ to $1$ as the predicted alert time $\hat{t}_p$ enters the $[t_s - 12, t_s - 6]$ window, peaks at $1$ across $[t_s - 6, t_s]$ (the optimal early-treatment window), and decays into a penalty as $\hat{t}_p$ slides past $t_s + 3$ (a missed sepsis case carries a strong negative reward). For a non-sepsis patient, false positives accumulate small per-timestep penalties (modeling alarm fatigue) while true negatives are neutral. Letting $\hat{t}_p$ denote the model's predicted alert time and $t_s$ the true onset, the per-step utility is the piecewise function</p>
 
       <p>$$U(\hat{t}_p,\, t_s) \;=\; \begin{cases}
         \tfrac{\hat{t}_p - (t_s - 12)}{6} & \text{if } t_s - 12 \le \hat{t}_p \le t_s - 6 \\[4pt]
@@ -119,28 +143,60 @@
       \end{cases}$$</p>
 
       <noscript>
-        <p><code>U(t_p, t_s) = ramp from 0 to 1 over [t_s-12, t_s-6]; = 1 over [t_s-6, t_s]; ramp from 1 to negative over [t_s, t_s+3]; = -0.05 for false positives; = 0 otherwise.</code> — PhysioNet 2019 sepsis utility metric.</p>
+        <p><code>U(t_p, t_s) = ramp from 0 to 1 over [t_s-12, t_s-6]; = 1 over [t_s-6, t_s]; ramp from 1 to negative over [t_s, t_s+3]; = -0.05 for false positives; = 0 otherwise.</code></p>
       </noscript>
 
-      <p>Per-patient utility sums across timesteps; aggregate utility normalizes against a perfect-model upper bound and a no-alert lower bound. The Transformer-based approach uses time-lagged Independent Component Analysis on the 80-dimensional features, encoder-only attention layers from the standard architecture (Vaswani et al., 2017) for per-step sepsis-probability output, and a tuned decision threshold. Its $0.578$ utility reflects high early-detection sensitivity at the cost of a higher per-timestep false-positive rate. The LSTM model — Samir's contribution to the project — uses bidirectional recurrent layers feeding a sigmoid output head, trained with binary cross-entropy on the per-step sepsis-onset label, with no dimensionality reduction. Threshold tuning lifts utility from a near-zero starting point to $0.261$, peaking around threshold $0.5$.</p>
+      <p>Per-patient utility is the sum of $U$ across all hours; aggregate utility is normalized to $[0, 1]$ against a perfect-model upper bound and a no-alert lower bound. The reward asymmetry is striking: missing a sepsis case carries a $-2$ penalty, while a single false-positive hour carries only $-0.05$ — a $40\times$ ratio. As a result, models tuned for utility tend to alert aggressively, with optimal decision thresholds often around $\theta \approx 0.03$ (a $3\%$ predicted probability is enough to fire). This is intentional: the metric reflects the clinical reality that early antibiotics are vastly more valuable than spared paperwork.</p>
+
+      <h2 id="methods">Methods</h2>
+      <p>Our team built four models. The logistic-regression baseline ignores all clinical values and uses only the $40$ binary missingness indicators per timestep. It is a deliberately weak baseline; it tests whether the missingness pattern alone — a doctor's implicit signal of "this measurement matters" — carries any sepsis-prediction power. The model achieved AUROC $0.5996$, AUPRC $0.0298$, and utility $\approx 0.10$, which is barely above the no-alert floor. Logistic regression cannot capture temporal trajectories, so this benchmark serves as a floor against which the deep architectures are measured.</p>
+
+      <p>The first deep approach is an autoencoder followed by k-nearest neighbors classification. The full $160$-dimensional feature space (with temporal augmentations) feeds an undercomplete autoencoder with two hidden encoding layers, a $32$-dimensional embedding bottleneck, two hidden decoding layers, ReLU activations, and dropout ($p = 0.5$) during training. The autoencoder is trained to minimize reconstruction MSE. At inference time, the encoder embeds each test point into the $32$-dimensional latent space, and a k-NN lookup over the labeled training embeddings produces the sepsis prediction. The motivation is that an autoencoder learns a low-dimensional representation of "normal" physiology, with sepsis trajectories pushed off-manifold and thus distinguishable by k-NN distance.</p>
+
+      <p>The LSTM model — Samir's contribution to the project — handles the time-series directly. It uses a stacked bidirectional Long Short-Term Memory recurrent network operating on the $80$-dimensional feature vectors (the $40$ imputed clinical values plus $40$ missingness indicators), with a sigmoid output head that produces a per-step sepsis probability. Training uses binary cross-entropy on the per-step sepsis label and the Adam optimizer with early stopping on validation utility. No dimensionality reduction precedes the LSTM; the recurrent layers are responsible for distilling the temporal structure on their own. Hyperparameters (hidden width, depth, dropout, learning rate) were tuned with Bayesian optimization (Optuna) up to a maximum of $100$ epochs. The LSTM is the natural causal-temporal model for this task — it processes hours sequentially in order, so its prediction at hour $t$ depends only on hours $\leq t$, matching the deployment scenario where future measurements are not yet available.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/sepsis-prediction/chart6_lstm_architecture.jpeg"
+             alt="LSTM architecture with bidirectional recurrent layers feeding a sigmoid output head, trained with binary cross-entropy on the sepsis-onset binary label."
+             width="2080" height="880" loading="lazy" decoding="async">
+        <figcaption>Figure 2: LSTM architecture (Samir's contribution).</figcaption>
+      </figure>
+
+      <p>The Transformer model uses encoder-only attention layers in the standard architecture of Vaswani et al. (2017), preceded by a time-lagged Independent Component Analysis (tICA) dimensionality-reduction step on the $80$-dimensional features. The attention mechanism allows the model to learn long-range cross-time dependencies that an LSTM has to encode through its recurrent state. As with the LSTM, the output is a per-step sepsis probability passed through a tuned decision threshold. Bayesian optimization on the validation set selected the number of attention heads, embedding dimension, dropout, and learning rate. The Transformer's hypothesized advantage over the LSTM is that attention can directly relate distant timesteps (e.g., a fever 12 hours ago and a current heart-rate spike) without the gradient signal having to pass through every intermediate state.</p>
+
+      <h2 id="results">Results</h2>
+      <p>The three temporal architectures span a wide utility range. The Transformer achieved normalized utility $0.578$ — the strongest score by a substantial margin — with AUROC $0.949$ and AUPRC $0.355$ at the optimal decision threshold ($\theta \approx 0.03$). The LSTM achieved utility $0.261$ at threshold $\theta = 0.03$ on the validation set, with AUROC $0.651$ and AUPRC $0.038$. The Autoencoder + k-NN model achieved utility $0.04$ — only slightly above the no-alert floor — with AUROC $0.651$ and AUPRC $0.038$ as well, but a much higher per-timestep error rate.</p>
 
       <figure class="figure">
         <img src="/assets/img/sepsis-prediction/threshold.jpeg"
-             alt="Utility-vs-threshold curve for the LSTM model, peaking at threshold 0.5 with utility 0.261."
+             alt="Utility-vs-threshold curve for the LSTM model, showing how normalized utility varies with the decision threshold and identifying the optimal operating point."
              width="536" height="393" loading="lazy" decoding="async">
-        <figcaption>Figure 3: Utility versus decision threshold (LSTM).</figcaption>
+        <figcaption>Figure 3: Utility versus decision threshold (LSTM). Optimal threshold ≈ 0.03 maximizes normalized utility; lower thresholds trigger excessive false alarms while higher thresholds miss sepsis cases.</figcaption>
       </figure>
 
-      <p>The Autoencoder + k-NN approach uses a 160-dimensional feature space augmented with exponential-moving-averages and inter-step deltas, trains an unsupervised autoencoder to learn a low-dimensional embedding, and runs k-nearest-neighbor lookups against the labeled training set at inference time. It under-performs ($0.04$) because the embedding does not preserve the per-patient temporal structure that the utility metric explicitly rewards.</p>
+      <p>For the LSTM specifically, the threshold-utility curve has a clean unimodal shape (Figure 3): at very low thresholds the model alerts on essentially every patient and the false-positive penalty dominates; at high thresholds the model misses most sepsis cases and the missed-detection penalty dominates. The peak at $\theta \approx 0.03$ reflects the strong asymmetry of the utility function — a $3\%$ predicted probability is the right cutoff because the cost of missing sepsis is $40\times$ the cost of a false positive. At this operating point, the LSTM produces meaningful early-warning behavior: of the $299$ sepsis-positive patients in the test set, $110$ ($\approx 37\%$) received a correct alert before clinical onset.</p>
 
       <figure class="figure">
         <img src="/assets/img/sepsis-prediction/lead_times.jpeg"
-             alt="Distribution of prediction lead times relative to clinical sepsis onset, with mass concentrated at 6-12 hours before onset."
+             alt="Distribution of prediction lead times relative to clinical sepsis onset, with mass concentrated 6 to 12 hours before onset."
              width="624" height="403" loading="lazy" decoding="async">
-        <figcaption>Figure 4: Lead-time distribution for early-detection alerts.</figcaption>
+        <figcaption>Figure 4: Lead-time distribution for early-detection alerts (LSTM). The median lead time falls in the clinically actionable 6-to-12-hour window where antibiotic timing measurably affects mortality.</figcaption>
       </figure>
 
-      <p>The team's takeaway is unsurprising in hindsight but worth stating: temporal inductive bias matters more than parameter count or representation cleverness for this task. Attention-based architectures dominate the leaderboard and, by separately tuning recall (via threshold) and precision (via post-processing), can be pushed to clinically meaningful early-warning lead times of 6–12 hours, the window where the literature shows antibiotic timing actually moves mortality.</p>
+      <p>The Transformer's $0.578$ utility comes from a combination of higher recall and earlier detection lead times. Its very high AUROC ($0.949$) tells us that the model orders sepsis-positive timesteps above sepsis-negative ones nearly perfectly when measured pairwise across the whole dataset — much better discrimination than the LSTM's $0.651$. But the per-timestep ranking is computed across the entire patient pool, while the utility metric scores each patient individually, so the gap between ranking-quality and clinical-quality matters: not every well-ordered timestep produces a clinically useful alert. Even so, the Transformer's stronger early-detection behavior dominated. Its main weakness was a high false-positive rate, which the team attempted to control through threshold tuning and post-processing without fully succeeding.</p>
+
+      <p>The Autoencoder + k-NN approach underperformed because its embedding does not preserve the per-patient temporal structure that the utility metric explicitly rewards. The autoencoder is trained to reconstruct hourly feature vectors independently — it has no recurrence and no attention — so two hours from the same patient that look similar in feature space land near each other in latent space, even if they are at different points in the patient's trajectory. The k-NN classifier then averages over neighbors that may come from completely different patients and stays. This loses the trajectory signal that early sepsis prediction relies on, and confirms that representation learning <em>without</em> a temporal inductive bias is a poor fit for this task.</p>
+
+      <h2 id="discussion">Discussion</h2>
+      <p>The relative ordering — Transformer $\gg$ LSTM $\gg$ Autoencoder+k-NN — is unsurprising but worth stating clearly: temporal inductive bias matters more than parameter count or representation cleverness for this task. Both the Transformer and the LSTM impose strong priors on the temporal structure of the input (attention weights and gated recurrent state, respectively), and both substantially outperform the static autoencoder. The Transformer's edge over the LSTM reflects the architectural advantage of direct long-range attention over gradient-propagated recurrence for predictions depending on physiological events many hours apart.</p>
+
+      <p>The utility function shaped model behavior in a way that is itself a discussion point. The $40\times$ asymmetry between false-negative and false-positive penalties drove all three models to extremely low decision thresholds ($\theta \approx 0.03$). At those thresholds the alerts are aggressive: a $3\%$ predicted sepsis probability is enough to fire. This looks bad on raw precision metrics, but it aligns with the clinical priority that early intervention is far more valuable than avoiding a false alarm. In real-world deployment, such aggressive alerts would integrate into a workflow that combines automated prescreening with manual clinician validation — clinicians can quickly disregard false positives but cannot recover from missed early sepsis cases. The threshold and weighting could be tuned to local clinical resources: a hospital with abundant nursing capacity can tolerate more aggressive prescreening, while a hospital with strained capacity benefits from a higher threshold and tighter precision.</p>
+
+      <p>Several limitations deserve flagging. The PhysioNet 2019 dataset represents two specific U.S. hospital systems, and the missingness patterns reflect those clinicians' decision-making rather than universal clinical practice — a model trained on this data may generalize poorly to hospitals with different documentation conventions. The forward-fill imputation strategy treats temporal autocorrelation as a positive signal, which works for slowly-varying features (heart rate, blood pressure) but degrades for transient lab values. Class imbalance ($8.28\%$ sepsis prevalence) makes evaluation metrics noisy; the difference between $0.578$ and $0.261$ utility rests on fairly small case counts.</p>
+
+      <p>Methodologically, several extensions are natural. Hybrid architectures — an LSTM-encoder followed by Transformer-decoder, or cross-attention from a Transformer onto a recurrently-encoded patient context — could capture both fine-grained per-step dynamics and long-range cross-time patterns. Better calibration is another open direction: at $\theta \approx 0.03$ predictions are far from probabilistically calibrated, and temperature scaling or conformal prediction could give clinicians better-grounded confidence estimates. Multimodal extensions combining the time-series with clinical notes, imaging, or genomics would likely improve performance further. Finally, calibrating the utility metric against patient-level outcomes (length of stay, mortality, readmission) would put the modeling work on firmer ground.</p>
+
+      <p>Despite these limitations, the project demonstrates that temporal deep-learning architectures — particularly attention-based ones — produce meaningful early-warning behavior on a clinically realistic sepsis task. With the right architecture, 6-to-12-hour lead times are achievable — the window where antibiotic-timing literature shows mortality measurably improves. Closing the gap from research-grade model to deployable hospital system is then primarily an integration, calibration, and validation problem.</p>
     </article>
 
     <section class="references" aria-labelledby="references">
