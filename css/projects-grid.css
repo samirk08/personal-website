@@ -43,6 +43,50 @@
 }
 
 /* ============================================================
+ * 1b. Detail-page article-header icon (56×56)
+ * ============================================================ */
+
+/* Same Lucide SVG as the card grid, scaled up and placed left of the H1 inside the
+ * detail-page article-header. The icon is wrapped in .article-header__title-row, a
+ * flex container that keeps the H1 vertically centered against the icon. */
+.article-header__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-block: 0 var(--space-3);
+}
+
+.article-header__icon {
+  flex: 0 0 56px;
+  inline-size: 56px;
+  block-size: 56px;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.article-header__icon svg {
+  inline-size: 100%;
+  block-size: 100%;
+  display: block;
+}
+
+/* Drop the H1's own top/bottom margin now that the row controls spacing. */
+.article-header__title-row .article-header__title {
+  margin-block: 0;
+}
+
+/* On mobile, scale icon down so the title doesn't get crowded out at narrow widths. */
+@media (max-width: 600px) {
+  .article-header__icon {
+    flex-basis: 40px;
+    inline-size: 40px;
+    block-size: 40px;
+  }
+  .article-header__title-row { gap: var(--space-3); }
+}
+
+/* ============================================================
  * 2. Filter pill control
  * ============================================================ */
 
