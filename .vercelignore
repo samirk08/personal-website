@@ -30,6 +30,11 @@ Thumbs.db
 .vercelignore
 README.md
 
+# Audit script + its runtime output (POL-04). Script is committed to git for re-runs;
+# .vercelignore drops it (and any audit log) from deploy so production never serves them.
+scripts/
+_build/
+
 # Test files (kept in git, not deployed — keeps GPA/4.8 regex assertions off the deploy surface)
 *.test.mjs
 *.test.js

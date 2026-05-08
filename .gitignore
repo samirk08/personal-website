@@ -34,6 +34,7 @@ node_modules/
 # Build artifacts (none expected, but safe to ignore)
 dist/
 build/
+_build/
 
 # GSD planning artifacts — kept locally, never published to the public repo.
 # Contains audit-trail collaborator names (D-13 internal-only) and sundry workflow state.
