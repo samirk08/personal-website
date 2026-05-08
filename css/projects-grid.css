@@ -1,0 +1,154 @@
+/* css/projects-grid.css — projects-page-only styles, scoped to /projects (.page--projects)
+ * and to the per-card icon slot (.card__icon, .card__heading). Imported into css/main.css
+ * under @layer components. Kept SEPARATE from css/components.css so Wave B and Wave C of the
+ * 2026-05-07 quick task could land in parallel without colliding on a single shared file.
+ *
+ * Sections:
+ *   1. Card icon (.card__icon, .card__heading) — 32×32 inline-SVG slot left of card title
+ *   2. Filter pill control (.project-filter, .project-filter__btn, .project-filter__indicator)
+ *   3. Filter visibility (data-project-filter attribute on <html>) — hides cards by data-section
+ */
+
+/* ============================================================
+ * 1. Card icon slot
+ * ============================================================ */
+
+.card__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block: var(--space-3) var(--space-2);
+}
+
+/* Icon sits at 32×32 in card grid; uses currentColor stroke so accent color flows from
+ * the per-card .card__icon rule below. Flex-shrink:0 keeps it square as title wraps. */
+.card__icon {
+  flex: 0 0 32px;
+  inline-size: 32px;
+  block-size: 32px;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.card__icon svg {
+  inline-size: 100%;
+  block-size: 100%;
+  display: block;
+}
+
+/* Override the .card__title margin-block now that .card__heading owns the spacing. */
+.card__heading .card__title {
+  margin-block: 0;
+}
+
+/* ============================================================
+ * 2. Filter pill control
+ * ============================================================ */
+
+/* Sits above the CS Projects sub-heading on /projects only. The element is a tablist of
+ * three pill buttons (All / CS / Math) plus a sliding accent indicator that animates
+ * between active buttons. Indicator slide is wrapped in prefers-reduced-motion guard. */
+.project-filter {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  background: var(--surface-muted);
+  border-radius: 999px;            /* pill */
+  padding: 4px;
+  margin-block: var(--space-6) var(--space-4);
+  /* Each button is min-height 44px to clear MOB-03 tap-target floor. */
+  min-block-size: 44px;
+}
+
+.project-filter__btn {
+  /* Reset native button chrome */
+  appearance: none;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: var(--text-muted);
+  /* Layout */
+  position: relative;
+  z-index: 1;                      /* sit above the absolute-positioned indicator */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 36px;            /* visible pill height; outer padding makes total ≥44px */
+  min-inline-size: 56px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  /* Ensure the whole hit-target meets 44×44 even for "CS" which is short text. */
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .project-filter__btn { transition: color 180ms ease-out; }
+}
+
+.project-filter__btn:hover {
+  color: var(--text);
+}
+
+.project-filter__btn[aria-selected="true"] {
+  color: var(--surface);
+}
+
+.project-filter__btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Sliding accent indicator. Sized to one button's box and translated horizontally on
+ * filter change (set inline by js/project-filter.js via custom property --filter-x).
+ *
+ * Positioning math: the indicator is absolutely positioned within .project-filter and
+ * sized to the active button via JS (left + width copied from the active button's
+ * offsetLeft/offsetWidth). This sidesteps the brittleness of CSS-only nth-child math when
+ * button widths differ ("All" vs "Math" vs "CS"). */
+.project-filter__indicator {
+  position: absolute;
+  z-index: 0;
+  inset-block-start: 4px;
+  inset-block-end: 4px;
+  inset-inline-start: 0;
+  inline-size: 0;                  /* JS sets this on init + on click */
+  background: var(--accent);
+  border-radius: 999px;
+  /* Translated by JS via inline style.transform = `translateX(${px}px)`. */
+  transform: translateX(0);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .project-filter__indicator {
+    transition: transform 200ms ease, inline-size 200ms ease;
+  }
+}
+
+/* ============================================================
+ * 3. Filter visibility (driven by data-project-filter on <html>)
+ * ============================================================ */
+
+/* Default state (no attribute or "all"): all cards visible. JS sets the attribute
+ * on <html> on page-load (reading URL hash) and on filter button click. CSS does the
+ * actual hide-show — no per-card style mutation. */
+
+[data-project-filter="cs"]   .card[data-section="math"],
+[data-project-filter="math"] .card[data-section="cs"] {
+  display: none;
+}
+
+/* Hide section heading + grid when its content is filtered out. The <h3> sits as the
+ * sibling immediately preceding its grid; we use :has() to check whether the grid
+ * still contains visible cards. Universal :has() support in 2026 (per CLAUDE.md). */
+[data-project-filter="cs"]   #math-projects-grid,
+[data-project-filter="cs"]   .projects__sub:has(+ #math-projects-grid),
+[data-project-filter="math"] #cs-projects-grid,
+[data-project-filter="math"] .projects__sub:has(+ #cs-projects-grid) {
+  display: none;
+}

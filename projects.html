@@ -43,6 +43,13 @@
       <p class="page-header__lede">Selected CS and math work from MIT coursework, research, and side projects.</p>
     </header>
     <section class="page-body">
+      <div class="project-filter" role="tablist" aria-label="Filter projects">
+        <button class="project-filter__btn" type="button" role="tab" aria-selected="true" aria-pressed="true" data-filter="all">All</button>
+        <button class="project-filter__btn" type="button" role="tab" aria-selected="false" aria-pressed="false" data-filter="cs">CS</button>
+        <button class="project-filter__btn" type="button" role="tab" aria-selected="false" aria-pressed="false" data-filter="math">Math</button>
+        <span class="project-filter__indicator" aria-hidden="true"></span>
+      </div>
+
       <h3 class="projects__sub reveal">CS Projects</h3>
       <div class="card-grid" id="cs-projects-grid"><!-- populated by js/render-projects.js --></div>
 
