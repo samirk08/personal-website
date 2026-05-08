@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0F4C81"/>
+  <rect width="1200" height="630" fill="url(#g)" opacity="0.25"/>
+  <!-- SK badge top-left (mirrors favicon) -->
+  <rect x="60" y="60" width="80" height="80" rx="14" fill="#fff" opacity="0.18"/>
+  <text x="100" y="115" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-weight="700" font-size="36" fill="#fff">SK</text>
+  <!-- Variable title (this text node is what render-og.sh substitutes) -->
+  <text id="og-title" x="60" y="380" font-family="-apple-system,system-ui,sans-serif" font-weight="700" font-size="64" fill="#fff">__OG_TITLE__</text>
+  <!-- Static byline -->
+  <text x="60" y="560" font-family="-apple-system,system-ui,sans-serif" font-weight="400" font-size="28" fill="#fff" opacity="0.85">samirkadariya — MIT '26</text>
+</svg>
