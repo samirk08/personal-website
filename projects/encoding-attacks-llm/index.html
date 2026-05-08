@@ -57,9 +57,27 @@
             </a>
           </li>
           <li class="article-toc__item">
-            <a href="#key-results" data-toc-target="key-results">
+            <a href="#introduction" data-toc-target="introduction">
               <span class="article-toc__dot" aria-hidden="true"></span>
-              <span class="article-toc__label">Key results</span>
+              <span class="article-toc__label">Introduction</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#approach" data-toc-target="approach">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Approach</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#results" data-toc-target="results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#discussion" data-toc-target="discussion">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Discussion</span>
             </a>
           </li>
           <li class="article-toc__item">
@@ -77,8 +95,14 @@
 
       <aside class="my-role"><strong>My role:</strong> Co-authored class project (3-person team). Designed and tested in-context cipher prompts on Claude 3.5 Sonnet using HarmBench — purely prompt-level attacks, no model modification.</aside>
 
-      <h2 id="key-results">Key results</h2>
-      <p>The team's central finding is that the attack success rate (ASR) is sharply controlled by the number of "quiet" fixed-point terms left untouched in the cipher prompt. With only five quiet terms the ciphered prompts succeeded on roughly 80% of harmful queries in categories such as Drug Production, and around 70% in Cyber Attacks, against Claude 3.5 Sonnet. Pushing the quiet-term count up to 15 cuts those rates roughly in half — Drug Production drops to 40%, Cyber Attacks to 55% — and at 25 quiet terms the ASR collapses essentially to zero. The pattern is consistent: more recognizable structure in the cipher gives the safety classifier more surface to work with.</p>
+      <h2 id="introduction">Introduction</h2>
+      <p>Large language models have moved from research curiosity to deployed product in a few short years. Their reasoning, instruction-following, and domain expertise make them powerful, but those same capabilities widen the attack surface. Developers have layered on safety mechanisms — RLHF, constitutional training, adversarial testing, input/output filters — and yet adversarial inputs still slip through. The pattern that motivated our team is uncomfortable: the more capable a model becomes, the more sophisticated its reasoning about novel inputs, and therefore the more it can be coaxed into reasoning about an attacker-supplied encoding scheme well enough to participate in a jailbreak.</p>
+      <p>Our work targets that exact tension. The class is MIT 6.3950, the team is three of us, and the question we set out to answer is: can we construct an in-context attack that does not depend on any pre-existing cipher the model was trained against, and instead teaches the target model a fresh string-to-string mapping inside the conversation? If we can, conventional safety filters trained to recognize known cipher families lose their grip — there is an effectively infinite space of encodings the attacker can dial in, and each one has to be defended against from scratch.</p>
+      <p>Prior jailbreak work falls into a few buckets. Discrete token optimization (e.g., universal-suffix attacks) succeeds but typically requires white-box gradient access. Many-shot and human-crafted prompt injections work without model access but need per-attack engineering. ASCII-art and low-resource-language attacks demonstrate that out-of-distribution inputs can route around safety, but they rely on the attacker exploiting a fixed surface (a known font, a known underrepresented language). What is missing — and what our work delivers — is a procedural recipe for generating dynamic encodings on the fly, taught in-context, with hyperparameters that the attacker can tune to a specific target model.</p>
+
+      <h2 id="approach">Approach</h2>
+      <p>We define a cipher as a pair C = (Q, M) operating over a vocabulary V (the lower- and upper-case Latin alphabet plus digits, |V| = 62). Q is the set of <em>quiet terms</em> — characters that map to themselves, e.g. <code>a → a</code>, <code>K → K</code>, <code>7 → 7</code>. M is the set of <em>mutated terms</em> — characters that map to a unique non-self string under our encoding rule, e.g. <code>j → 7oLP</code>, <code>12 → 82</code>. We require Q and M disjoint with Q ∪ M = V, so every character has exactly one image and decoding is deterministic. The single most important hyperparameter is |Q|, the number of quiet terms left untouched, because it controls how much familiar surface the model can use to recognize the cipher as a cipher.</p>
+      <p>Mutated terms are sampled from a discrete range K = [k1, k2) with the constraint that log(k2) − log(k1) ≤ 0.5. We arrived at that bound empirically: wider ranges produced large variance in encoded-token length, which destabilized the model's tokenizer behavior and the cipher would simply fail to "stick" in context. Inside this constraint, the cipher generator produces a fresh map per attack run, so the same harness yields a different concrete encoding every time without any change to the attack code.</p>
 
       <figure class="figure">
         <img src="/assets/img/encoding-attacks-llm/architecture.jpeg"
@@ -87,16 +111,29 @@
         <figcaption>Figure 1: Encoding-attack pipeline. Prompts are constructed via in-context cipher templates, sent to the target model, and graded by a HarmBench-aligned evaluator.</figcaption>
       </figure>
 
-      <p>The team kept the architecture deliberately static: the attack does not adapt to intermediate model output, which makes ASR a clean measurement rather than a moving target across runs. We red-teamed Claude 3.5 Sonnet specifically because it represents the upper end of commercially deployed safety hardening; the same harness can be pointed at smaller open-weight models given enough compute and API credits. Across all categories — cyber attacks, chemical-weapon synthesis instructions, drug production, and other HarmBench-curated harm types — the trend with quiet-term count holds.</p>
+      <p>We teach the cipher to the target model in three stages, all within a single conversation. First, a system prompt enumerates the key-value mapping <code>{v_i : c_i}</code> for every character in V, so the model has the full cipher in its working memory rather than having to infer it. Second, we feed several natural-language sentences and their encoded versions as multi-turn examples — a few-shot conversation that primes the model to translate cleanly between English and the cipher language L. Third, we issue an explicit instruction to respond only in the cipher language, never in English. This last step is critical; without it the model often produces partial English fallbacks at moments of uncertainty, and the safety classifier latches onto those.</p>
+      <p>With the cipher primed, we encode a HarmBench query into L and send it as the next turn. The model's reply, also in L, is decoded externally and graded by an evaluator language model that classifies whether the response actually breaches AI-safety guidelines. We chose Claude 3.5 Sonnet as our primary target precisely because it represents the upper end of commercially deployed safety hardening — if the attack works there, it raises a real concern, and if it fails there, it is meaningful evidence that safety training transfers to encoded inputs. The architecture is deliberately static: nothing about the attack adapts to the model's intermediate output, which keeps attack success rate (ASR) a clean measurement rather than a moving target across runs.</p>
+      <p>Evaluation is built around HarmBench specifically because it spans the harm categories we care about — cyber attacks, chemical-weapons synthesis, drug production, hate speech, malicious code generation — with query lengths from 37 to 142 characters. We swept |Q| over <code>{5, 15, 25}</code> to study how quiet-term count interacts with the model's ability to recognize and refuse, and we also looked at refusal-rate and response-length distributions to disentangle "the model refused" from "the model produced incoherent output the evaluator marked as failure."</p>
+
+      <h2 id="results">Results</h2>
+      <p>The headline result is that |Q| controls ASR almost monotonically, and the effect is large. With only five quiet terms our ciphered prompts succeed on roughly 80% of HarmBench queries in the Drug Production category and around 70% in Cyber Attacks against Claude 3.5 Sonnet. Pushing |Q| up to 15 cuts both rates roughly in half — Drug Production drops to about 40%, Cyber Attacks to about 55%. At |Q| = 25 the ASR collapses essentially to zero across all categories. The pattern is consistent: more recognizable structure in the cipher gives the safety classifier more surface to work with.</p>
+      <p>The refusal-rate plot mirrors that ASR curve. At |Q| = 5 the model refuses only about 30% of the time, leaving most queries open to attack. At |Q| = 15 refusal climbs to 65%. At |Q| = 25 refusal hits 95% — a strong signal that once the cipher looks recognizable enough, the same safety mechanisms that catch plain-English harmful queries catch the encoded ones too.</p>
+      <p>Query length interacts with quiet-term count in a way we did not expect at the start. Refusals rise sharply with query length: 25-character queries are refused about 73% of the time, and warnings (the model includes a safety caveat without a hard refusal) also climb. The simplest interpretation is that input length is itself a heuristic the model uses to assess risk — longer encoded inputs trigger more cautious behavior independently of the cipher's recognizability. For successful attacks, the response distribution is detailed: when an encoded short query slips through, the model engages fully and produces 300–500 character replies. Failed attacks on longer queries collapse to short refusals.</p>
+      <p>The failure-mode breakdown by query length is illuminating. Short queries fail mostly through <em>incoherency</em> — the model produces nonsensical encoded output that the evaluator cannot grade as a successful attack. Medium and long queries fail through <em>refusal</em> — the model successfully recognizes the harmful content. This split matters for defense design: incoherency is a tokenization-and-context problem, while refusal is a safety-training problem, and they call for different mitigations.</p>
 
       <figure class="figure">
         <img src="/assets/img/encoding-attacks-llm/layered_defense_strategy.jpeg"
-             alt="Layered defense strategy with input-side filtering, instruction-tuning hardening, and output-side classifier — attack success rate falls at each successive layer."
+             alt="Layered defense strategy with static filters as input-side defense, dynamic detection on intermediate state, and real-time output-side monitoring stacking to drive residual ASR toward zero."
              width="1144" height="390" loading="lazy" decoding="async">
         <figcaption>Figure 2: Layered defense strategy. Static input filters, dynamic detection on intermediate state, and real-time output monitoring stack to drive residual ASR toward zero.</figcaption>
       </figure>
 
-      <p>The defensive recommendation that comes out of the work is straightforward: encoding-style adversarial prompts should be folded into safety-training pipelines explicitly, and runtime defenses should be layered rather than monolithic. A single static input filter is brittle against in-context cipher schemes; a static filter combined with a dynamic detection system and an output-side classifier is much harder to slip through.</p>
+      <p>Across categories, Drug Production and Cyber Attacks are the most vulnerable; Hate Speech and Chemical Weapons sit in the middle; structured malicious-code categories sit lowest. We attribute the category gradient to how distinctive the harmful pattern is at the token level — the more a category looks like ordinary technical text once decoded, the harder it is for the safety classifier to flag.</p>
+
+      <h2 id="discussion">Discussion</h2>
+      <p>The defensive recommendation that comes out of the work is straightforward but worth stating directly: encoding-style adversarial prompts should be folded into safety-training pipelines explicitly, not assumed to be covered by general adversarial fine-tuning. A single static input filter is brittle against in-context cipher schemes because the attacker can simply pick a new cipher; a static filter combined with a dynamic detection system that scores the input's deviation from natural-language statistics, and an output-side classifier that catches harmful content regardless of how it was elicited, is much harder to slip through. Each layer covers a different failure mode of the others.</p>
+      <p>A few honest limitations of the study. We tested primarily against Claude 3.5 Sonnet — generalization across model families (Mistral 7B, Llama 3.1 70B, GPT-4 variants) would need separate runs and was out of scope for the class deadline. The cipher generator is parametrized over a fixed vocabulary V (Latin letters plus digits); attacks against models that handle CJK or RTL scripts likely behave differently and we did not measure that. The HarmBench evaluator we used is itself an LLM, so there is some unavoidable noise in the ASR numbers from grader variability — we ran multiple seeds, but a fully blind human-judged sample would tighten the confidence intervals further.</p>
+      <p>The broader point our team takes away from the work is that encoding-based attacks are easy to construct, hard to enumerate, and effective against state-of-the-art commercial systems at exactly the parameter settings that produce attacker-friendly behavior. Safety roadmaps that rely on training-time mitigations alone will keep losing ground to in-context attacks of this shape. Investing in runtime layered defenses — and explicitly red-teaming with dynamic ciphers as part of the standard evaluation suite — is the most concrete operational change we would push for.</p>
     </article>
 
     <section class="references" aria-labelledby="references">
