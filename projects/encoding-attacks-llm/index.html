@@ -6,7 +6,15 @@
   <title>Encoding-Based Attacks on Large Language Models — Samir Kadariya</title>
   <meta name="description" content="Co-authored MIT 6.3950 final project — in-context cipher prompts on Claude 3.5 Sonnet via HarmBench, measuring ASR shift as quiet-term count varies.">
   <meta name="theme-color" content="#0F4C81">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Encoding-Based Attacks on LLMs — Samir Kadariya">
+  <meta property="og:description" content="Co-authored MIT 6.3950 final project — in-context cipher prompts on Claude 3.5 Sonnet via HarmBench, measuring ASR shift as quiet-term count varies.">
+  <meta property="og:image" content="https://personal-website-pink-pi.vercel.app/assets/og/encoding-attacks-llm.png">
+  <meta property="og:url" content="https://personal-website-pink-pi.vercel.app/projects/encoding-attacks-llm/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/main.css?v=20260507-3">
 </head>
@@ -105,9 +113,13 @@
       <p>Mutated terms are sampled from a discrete range K = [k1, k2) with the constraint that log(k2) − log(k1) ≤ 0.5. We arrived at that bound empirically: wider ranges produced large variance in encoded-token length, which destabilized the model's tokenizer behavior and the cipher would simply fail to "stick" in context. Inside this constraint, the cipher generator produces a fresh map per attack run, so the same harness yields a different concrete encoding every time without any change to the attack code.</p>
 
       <figure class="figure">
-        <img src="/assets/img/encoding-attacks-llm/architecture.jpeg"
-             alt="System architecture diagram showing prompt construction with quiet-term injection feeding Claude 3.5 Sonnet, with a HarmBench evaluator measuring attack success rate."
-             width="2926" height="1254" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/encoding-attacks-llm/architecture.avif" type="image/avif">
+          <source srcset="/assets/img/encoding-attacks-llm/architecture.webp" type="image/webp">
+          <img src="/assets/img/encoding-attacks-llm/architecture.jpeg"
+               alt="System architecture diagram showing prompt construction with quiet-term injection feeding Claude 3.5 Sonnet, with a HarmBench evaluator measuring attack success rate."
+               width="2926" height="1254" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 1: Encoding-attack pipeline. Prompts are constructed via in-context cipher templates, sent to the target model, and graded by a HarmBench-aligned evaluator.</figcaption>
       </figure>
 
@@ -122,9 +134,13 @@
       <p>The failure-mode breakdown by query length is illuminating. Short queries fail mostly through <em>incoherency</em> — the model produces nonsensical encoded output that the evaluator cannot grade as a successful attack. Medium and long queries fail through <em>refusal</em> — the model successfully recognizes the harmful content. This split matters for defense design: incoherency is a tokenization-and-context problem, while refusal is a safety-training problem, and they call for different mitigations.</p>
 
       <figure class="figure">
-        <img src="/assets/img/encoding-attacks-llm/layered_defense_strategy.jpeg"
-             alt="Layered defense strategy with static filters as input-side defense, dynamic detection on intermediate state, and real-time output-side monitoring stacking to drive residual ASR toward zero."
-             width="1144" height="390" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/encoding-attacks-llm/layered_defense_strategy.avif" type="image/avif">
+          <source srcset="/assets/img/encoding-attacks-llm/layered_defense_strategy.webp" type="image/webp">
+          <img src="/assets/img/encoding-attacks-llm/layered_defense_strategy.jpeg"
+               alt="Layered defense strategy with static filters as input-side defense, dynamic detection on intermediate state, and real-time output-side monitoring stacking to drive residual ASR toward zero."
+               width="1144" height="390" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 2: Layered defense strategy. Static input filters, dynamic detection on intermediate state, and real-time output monitoring stack to drive residual ASR toward zero.</figcaption>
       </figure>
 
