@@ -239,6 +239,7 @@
     font-weight: 400;
     color: var(--accent);
     margin: 0 0 var(--space-3);
+    padding-inline-start: 20px;     /* align with TOC label text (after the 9px dot + 11px gap) */
     line-height: 1.4;
     letter-spacing: 0.01em;
   }
@@ -267,11 +268,18 @@
     position: relative;
   }
 
-  /* (0,3,1) specificity — wins over base 'a' rule from base.css */
+  /* (0,3,1) specificity — wins over base 'a' rule from base.css.
+     Uses flex layout so the dot sits inline with the label rather than
+     absolutely-positioned. The earlier absolute-positioned dot was rendering
+     invisibly: 9px cream-on-cream center inside a 1.5px gray ring is barely
+     perceptible at any viewing distance, AND the absolute span inside an
+     <a> with position:relative produced inconsistent box dimensions across
+     browsers. Inline-flex flow is bulletproof. */
   .article-toc .article-toc__list .article-toc__item a {
-    display: block;
-    position: relative;
-    padding: var(--space-1) 0 var(--space-1) calc(var(--space-3) + 8px);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding-block: 4px;
     color: var(--text-muted);
     text-decoration: none;
     line-height: 1.5;
@@ -289,18 +297,25 @@
     border-radius: 2px;
   }
 
+  /* Dot now lives in the flex flow (no absolute positioning). flex: 0 0 auto
+     keeps it from shrinking when long labels wrap. position:relative + z-index
+     puts it in front of the rail's z-index:0 so the dot's bg punches through. */
   .article-toc .article-toc__list .article-toc__item .article-toc__dot {
-    position: absolute;
-    inset-inline-start: 0;
-    inset-block-start: 7px;
+    flex: 0 0 auto;
     width: 9px;
     height: 9px;
     border-radius: 50%;
     border: 1.5px solid var(--text-muted);
     background: var(--bg);
     box-sizing: border-box;
+    position: relative;
     z-index: 1;
     transition: background 150ms, border-color 150ms;
+  }
+
+  /* Allow long labels to wrap without pushing the dot or breaking the layout. */
+  .article-toc .article-toc__list .article-toc__item .article-toc__label {
+    min-inline-size: 0;
   }
 
   .article-toc .article-toc__list .article-toc__item a[aria-current="location"] .article-toc__dot {
