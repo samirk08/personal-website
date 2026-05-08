@@ -35,7 +35,20 @@
   min-block-size: 44px;
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   margin-inline-end: auto;
+}
+
+/* Brand dot — mirrors the favicon (filled circle) and pairs with "SK" text.
+   Uses currentColor so the dot adapts to nav-text color: white on the
+   homepage hero (dark backdrop) and dark on every other page. */
+.site-nav__brand::before {
+  content: "";
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
 .site-nav__toggle {
