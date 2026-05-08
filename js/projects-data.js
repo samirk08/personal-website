@@ -122,6 +122,37 @@ export const projects = [
     detailPage: '/projects/market-mood/'
   },
 
+  // CS-5
+  {
+    slug: 'transformers-vs-lstms',
+    section: 'cs',
+    title: 'When Do Transformers Actually Beat LSTMs for Time Series Forecasting?',
+    oneLiner: 'Empirical study of LSTM, Transformer, TFT, PatchTST, Crossformer, and Autoformer architectures across electricity, traffic, and flu forecasting horizons.',
+    type: 'class project',
+    course: 'MIT 6.7960',
+    affiliation: 'MIT 6.7960 (Deep Learning)',
+    role: 'group',
+    groupSize: 3,
+    coauthors: [],
+    myContribution: 'Group project (3-person team) for MIT 6.7960 Deep Learning, Fall 2025. Co-authored experiments across all three datasets.',
+    techChips: ['PyTorch', 'LSTM', 'Transformer', 'Time-Series'],
+    icon: 'cpu',
+    iconSvg: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>',
+    claims: [
+      { text: 'Crossformer reduced MSE by ~40% over the vanilla Transformer baseline on the high-dimensional traffic dataset',
+        source: '_src/papers/transformers-vs-lstms/index.html' },
+      { text: 'Autoformer achieved the best long-horizon performance on the electricity dataset (96-720h)',
+        source: '_src/papers/transformers-vs-lstms/index.html' },
+      { text: 'Well-tuned LSTMs remain strong baselines; complexity gains from seq2seq+attention or stacked BiLSTM are marginal',
+        source: '_src/papers/transformers-vs-lstms/index.html' }
+    ],
+    figures: [
+      { src: 'assets/img/transformers-vs-lstms/electricity_horizon_comparison', alt: 'Forecast horizon comparison across architectures on the electricity dataset', caption: 'Figure 1' }
+    ],
+    links: { repo: 'https://github.com/samirk08/Deep-Learning-Final', paper: null, live: null },
+    detailPage: '/projects/transformers-vs-lstms/'
+  },
+
   // M-1
   {
     slug: 'lobbying-networks',
@@ -194,10 +225,10 @@ export const projects = [
     detailPage: '/projects/branching-cancer/'
   },
 
-  // M-4
+  // CS-6 (was M-4 — reclassified math → cs 2026-05-08; deep-learning project, not pure math)
   {
     slug: 'sepsis-prediction',
-    section: 'math',
+    section: 'cs',
     title: 'Early Sepsis Prediction with Deep Learning',
     oneLiner: 'Group project on the 2019 PhysioNet Challenge comparing Transformer, LSTM, and Autoencoder+kNN approaches for early sepsis prediction.',
     type: 'class project',
@@ -221,7 +252,7 @@ export const projects = [
     figures: [
       { src: 'assets/img/sepsis-prediction/utility-comparison', alt: 'Utility scores across Transformer / LSTM / Autoencoder+kNN', caption: 'Figure 1' }
     ],
-    links: { repo: 'https://github.com/samirk08/Deep-Learning-Final', paper: null, live: null },
+    links: { repo: null, paper: null, live: null },
     detailPage: '/projects/sepsis-prediction/'
   },
 
