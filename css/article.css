@@ -116,21 +116,14 @@
     line-height: 1.5;
     margin-block-start: var(--space-2);
   }
-  .figure--breakout {
-    margin-inline: max(calc(50% - 50vw), calc(-1 * (100vw - var(--measure-grid)) / 2));
-    max-inline-size: 100vw;
-    text-align: center;
-  }
-  .figure--breakout img {
-    max-inline-size: min(100vw, var(--measure-grid));
-    margin-inline: auto;
-  }
-  .figure--breakout figcaption {
-    max-inline-size: var(--measure);
-    margin-inline: auto;
-    padding-inline: var(--space-4);
-    text-align: start;
-  }
+  /* .figure--breakout removed (2026-05-07): the negative-margin breakout
+     extended figures to viewport-edge, which mis-aligned inside the new
+     2-column TOC layout — the figure parent .article-body is offset 180px
+     from .article-page's left, so breakout extended too far rightward.
+     All figures now stay inside the 65ch article column (matches Hector's
+     pattern). If a future figure genuinely needs to be wide, add a new
+     `.figure--wide` that extends only to the article-page width minus the
+     TOC column, NOT viewport width. */
 
   /* §5 References */
   .references {
