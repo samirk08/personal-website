@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>When Do Transformers Actually Beat LSTMs for Time Series Forecasting? — Samir Kadariya</title>
+  <meta name="description" content="MIT 6.7960 Deep Learning project: when do Transformers (TFT, PatchTST, Crossformer) actually beat well-tuned LSTMs for time-series forecasting?">
+  <meta name="theme-color" content="#0F4C81">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Transformers vs LSTMs — Samir Kadariya">
+  <meta property="og:description" content="MIT 6.7960 Deep Learning project comparing TFT, PatchTST, Crossformer, and well-tuned LSTM baselines across electricity, traffic, and flu forecasting horizons.">
+  <meta property="og:image" content="https://samirkadariya.com/assets/og/transformers-vs-lstms.png">
+  <meta property="og:url" content="https://samirkadariya.com/projects/transformers-vs-lstms/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
+        integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
+          integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/contrib/auto-render.min.js"
+          integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false},{left: '\\(', right: '\\)', display: false},{left: '\\[', right: '\\]', display: true}],throwOnError: false});"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" data-page="projects">
+    <a class="site-nav__brand" href="/" aria-label="Home — Samir Kadariya">SK</a>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Toggle navigation">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="site-nav-menu" aria-label="Primary">
+      <ul class="site-nav__links">
+        <li><a href="/"           data-nav="home"      >Home</a></li>
+        <li><a href="/about"      data-nav="about"     >About</a></li>
+        <li><a href="/projects"   data-nav="projects"   aria-current="page">Projects</a></li>
+        <li><a href="/experience" data-nav="experience">Experience</a></li>
+        <li><a href="/contact"    data-nav="contact"   >Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="article-page">
+    <header class="article-header">
+      <a href="/projects" class="article-header__back" aria-label="Back to projects">← Projects</a>
+      <div class="article-header__title-row">
+        <span class="article-header__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+        </span>
+        <h1 class="article-header__title">When Do Transformers Actually Beat LSTMs for Time Series Forecasting?</h1>
+      </div>
+      <p class="article-header__meta">
+        <span class="chip">class project</span>
+        <span class="article-header__course">MIT 6.7960 (Deep Learning)</span>
+      </p>
+      <p class="article-header__role">Group project · 3-person team · MIT 6.7960 (Deep Learning), Fall 2025</p>
+      <p class="article-header__links">
+        <a href="https://github.com/samirk08/Deep-Learning-Final" target="_blank" rel="noopener noreferrer">View source on GitHub ↗</a>
+      </p>
+      <div class="article-header__chips">
+        <span class="chip chip--tech">PyTorch</span>
+        <span class="chip chip--tech">LSTM</span>
+        <span class="chip chip--tech">Transformer</span>
+        <span class="chip chip--tech">Time-Series</span>
+      </div>
+    </header>
+
+    <div class="article-layout">
+      <aside class="article-toc" aria-label="On this page">
+        <p class="article-toc__heading">Transformers vs LSTMs</p>
+        <ol class="article-toc__list">
+          <li class="article-toc__item">
+            <a href="#abstract" data-toc-target="abstract">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Abstract</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#introduction" data-toc-target="introduction">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Introduction</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#datasets" data-toc-target="datasets">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Datasets</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#lstm-baselines" data-toc-target="lstm-baselines">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">LSTM Baselines</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#transformers" data-toc-target="transformers">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Transformer architectures</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#results" data-toc-target="results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Model Comparison</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#conclusion" data-toc-target="conclusion">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Conclusion</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
+            </a>
+          </li>
+        </ol>
+      </aside>
+      <div class="article-body">
+    <article class="article">
+      <h2 id="abstract">Abstract</h2>
+      <p>Time-series forecasting has long been the province of statistical methods and recurrent networks, but the success of Transformers in language has driven enormous interest in attention-based forecasters. Architectures such as Informer, Autoformer, Crossformer, the Temporal Fusion Transformer (TFT), and PatchTST promise to overcome the recurrent bottleneck — the inability to parallelize across time steps and the well-known difficulty of carrying information across very long lags — by allowing every step to attend to every other step in $O(L^2)$ self-attention. Recent rigorous studies, however, have argued that simple linear models or well-tuned LSTMs often match or even beat these specialized Transformers, suggesting that many reported gains are benchmark artifacts rather than genuine architectural superiority. In this project we conduct a controlled head-to-head comparison across a dense spectrum of forecast horizons — from 24 hours through 30 days on hourly electricity demand, from 4 to 12 weeks on a 100-sensor traffic network, and from 1 to 3 weeks on regional flu — using strong LSTM-family baselines (vanilla LSTM, GRU, seq2seq with attention, stacked BiLSTM) against a vanilla Transformer, Crossformer, TFT, and PatchTST under matched parameter and compute budgets. Our findings reverse the simple "Transformers win" narrative: well-tuned LSTMs degrade gracefully even at 720h horizons, vanilla Transformers collapse on the small high-dimensional traffic dataset (MSE $\approx 1.43$), and only the architectures with the right inductive bias for the regime — Crossformer for spatial mixing, TFT for rich exogenous features, PatchTST for long-horizon multivariate scaling — consistently beat the LSTM line.</p>
+
+      <aside class="my-role">
+        <strong>My role:</strong> Group project (3-person team) for MIT 6.7960 Deep Learning, Fall 2025. I co-led the LSTM-baseline track (vanilla LSTM, GRU, seq2seq+attention, stacked BiLSTM across all three datasets) and contributed to the multi-horizon evaluation harness used to compare every architecture on a common train/validation/test split.
+      </aside>
+
+      <h2 id="introduction">Introduction</h2>
+      <p>The case for Transformers in time-series forecasting has always rested on two appealing arguments: a self-attention layer can in principle bridge any two time steps with a single hop, and Transformer training parallelizes cleanly across the time axis in a way that recurrence does not. Both arguments are real. But standard self-attention is also permutation-invariant — it treats a sequence like a bag of tokens — so a forecaster has to bolt positional encodings, seasonality decompositions, or patching mechanisms back on to recover the temporal structure that an LSTM gets for free. That extra machinery is exactly where Transformer forecasters earn their advantage <em>or</em> fail to.</p>
+
+      <p>Recent work has cast doubt on whether the advantage materializes in practice. Zeng et al.<sup><a href="#ref1">[1]</a></sup> showed that very simple linear baselines beat several published Transformer LTSF models on standard benchmarks, and Li et al.<sup><a href="#ref2">[2]</a></sup> reproduced and extended the finding. Domain studies in hydrology and finance<sup><a href="#ref3">[3]</a></sup> report that Transformers can edge out LSTMs in some regimes but rarely justify their additional compute. The picture that emerges is not "Transformers always win" or "Transformers are oversold," but rather: <em>it depends on the regime</em> — on data size, sequence length, dimensionality, and the specific inductive biases the architecture brings.</p>
+
+      <p>Most prior comparisons measure performance at a few fixed horizons (typically 96h and 720h on a single dataset) and stop there. That sampling is too coarse to see <em>where</em> the Transformer advantage emerges, if at all. We instead evaluate every model on a dense spectrum of horizons — 24h, 96h, 192h, 336h, 720h on electricity; 4, 8, 12 weeks on traffic; 1, 2, 3 weeks on flu — under controlled parameter counts (roughly matched hidden sizes across the LSTM family and the Transformer family) and a fixed training budget per architecture. The dense horizon sweep is what lets us identify the transition points: the horizon length at which patching, channel independence, or spatial-cross attention finally pays for its overhead.</p>
+
+      <p>The central question is direct: <em>when does each Transformer variant actually beat a well-tuned LSTM, and on what axis</em> — horizon, dataset size, or feature complexity? We approach this empirically by holding the evaluation pipeline constant, swapping architectures, and reporting MAE and RMSE per horizon per dataset, alongside training time and memory. The headline finding is in the opening paragraph; the rest of this writeup unpacks it.</p>
+
+      <h2 id="datasets">Datasets</h2>
+      <p>We use three real-world datasets that span very different regimes for sequence modeling. Each one isolates a different stress test: long-horizon forecasting with rich exogenous variables, high-dimensional multivariate forecasting in a small-data regime, and multi-output spatial-temporal forecasting under severe data limits.</p>
+
+      <p><strong>Electricity (large data, rich exogenous features).</strong> Hourly Irish smart-meter data — 48,048 hours of national electricity demand. The target is <code>nat_demand</code>; the model has access to 22 features, including 12 weather variables (temperature, humidity, cloud water content, and wind speed at three geographical locations), 2 binary calendar indicators (holiday and school-term flags), and 8 cyclic temporal encodings (sine/cosine pairs for hour, day, month, and day-of-year). We evaluate at five horizons that span one day to one month: 24h, 96h, 192h, 336h, and 720h. This dataset tests whether a model can integrate heterogeneous exogenous predictors with strong daily, weekly, and yearly seasonalities at long horizons.</p>
+
+      <p><strong>Traffic (high-dimensional, small data).</strong> 104 weeks of road-occupancy measurements from 100 sensor locations. Every sensor is both an input and a forecasting target — the model predicts future occupancy across the entire 100-dimensional sensor network simultaneously. Critically, we use no exogenous features and no engineered lags or rolling statistics, only the raw normalized sensor values. This isolates pure sequence modeling capability under a small-data, high-dimensional setting that is hostile to vanilla self-attention. Horizons are 4, 8, and 12 weeks ahead.</p>
+
+      <p><strong>Flu (small data, multi-output spatial).</strong> Influenza-like Illness rates across 10 U.S. HHS regions over 677 weeks. We deliberately use only a 38-week training window to mirror the realistic data-limited regime of epidemiological forecasting. The target is <code>Perc_Weighted_ILI</code> across all 10 regions, with 45 input features (40 epidemiological indicators across regions plus 5 temporal features). Horizons are 1, 2, and 3 weeks. The challenge is to learn both temporal disease progression and spatial diffusion across regions with very few training samples — the kind of regime where high-capacity Transformers are most prone to overfit.</p>
+
+      <p>Together these three datasets cover the three axes that prior work has used to argue for or against Transformers: data availability (large vs. small), feature complexity (rich vs. minimal), and output dimensionality (univariate vs. high-dimensional multivariate). Every result that follows uses a 70/15/15 train/validation/test split per dataset and reports test MAE and RMSE.</p>
+
+      <h2 id="lstm-baselines">LSTM Baselines</h2>
+      <p>Our research question — <em>when do Transformers actually beat LSTMs?</em> — only makes sense if the LSTM side is genuinely strong. A vanilla LSTM with default hyperparameters thrown against a tuned Transformer would tell us nothing useful. So we built four LSTM-family baselines and tuned them carefully under the same parameter and compute budgets we later spent on the Transformer variants.</p>
+
+      <p>An LSTM cell maintains a cell state $c_t$ alongside its hidden state $h_t$, and at every step three gates — input $i_t$, forget $f_t$, and output $o_t$ — modulate how the cell state updates and how it is read out:</p>
+
+      <p>$$ \begin{aligned}
+        i_t &= \sigma(W_i x_t + U_i h_{t-1} + b_i) \\
+        f_t &= \sigma(W_f x_t + U_f h_{t-1} + b_f) \\
+        o_t &= \sigma(W_o x_t + U_o h_{t-1} + b_o) \\
+        c_t &= f_t \odot c_{t-1} + i_t \odot \tanh(W_c x_t + U_c h_{t-1} + b_c) \\
+        h_t &= o_t \odot \tanh(c_t)
+      \end{aligned} $$</p>
+
+      <p>That gated-memory structure is exactly what gives LSTMs the ability to carry information over long lags<sup><a href="#ref6">[6]</a></sup> — a capability that recent "revival" approaches such as P-sLSTM<sup><a href="#ref7">[7]</a></sup> have shown can match modern Transformers on long-term forecasting when combined with patching and channel-independence ideas. Our four baselines are: a multi-layer <strong>vanilla LSTM</strong>; a <strong>GRU</strong><sup><a href="#ref8">[8]</a></sup>, which collapses the input and forget gates into a single update gate (often more parameter-efficient); a <strong>seq2seq LSTM</strong> encoder-decoder with Bahdanau additive attention<sup><a href="#ref9">[9]</a></sup>, which lets the decoder explicitly re-read encoded history at every output step; and a <strong>stacked BiLSTM</strong>, which combines forward and backward passes for richer context over each input window. Hidden sizes were tuned within the same parameter budget so the comparison would be apples-to-apples.</p>
+
+      <figure class="figure">
+        <picture>
+          <source srcset="/assets/img/transformers-vs-lstms/lstm_electricity_96h_forecast.avif" type="image/avif">
+          <source srcset="/assets/img/transformers-vs-lstms/lstm_electricity_96h_forecast.webp" type="image/webp">
+          <img src="/assets/img/transformers-vs-lstms/lstm_electricity_96h_forecast.jpeg"
+               alt="Vanilla LSTM forecast on the electricity dataset at the 96-hour horizon: predicted demand tracks the daily seasonality of ground truth across four days, with small phase errors at the daily peaks."
+               width="1600" height="1186" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Figure 1: Vanilla LSTM forecast on electricity at the 96-hour horizon. The model captures daily seasonality and tracks the demand pattern; small phase errors at the daily peaks are the dominant residual.</figcaption>
+      </figure>
+
+      <p>On electricity, the LSTM family trained smoothly across all four horizons we tried (96h, 192h, 336h, 720h). Training and validation losses dropped together with no sign of divergence; the gap between curves was modest for vanilla LSTM and GRU and slightly wider for seq2seq+attention because of its extra decoder parameters. Test error grew with horizon, as expected, but the growth was gradual: even at 720h (30 days ahead) the LSTMs produced sensible forecasts rather than collapsing to a flat mean. The horizon comparison plot below makes the point visually — the curves separate, but they never blow up.</p>
+
+      <figure class="figure">
+        <picture>
+          <source srcset="/assets/img/transformers-vs-lstms/electricity_horizon_comparison.avif" type="image/avif">
+          <source srcset="/assets/img/transformers-vs-lstms/electricity_horizon_comparison.webp" type="image/webp">
+          <img src="/assets/img/transformers-vs-lstms/electricity_horizon_comparison.jpeg"
+               alt="Test error across forecast horizons on the electricity dataset for four LSTM variants — vanilla LSTM, GRU, seq2seq with attention, and stacked BiLSTM — with error rising gradually from 96h to 720h."
+               width="1400" height="928" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Figure 2: Horizon comparison on electricity for the four LSTM-family baselines. Error increases gradually with horizon — graceful degradation, not catastrophic collapse — and the four variants stay tightly bunched, showing that architectural complexity inside the recurrent family does not, by itself, buy meaningful accuracy.</figcaption>
+      </figure>
+
+      <p>Two consistent patterns showed up across all three datasets. First, vanilla LSTM and GRU were typically the best variants in the family — adding attention or stacking BiLSTM layers rarely produced a gain large enough to justify the extra parameters, echoing the conclusions of Zeng et al.<sup><a href="#ref1">[1]</a></sup> and Li et al.<sup><a href="#ref2">[2]</a></sup> that simpler baselines often suffice. Second, the LSTMs handled all three regimes — rich-exogenous (electricity), high-dimensional small-data (traffic), and multi-output spatial (flu) — without any pathological failure mode. They are not the ceiling, but they are a real ceiling: any Transformer claim has to clear this line, not a strawman.</p>
+
+      <h2 id="transformers">Transformer architectures</h2>
+      <p>We compared four Transformer variants against the LSTM line: a vanilla encoder-only Transformer (control), Crossformer (spatial specialist), TFT (rich-exogenous specialist), and PatchTST (long-horizon multivariate specialist). Each architecture brings a different inductive bias for time-series structure, and the empirical question is whether that bias actually pays off in its target regime.</p>
+
+      <p><strong>Self-attention.</strong> The shared computational primitive across all four is scaled dot-product attention. Given query, key, and value matrices $Q, K, V$ of dimension $d_k$ produced by linear projections of the input, the layer computes</p>
+
+      <p>$$ \mathrm{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V. $$</p>
+
+      <p>This is $O(L^2)$ in the sequence length $L$, and the resulting weight matrix is permutation-invariant — which is why every time-series Transformer must add positional information back in (absolute position embeddings, learned relative positions, or, in PatchTST, segmenting the series into patches that act as larger tokens).</p>
+
+      <p><strong>Vanilla Transformer (control).</strong> A standard encoder-only Transformer with absolute positional encodings and a linear forecasting head, treating the 100 traffic sensors as a single high-dimensional vector at each time step. On traffic, this baseline failed: across 4-, 8-, and 12-week horizons it consistently produced MSE values above 1.0 on normalized data — worse than a naive moving average — collapsing toward the mean rather than tracking the volatility of ground truth. The pattern is well known: standard self-attention is data-hungry, and 100 weeks of training data is simply not enough to learn 100-dimensional spatial correlations from scratch.</p>
+
+      <p><strong>Crossformer (spatial specialist).</strong> Crossformer addresses the vanilla failure with a Two-Stage Attention (TSA) block: a <em>time-stage</em> attention captures temporal dependencies within each individual sensor's series, and a <em>dimension-stage</em> attention explicitly captures dependencies <em>between</em> sensors. The dimension-stage step is precisely what the vanilla model couldn't learn from 100 weeks of data, because TSA gives the model an inductive bias toward "sensors talk to each other" rather than asking it to discover the bias on its own. On the same traffic 12-week horizon where vanilla MSE was $\approx 1.43$, Crossformer hit $\approx 0.82$ — a roughly 42% reduction. The learned attention map even shows bright vertical stripes for hub sensors that are globally informative for the rest of the network, so the model genuinely recovered the topology rather than memorizing.</p>
+
+      <p><strong>Temporal Fusion Transformer (TFT).</strong> TFT<sup><a href="#ref4">[4]</a></sup> is built for multi-horizon forecasting with heterogeneous inputs — exactly the electricity regime. Its central innovation is a Variable Selection Network (VSN) that uses gated residual blocks to weight features adaptively at every time step, plus a multi-horizon attention layer over enriched temporal embeddings. TFT processes static covariates, known future inputs, and observed past inputs through separate paths before fusion. We trained TFT with hidden size 64, a single LSTM encoder layer (TFT internally still uses recurrence for local context), 4 attention heads, dropout 0.1, AdamW with $\mathrm{lr}=10^{-3}$, and early stopping with patience 3. On electricity, MAE rose from $0.258$ at 24h to $0.445$ at 720h — a sublinear power-law degradation $\mathrm{MAE}(h) \propto h^{0.16}$ — meaning forecast quality degrades much more slowly than the horizon length grows.</p>
+
+      <figure class="figure">
+        <picture>
+          <source srcset="/assets/img/transformers-vs-lstms/electricity_attention_24h_forecast.avif" type="image/avif">
+          <source srcset="/assets/img/transformers-vs-lstms/electricity_attention_24h_forecast.webp" type="image/webp">
+          <img src="/assets/img/transformers-vs-lstms/electricity_attention_24h_forecast.jpeg"
+               alt="TFT attention weights overlaid on a 24-hour electricity forecast: the model's variable-selection scores shift across the day from lag features in early hours to weather and temporal-encoding features later."
+               width="1600" height="1238" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Figure 3: TFT attention weights for a 24-hour electricity forecast. The Variable Selection Network shifts emphasis across time — lag features dominate early-hour predictions, while weather and temporal encodings carry more weight by mid-day — giving an interpretable trace of which inputs the model relied on at each step.</figcaption>
+      </figure>
+
+      <p><strong>PatchTST (long-horizon multivariate specialist).</strong> PatchTST<sup><a href="#ref5">[5]</a></sup> reframes tokenization itself. Instead of treating each time step as a token, it segments the series into subseries-level patches of length $P$ with stride $S$. A length-$L$ series becomes $N = \lfloor L/S \rfloor$ patches, dropping self-attention complexity from $O(L^2)$ to $O(N^2)$ and giving each token enough local context to encode short-term dynamics directly. PatchTST also processes each variate independently (channel independence), preventing negative transfer between weakly correlated channels and enabling linear scaling to hundreds of series. Reversible Instance Normalization (RevIN)<sup><a href="#ref12">[12]</a></sup> normalizes each instance before the encoder and denormalizes the predictions after, neutralizing distribution shift across the train/test boundary. On electricity, PatchTST hit MAE $0.221$ at 24h and $0.365$ at 720h — strictly better than TFT at every horizon. On traffic, channel independence kept error nearly flat across horizons (4 weeks: $0.499$; 12 weeks: $0.504$), exactly the regime PatchTST was built for.</p>
+
+      <figure class="figure">
+        <picture>
+          <source srcset="/assets/img/transformers-vs-lstms/electricity_tft_vs_patchtst_comparison.avif" type="image/avif">
+          <source srcset="/assets/img/transformers-vs-lstms/electricity_tft_vs_patchtst_comparison.webp" type="image/webp">
+          <img src="/assets/img/transformers-vs-lstms/electricity_tft_vs_patchtst_comparison.jpeg"
+               alt="Side-by-side electricity forecasts from TFT and PatchTST at multiple horizons, with PatchTST tracking ground-truth peaks slightly more tightly at long horizons."
+               width="1600" height="676" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Figure 4: TFT vs PatchTST forecasts on electricity. PatchTST's patching mechanism keeps prediction quality close to ground truth even at extended horizons, while TFT trades a small amount of accuracy for the interpretability its Variable Selection Network provides.</figcaption>
+      </figure>
+
+      <h2 id="results">Model Comparison</h2>
+      <p>With the LSTM and Transformer halves measured under the same evaluation protocol, the central question becomes concrete: across our three datasets and horizon sweeps, when does each Transformer variant clear the LSTM line, and when does it not?</p>
+
+      <figure class="figure">
+        <picture>
+          <source srcset="/assets/img/transformers-vs-lstms/unified_model_comparison.avif" type="image/avif">
+          <source srcset="/assets/img/transformers-vs-lstms/unified_model_comparison.webp" type="image/webp">
+          <img src="/assets/img/transformers-vs-lstms/unified_model_comparison.jpeg"
+               alt="Unified model comparison across electricity, traffic, and flu showing PatchTST and TFT outperforming LSTM baselines on the two larger datasets while the gap shrinks to within noise on the small flu dataset."
+               width="1600" height="551" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Figure 5: Unified comparison across all three datasets. On electricity, PatchTST achieves a 16–19% MAE improvement over TFT and 37–40% over the best LSTM baseline at 720h. On traffic, channel independence is decisive: PatchTST delivers a 19–21% improvement over TFT and 56–58% over LSTM. On flu, with only 38 training weeks, TFT slightly edges PatchTST, but the differences are within noise — data scarcity is the limiting factor, not architecture.</figcaption>
+      </figure>
+
+      <p>The pattern is clear by dataset. On <strong>electricity</strong> (large, rich exogenous), every architecture trains well and the ranking is PatchTST &lt; TFT &lt; LSTM family in MAE; the gap between PatchTST and the LSTM ceiling is roughly 37–40% at 720h. On <strong>traffic</strong> (small, high-dimensional), the vanilla Transformer fails outright; Crossformer's two-stage attention recovers most of that loss; PatchTST's channel independence beats both Crossformer and the LSTM line by another 15–25%. On <strong>flu</strong> (small, multi-output), no architecture has enough data to separate from the others — TFT and PatchTST end up within noise of each other and only modestly ahead of LSTM. The Transformer advantage, in other words, lives entirely in the regimes where the architecture brings the right inductive bias <em>and</em> where the data is large enough to use it.</p>
+
+      <figure class="figure">
+        <picture>
+          <source srcset="/assets/img/transformers-vs-lstms/computational_accuracy_tradeoff.avif" type="image/avif">
+          <source srcset="/assets/img/transformers-vs-lstms/computational_accuracy_tradeoff.webp" type="image/webp">
+          <img src="/assets/img/transformers-vs-lstms/computational_accuracy_tradeoff.jpeg"
+               alt="Pareto plot of accuracy versus training cost: PatchTST achieves the largest accuracy gains per unit of compute, TFT trades accuracy for interpretability, and LSTM remains the lowest-cost option."
+               width="1600" height="1113" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Figure 6: Accuracy versus computational cost. PatchTST is Pareto-optimal in our experiments — roughly 27.5% accuracy gain per unit of training time vs. TFT's 15.8%. TFT pays for its 4× compute with interpretable variable-selection weights, valuable when audits or regulatory reviews require model explanations. LSTM remains the cheapest option and the right choice under strict latency or budget constraints.</figcaption>
+      </figure>
+
+      <p>Compute cost is the second axis that breaks ties. TFT runs roughly 4× the LSTM training time; PatchTST runs roughly 2.5×. In a research setting both look modest, but at production scale — forecasting thousands of stores or sensors hourly — that multiplier becomes the deciding factor for what gets deployed. The Pareto plot above is the operational view of our central finding: PatchTST gives the largest accuracy gain per unit of compute, TFT buys interpretability rather than raw accuracy, and LSTM is what you pick when latency or budget caps the design.</p>
+
+      <figure class="figure">
+        <picture>
+          <source srcset="/assets/img/transformers-vs-lstms/summary_dashboard.avif" type="image/avif">
+          <source srcset="/assets/img/transformers-vs-lstms/summary_dashboard.webp" type="image/webp">
+          <img src="/assets/img/transformers-vs-lstms/summary_dashboard.jpeg"
+               alt="Summary dashboard collating MAE, RMSE, training time, and parameter counts across LSTM, Crossformer, TFT, and PatchTST on all three datasets."
+               width="1600" height="1031" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Figure 7: Summary dashboard. The dashboard collates per-dataset and per-horizon test metrics alongside training cost and parameter counts, making the regime-dependence of the Transformer advantage visible at a glance: large gains on electricity and traffic, marginal gains on flu, and never universally.</figcaption>
+      </figure>
+
+      <p>Stepping back, four cross-cutting observations fall out of the experiments. First, <strong>architectural specialization is essential</strong>: vanilla Transformers fail catastrophically on traffic, and every Transformer variant that succeeds does so by adding a domain-specific inductive bias — Crossformer's spatial-temporal separation, TFT's variable selection, PatchTST's channel independence and patching. Basic LSTMs, by contrast, "just work" without that customization. Second, <strong>data efficiency remains a Transformer weakness</strong>: on flu, none of the Transformer variants meaningfully outperform each other or the LSTM line, because their quadratic attention layer needs more data to regularize than 38 weeks can supply. Third, <strong>sublinear horizon degradation is a property of data availability, not architecture</strong>: TFT and PatchTST exhibit power-law degradation $\mathrm{MAE}(h) \propto h^{0.16}$ on electricity, but the same models plateau on flu where the data simply runs out. Fourth, <strong>compute is a real deployment barrier</strong>: a 5% MAE improvement at 10× cost is rarely justified in production, which is why LSTM still appears in many real forecasting pipelines.</p>
+
+      <h2 id="conclusion">Conclusion</h2>
+      <p>The Transformer literature in time-series forecasting is full of headlines that read "architecture X beats LSTMs by Y%." Our experiments confirm that those headlines are right in narrow regimes and misleading at large. Well-tuned LSTMs are strong, stable baselines: they degrade gracefully across horizons up to 30 days or 48 weeks, they handle rich exogenous variables, sparse data, and high-dimensional multivariate outputs without pathological failure modes, and the more elaborate variants in the LSTM family (seq2seq with attention, stacked BiLSTM) rarely produce gains large enough to justify their extra cost. Vanilla Transformers, on the other hand, can fail outright when data is scarce relative to dimensionality. It takes specialized architectures — Crossformer for cross-sensor mixing, TFT for heterogeneous exogenous features, PatchTST for long-horizon multivariate scaling — to clear the LSTM line, and even then only in the regimes those biases were designed for.</p>
+
+      <p>The practical recommendation that falls out of our results is regime-conditioned. <em>Small data (under ~1K samples)</em>: an LSTM or TFT with strong regularization is the safer bet. <em>Medium data with rich exogenous features</em>: TFT — its Variable Selection Network exploits the side information and its attention weights provide interpretability worth paying compute for. <em>Medium data with minimal features</em>: PatchTST — simpler than TFT, less prone to overfitting. <em>Large data with long horizons</em>: PatchTST — patching prevents attention dilution and the sublinear degradation is real. <em>High-dimensional multivariate (100+ series)</em>: PatchTST — channel independence scales linearly; on traffic specifically, Crossformer is the right choice when cross-channel coupling is strong. <em>Tight compute budget or strict latency</em>: LSTM — graceful degradation at 1× the cost is hard to beat. There is no universal winner. The architecture is a function of the regime, and the right move for a practitioner is to pick the model whose inductive bias matches the data, then verify by running both that model and a tuned LSTM head-to-head on a held-out window.</p>
+
+      <h2 id="references">References</h2>
+    </article>
+
+    <section class="references" aria-labelledby="references">
+      <ol class="references__list">
+        <li class="references__item" id="ref1">
+          <span class="references__authors">Zeng, A., Chen, M., Zhang, L., &amp; Xu, Q.</span>
+          <span class="references__year">(2023).</span>
+          <span class="references__title">Are Transformers Effective for Time Series Forecasting?</span>
+          <span class="references__venue"><em>Proceedings of the AAAI Conference on Artificial Intelligence</em>, 37(9), 11121–11128. <a href="https://arxiv.org/abs/2205.13504" target="_blank" rel="noopener noreferrer">arXiv:2205.13504</a>.</span>
+        </li>
+        <li class="references__item" id="ref2">
+          <span class="references__authors">Li, Z., Rao, Z., Pan, L., &amp; Xu, Z.</span>
+          <span class="references__year">(2023).</span>
+          <span class="references__title">Revisiting Long-Term Time Series Forecasting: An Investigation on Linear Mapping.</span>
+          <span class="references__venue"><em>arXiv preprint</em>. <a href="https://arxiv.org/abs/2305.10721" target="_blank" rel="noopener noreferrer">arXiv:2305.10721</a>.</span>
+        </li>
+        <li class="references__item" id="ref3">
+          <span class="references__authors">Shen, C., et al.</span>
+          <span class="references__year">(2022).</span>
+          <span class="references__title">Deep Learning in Environmental Remote Sensing: Achievements and Challenges.</span>
+          <span class="references__venue"><em>Water Resources Research</em>, 58(12), e2022WR032602.</span>
+        </li>
+        <li class="references__item" id="ref4">
+          <span class="references__authors">Lim, B., Arık, S. Ö., Loeff, N., &amp; Pfister, T.</span>
+          <span class="references__year">(2021).</span>
+          <span class="references__title">Temporal Fusion Transformers for Interpretable Multi-Horizon Time Series Forecasting.</span>
+          <span class="references__venue"><em>International Journal of Forecasting</em>, 37(4), 1748–1764. <a href="https://arxiv.org/abs/1912.09363" target="_blank" rel="noopener noreferrer">arXiv:1912.09363</a>.</span>
+        </li>
+        <li class="references__item" id="ref5">
+          <span class="references__authors">Nie, Y., Nguyen, N. H., Sinthong, P., &amp; Kalagnanam, J.</span>
+          <span class="references__year">(2023).</span>
+          <span class="references__title">A Time Series Is Worth 64 Words: Long-Term Forecasting with Transformers.</span>
+          <span class="references__venue"><em>International Conference on Learning Representations</em>. <a href="https://arxiv.org/abs/2211.14730" target="_blank" rel="noopener noreferrer">arXiv:2211.14730</a>.</span>
+        </li>
+        <li class="references__item" id="ref6">
+          <span class="references__authors">Hochreiter, S., &amp; Schmidhuber, J.</span>
+          <span class="references__year">(1997).</span>
+          <span class="references__title">Long Short-Term Memory.</span>
+          <span class="references__venue"><em>Neural Computation</em>, 9(8), 1735–1780.</span>
+        </li>
+        <li class="references__item" id="ref7">
+          <span class="references__authors">Kiangiani, K., &amp; Wang, Z.</span>
+          <span class="references__year">(2024).</span>
+          <span class="references__title">Parallel Subseries-based Long-Short Term Memory (P-sLSTM) for Long-Term Time Series Forecasting.</span>
+          <span class="references__venue"><em>arXiv preprint</em>.</span>
+        </li>
+        <li class="references__item" id="ref8">
+          <span class="references__authors">Cho, K., van Merriënboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., &amp; Bengio, Y.</span>
+          <span class="references__year">(2014).</span>
+          <span class="references__title">Learning Phrase Representations Using RNN Encoder-Decoder for Statistical Machine Translation.</span>
+          <span class="references__venue"><em>EMNLP 2014</em>.</span>
+        </li>
+        <li class="references__item" id="ref9">
+          <span class="references__authors">Bahdanau, D., Cho, K., &amp; Bengio, Y.</span>
+          <span class="references__year">(2015).</span>
+          <span class="references__title">Neural Machine Translation by Jointly Learning to Align and Translate.</span>
+          <span class="references__venue"><em>ICLR 2015</em>.</span>
+        </li>
+        <li class="references__item" id="ref12">
+          <span class="references__authors">Kim, T., Kim, J., Tae, Y., Park, C., Choi, J.-H., &amp; Choo, J.</span>
+          <span class="references__year">(2022).</span>
+          <span class="references__title">Reversible Instance Normalization for Accurate Time-Series Forecasting against Distribution Shift.</span>
+          <span class="references__venue"><em>International Conference on Learning Representations</em>. <a href="https://openreview.net/forum?id=cGDAkQo1C0p" target="_blank" rel="noopener noreferrer">OpenReview</a>.</span>
+        </li>
+      </ol>
+    </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-08</p>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

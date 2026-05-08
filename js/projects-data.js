@@ -147,7 +147,13 @@ export const projects = [
         source: '_src/papers/transformers-vs-lstms/index.html' }
     ],
     figures: [
-      { src: 'assets/img/transformers-vs-lstms/electricity_horizon_comparison', alt: 'Forecast horizon comparison across architectures on the electricity dataset', caption: 'Figure 1' }
+      { src: 'assets/img/transformers-vs-lstms/lstm_electricity_96h_forecast', alt: 'Vanilla LSTM forecast on electricity at the 96-hour horizon tracking daily seasonality', caption: 'Figure 1' },
+      { src: 'assets/img/transformers-vs-lstms/electricity_horizon_comparison', alt: 'Test error across forecast horizons for four LSTM variants on electricity', caption: 'Figure 2' },
+      { src: 'assets/img/transformers-vs-lstms/electricity_attention_24h_forecast', alt: 'TFT attention weights for a 24-hour electricity forecast', caption: 'Figure 3' },
+      { src: 'assets/img/transformers-vs-lstms/electricity_tft_vs_patchtst_comparison', alt: 'TFT vs PatchTST forecasts on electricity across multiple horizons', caption: 'Figure 4' },
+      { src: 'assets/img/transformers-vs-lstms/unified_model_comparison', alt: 'Unified model comparison across electricity, traffic, and flu datasets', caption: 'Figure 5' },
+      { src: 'assets/img/transformers-vs-lstms/computational_accuracy_tradeoff', alt: 'Pareto plot of accuracy versus training cost across architectures', caption: 'Figure 6' },
+      { src: 'assets/img/transformers-vs-lstms/summary_dashboard', alt: 'Summary dashboard with MAE, RMSE, training time, and parameter counts', caption: 'Figure 7' }
     ],
     links: { repo: 'https://github.com/samirk08/Deep-Learning-Final', paper: null, live: null },
     detailPage: '/projects/transformers-vs-lstms/'
