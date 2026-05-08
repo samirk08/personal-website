@@ -6,7 +6,15 @@
   <title>Early Sepsis Prediction with Deep Learning — Samir Kadariya</title>
   <meta name="description" content="MIT AI for Medicine group project on the 2019 PhysioNet Challenge — Transformer (utility 0.578), LSTM (0.261), and Autoencoder+kNN (0.04) approaches compared.">
   <meta name="theme-color" content="#0F4C81">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Early Sepsis Prediction — Samir Kadariya">
+  <meta property="og:description" content="MIT AI for Medicine group project on the 2019 PhysioNet Challenge — Transformer (utility 0.578), LSTM (0.261), and Autoencoder+kNN (0.04) approaches compared.">
+  <meta property="og:image" content="https://personal-website-pink-pi.vercel.app/assets/og/sepsis-prediction.png">
+  <meta property="og:url" content="https://personal-website-pink-pi.vercel.app/projects/sepsis-prediction/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/main.css?v=20260507-3">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
@@ -126,9 +134,13 @@
       <p>Missingness is the dominant feature of the dataset. An average of $70\%$ of values are missing per patient; some features (notably EtCO$_2$) are absent in $100\%$ of cases. The missingness is not random — values are typically absent because the clinician judged the measurement unnecessary for the patient's current condition, so missingness itself carries diagnostic information. Both sepsis ($68.68\%$ avg. missingness) and non-sepsis ($70.00\%$) patients exhibit similar overall patterns, which means that any preprocessing that obscures missingness throws away signal. Our pipeline addresses this with two-stage imputation: first forward-fill within each patient (carrying the last observed value forward, exploiting temporal autocorrelation), then training-set timestep-specific population-mean fallback when no prior observation exists. Critically, we concatenate $40$-dimensional binary missingness-indicator features ($1$ = missing, $0$ = observed) to give an $80$-dimensional feature vector per timestep, doubling the input space. For models that benefit, we further augment with temporal derivatives (a 7-step exponential moving average and a one-step linear difference per feature), bringing the dimensionality to $160$.</p>
 
       <figure class="figure">
-        <img src="/assets/img/sepsis-prediction/chart3_pipeline.jpeg"
-             alt="Preprocessing pipeline for the PhysioNet sepsis challenge: feature imputation, sliding-window construction, and per-patient time-series normalization."
-             width="1780" height="505" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/sepsis-prediction/chart3_pipeline.avif" type="image/avif">
+          <source srcset="/assets/img/sepsis-prediction/chart3_pipeline.webp" type="image/webp">
+          <img src="/assets/img/sepsis-prediction/chart3_pipeline.jpeg"
+               alt="Preprocessing pipeline for the PhysioNet sepsis challenge: feature imputation, sliding-window construction, and per-patient time-series normalization."
+               width="1780" height="505" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 1: Preprocessing pipeline — population-mean computation, forward-fill imputation, and missingness augmentation transform the raw 40-feature input into an 80-dimensional feature space.</figcaption>
       </figure>
 
@@ -156,9 +168,13 @@
       <p>The LSTM model — Samir's contribution to the project — handles the time-series directly. It uses a stacked bidirectional Long Short-Term Memory recurrent network operating on the $80$-dimensional feature vectors (the $40$ imputed clinical values plus $40$ missingness indicators), with a sigmoid output head that produces a per-step sepsis probability. Training uses binary cross-entropy on the per-step sepsis label and the Adam optimizer with early stopping on validation utility. No dimensionality reduction precedes the LSTM; the recurrent layers are responsible for distilling the temporal structure on their own. Hyperparameters (hidden width, depth, dropout, learning rate) were tuned with Bayesian optimization (Optuna) up to a maximum of $100$ epochs. The LSTM is the natural causal-temporal model for this task — it processes hours sequentially in order, so its prediction at hour $t$ depends only on hours $\leq t$, matching the deployment scenario where future measurements are not yet available.</p>
 
       <figure class="figure">
-        <img src="/assets/img/sepsis-prediction/chart6_lstm_architecture.jpeg"
-             alt="LSTM architecture with bidirectional recurrent layers feeding a sigmoid output head, trained with binary cross-entropy on the sepsis-onset binary label."
-             width="2080" height="880" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/sepsis-prediction/chart6_lstm_architecture.avif" type="image/avif">
+          <source srcset="/assets/img/sepsis-prediction/chart6_lstm_architecture.webp" type="image/webp">
+          <img src="/assets/img/sepsis-prediction/chart6_lstm_architecture.jpeg"
+               alt="LSTM architecture with bidirectional recurrent layers feeding a sigmoid output head, trained with binary cross-entropy on the sepsis-onset binary label."
+               width="2080" height="880" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 2: LSTM architecture (Samir's contribution).</figcaption>
       </figure>
 
@@ -168,18 +184,26 @@
       <p>The three temporal architectures span a wide utility range. The Transformer achieved normalized utility $0.578$ — the strongest score by a substantial margin — with AUROC $0.949$ and AUPRC $0.355$ at the optimal decision threshold ($\theta \approx 0.03$). The LSTM achieved utility $0.261$ at threshold $\theta = 0.03$ on the validation set, with AUROC $0.651$ and AUPRC $0.038$. The Autoencoder + k-NN model achieved utility $0.04$ — only slightly above the no-alert floor — with AUROC $0.651$ and AUPRC $0.038$ as well, but a much higher per-timestep error rate.</p>
 
       <figure class="figure">
-        <img src="/assets/img/sepsis-prediction/threshold.jpeg"
-             alt="Utility-vs-threshold curve for the LSTM model, showing how normalized utility varies with the decision threshold and identifying the optimal operating point."
-             width="536" height="393" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/sepsis-prediction/threshold.avif" type="image/avif">
+          <source srcset="/assets/img/sepsis-prediction/threshold.webp" type="image/webp">
+          <img src="/assets/img/sepsis-prediction/threshold.jpeg"
+               alt="Utility-vs-threshold curve for the LSTM model, showing how normalized utility varies with the decision threshold and identifying the optimal operating point."
+               width="536" height="393" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 3: Utility versus decision threshold (LSTM). Optimal threshold ≈ 0.03 maximizes normalized utility; lower thresholds trigger excessive false alarms while higher thresholds miss sepsis cases.</figcaption>
       </figure>
 
       <p>For the LSTM specifically, the threshold-utility curve has a clean unimodal shape (Figure 3): at very low thresholds the model alerts on essentially every patient and the false-positive penalty dominates; at high thresholds the model misses most sepsis cases and the missed-detection penalty dominates. The peak at $\theta \approx 0.03$ reflects the strong asymmetry of the utility function — a $3\%$ predicted probability is the right cutoff because the cost of missing sepsis is $40\times$ the cost of a false positive. At this operating point, the LSTM produces meaningful early-warning behavior: of the $299$ sepsis-positive patients in the test set, $110$ ($\approx 37\%$) received a correct alert before clinical onset.</p>
 
       <figure class="figure">
-        <img src="/assets/img/sepsis-prediction/lead_times.jpeg"
-             alt="Distribution of prediction lead times relative to clinical sepsis onset, with mass concentrated 6 to 12 hours before onset."
-             width="624" height="403" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/sepsis-prediction/lead_times.avif" type="image/avif">
+          <source srcset="/assets/img/sepsis-prediction/lead_times.webp" type="image/webp">
+          <img src="/assets/img/sepsis-prediction/lead_times.jpeg"
+               alt="Distribution of prediction lead times relative to clinical sepsis onset, with mass concentrated 6 to 12 hours before onset."
+               width="624" height="403" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 4: Lead-time distribution for early-detection alerts (LSTM). The median lead time falls in the clinically actionable 6-to-12-hour window where antibiotic timing measurably affects mortality.</figcaption>
       </figure>
 
