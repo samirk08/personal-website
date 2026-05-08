@@ -11,4 +11,4 @@
 @import url("./motion.css")     layer(components);
 @import url("./nav.css")        layer(components);
 @import url("./page.css")       layer(components);
-@import url("./article.css")    layer(article);
+@import url("./article.css?v=20260507-3")    layer(article);

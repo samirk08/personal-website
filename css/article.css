@@ -268,20 +268,20 @@
     position: relative;
   }
 
-  /* (0,3,1) specificity — wins over base 'a' rule from base.css.
-     Uses flex layout so the dot sits inline with the label rather than
-     absolutely-positioned. The earlier absolute-positioned dot was rendering
-     invisibly: 9px cream-on-cream center inside a 1.5px gray ring is barely
-     perceptible at any viewing distance, AND the absolute span inside an
-     <a> with position:relative produced inconsistent box dimensions across
-     browsers. Inline-flex flow is bulletproof. */
+  /* (0,3,1) specificity + !important on color/decoration as a final-line
+     defense against any cascade-layer ordering quirks: even if `article` layer
+     somehow loses to `base` for our nested @layer setup, the !important keeps
+     the link from rendering as accent-blue underlined.
+
+     Inline-flex layout puts the dot in the flow next to the label — no more
+     absolute positioning fragility. */
   .article-toc .article-toc__list .article-toc__item a {
     display: flex;
     align-items: center;
     gap: 11px;
     padding-block: 4px;
-    color: var(--text-muted);
-    text-decoration: none;
+    color: var(--text-muted) !important;
+    text-decoration: none !important;
     line-height: 1.5;
     font-size: 0.75rem;
     font-family: var(--font-mono);
@@ -297,20 +297,19 @@
     border-radius: 2px;
   }
 
-  /* Dot now lives in the flex flow (no absolute positioning). flex: 0 0 auto
-     keeps it from shrinking when long labels wrap. position:relative + z-index
-     puts it in front of the rail's z-index:0 so the dot's bg punches through. */
+  /* Dot is FILLED (no outline + cream-fill — that combo was invisible against
+     the cream page bg). Solid gray shows clearly; the rail is visible BETWEEN
+     dots only. Active state swaps to the accent color. */
   .article-toc .article-toc__list .article-toc__item .article-toc__dot {
     flex: 0 0 auto;
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    border: 1.5px solid var(--text-muted);
-    background: var(--bg);
+    background: var(--text-muted);
     box-sizing: border-box;
     position: relative;
     z-index: 1;
-    transition: background 150ms, border-color 150ms;
+    transition: background 150ms;
   }
 
   /* Allow long labels to wrap without pushing the dot or breaking the layout. */
