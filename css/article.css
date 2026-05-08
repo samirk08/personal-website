@@ -170,11 +170,19 @@
     line-height: inherit;
   }
 
-  /* §6.1 Article TOC — bullets-on-a-rail layout (added 2026-05-07).
-     Wraps the article + references in a 2-column grid at >=1024 px:
-     a sticky monospace TOC on the left and the prose column on the right.
-     Below 1024 px the TOC is hidden (URL-anchor sharing still works because
-     the per-section H2 IDs remain in the DOM). */
+  /* §6.1 Article TOC — bullets-on-a-rail layout (added 2026-05-07; tightened
+     2026-05-07 to match hectorastrom.com proportions).
+
+     Wraps the article + references in a 2-column grid at >=1024 px: a sticky
+     monospace TOC on the left, prose column on the right. Below 1024 px the
+     TOC is hidden (URL-anchor sharing still works — H2 IDs remain in the DOM).
+
+     IMPORTANT: link selectors are 3-class deep
+     (.article-toc .article-toc__list .article-toc__item a) to give specificity
+     (0,3,1), which decisively beats `base.css`'s `a { color/text-decoration }`
+     (0,0,1) regardless of any cascade-layer ordering quirks introduced by
+     nested @layer wraps. Without this depth, the base 'a' rule was bleeding
+     through and rendering TOC links as default underlined accent-blue. */
   .article-page {
     max-inline-size: var(--measure-grid, 1200px);
     margin-inline: auto;
@@ -189,7 +197,7 @@
 
   @media (min-width: 1024px) {
     .article-layout {
-      grid-template-columns: 220px minmax(0, 65ch);
+      grid-template-columns: 180px minmax(0, 65ch);
       gap: var(--space-10);
       align-items: start;
     }
@@ -197,7 +205,7 @@
 
   .article-body { min-inline-size: 0; }
 
-  /* When the TOC layout is in effect the inner .article + .references blocks
+  /* When the TOC layout is in effect, the inner .article + .references blocks
      should not re-impose their own outer max-width / centering — the layout
      grid is the parent container now. */
   @media (min-width: 1024px) {
@@ -215,26 +223,27 @@
     .article-toc {
       display: block;
       position: sticky;
-      inset-block-start: var(--space-12);
+      inset-block-start: var(--space-6);
       align-self: start;
       max-block-size: calc(100vh - var(--space-12));
       overflow-y: auto;
       padding-block: var(--space-2);
-      font-size: var(--text-sm);
+      font-family: var(--font-mono);
     }
   }
 
-  .article-toc__heading {
+  /* Article title at top of TOC — small monospace in muted accent color */
+  .article-toc .article-toc__heading {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--accent);
     margin: 0 0 var(--space-3);
-    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
   }
 
-  .article-toc__list {
+  .article-toc .article-toc__list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -242,59 +251,65 @@
     font-family: var(--font-mono);
   }
 
-  .article-toc__list::before {
+  /* Vertical 1px rail behind the bullets — connects them visually */
+  .article-toc .article-toc__list::before {
     content: "";
     position: absolute;
-    inset-inline-start: 5px;
-    inset-block-start: 8px;
-    inset-block-end: 8px;
+    inset-inline-start: 4px;
+    inset-block-start: 6px;
+    inset-block-end: 6px;
     width: 1px;
     background: var(--surface-muted);
+    z-index: 0;
   }
 
-  .article-toc__item {
+  .article-toc .article-toc__list .article-toc__item {
     position: relative;
-    padding-block: var(--space-1);
   }
 
-  .article-toc__item a {
+  /* (0,3,1) specificity — wins over base 'a' rule from base.css */
+  .article-toc .article-toc__list .article-toc__item a {
     display: block;
     position: relative;
-    padding: var(--space-1) 0 var(--space-1) calc(var(--space-4) + 4px);
+    padding: var(--space-1) 0 var(--space-1) calc(var(--space-3) + 8px);
     color: var(--text-muted);
     text-decoration: none;
-    line-height: 1.4;
-    font-size: var(--text-sm);
+    line-height: 1.5;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
   }
 
-  .article-toc__item a:hover { color: var(--text); }
+  .article-toc .article-toc__list .article-toc__item a:hover {
+    color: var(--text);
+  }
 
-  .article-toc__item a:focus-visible {
+  .article-toc .article-toc__list .article-toc__item a:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
-    border-radius: 3px;
+    border-radius: 2px;
   }
 
-  .article-toc__dot {
+  .article-toc .article-toc__list .article-toc__item .article-toc__dot {
     position: absolute;
     inset-inline-start: 0;
-    inset-block-start: 10px;
-    width: 11px;
-    height: 11px;
+    inset-block-start: 7px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     border: 1.5px solid var(--text-muted);
     background: var(--bg);
     box-sizing: border-box;
+    z-index: 1;
     transition: background 150ms, border-color 150ms;
   }
 
-  .article-toc__item a[aria-current="location"] .article-toc__dot {
+  .article-toc .article-toc__list .article-toc__item a[aria-current="location"] .article-toc__dot {
     background: var(--accent);
     border-color: var(--accent);
   }
 
-  .article-toc__item a[aria-current="location"] .article-toc__label {
+  .article-toc .article-toc__list .article-toc__item a[aria-current="location"] .article-toc__label {
     color: var(--text);
-    font-weight: 600;
+    font-weight: 500;
   }
 }
