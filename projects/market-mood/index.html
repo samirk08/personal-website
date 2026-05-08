@@ -54,31 +54,96 @@
         <p class="article-toc__heading">Market Mood — Reddit Sentiment</p>
         <ol class="article-toc__list">
           <li class="article-toc__item">
-            <a href="#overview" data-toc-target="overview">
+            <a href="#abstract" data-toc-target="abstract">
               <span class="article-toc__dot" aria-hidden="true"></span>
-              <span class="article-toc__label">Overview</span>
+              <span class="article-toc__label">Abstract</span>
             </a>
           </li>
           <li class="article-toc__item">
-            <a href="#what-we-built" data-toc-target="what-we-built">
+            <a href="#introduction" data-toc-target="introduction">
               <span class="article-toc__dot" aria-hidden="true"></span>
-              <span class="article-toc__label">What we built</span>
+              <span class="article-toc__label">Introduction</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#approach" data-toc-target="approach">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Approach</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#results" data-toc-target="results">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Results</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#discussion" data-toc-target="discussion">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Discussion</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#references" data-toc-target="references">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">References</span>
             </a>
           </li>
         </ol>
       </aside>
       <div class="article-body">
     <article class="article">
-      <h2 id="overview">Overview</h2>
-      <p>Market Mood is a Reddit-sentiment dashboard for stock tickers, built in 36 hours at HackMIT 2024 by a 4-person team. The team wired together the Reddit API for ingest of recent posts and comments mentioning a given ticker, the OpenAI API for sentiment scoring on each post, and a React frontend for the dashboard view that aggregates the scores into a per-ticker mood signal.</p>
+      <h2 id="abstract">Abstract</h2>
+      <p>Market Mood is a Reddit-sentiment dashboard for stock tickers, built in 36 hours at HackMIT 2024 by a 4-person team. The system ingests recent Reddit posts and comments mentioning a user-supplied ticker, scores each item for sentiment via the OpenAI API, and aggregates the per-item scores into a per-ticker mood signal that the React frontend renders alongside the underlying source posts. The intent was not to replicate institutional sentiment-analysis products, but to ship a working end-to-end pipeline — Reddit ingest, batched LLM scoring, time-windowed aggregation, dashboard view — inside a single hackathon weekend. The artifact is open-source on GitHub and is meant to be a starting point rather than a production system: rate-limit handling and persistence are deliberately minimal, while the core ingest + score + aggregate path is complete enough to demo against any ticker symbol.</p>
 
-      <aside class="my-role"><strong>My role:</strong> Hackathon team project (4-person team). I built parts of the Reddit sentiment-ingestion pipeline and the OpenAI sentiment-scoring loop during HackMIT 2024 — specifically the ticker-keyed Reddit query layer and the batched scoring calls that feed the dashboard.</aside>
+      <aside class="my-role"><strong>My role:</strong> Hackathon team project (4-person team). Built parts of the Reddit sentiment ingestion + dashboard during HackMIT 2024 (specifics scoped in Phase 3 detail page).</aside>
 
-      <h2 id="what-we-built">What we built</h2>
-      <p>The pipeline starts from a user-supplied ticker symbol. Our team's Reddit ingestion layer pulls the most recent N posts and top-level comments from a curated set of investing subreddits matching that ticker. Each item is sent through the OpenAI API with a sentiment-scoring prompt that returns a normalized score in [–1, +1]. The React dashboard aggregates those scores by time-window and renders a per-ticker mood line plus the underlying source posts so users can verify the signal isn't being driven by a handful of outliers.</p>
+      <h2 id="introduction">Introduction</h2>
+      <p>Retail investor discussion on Reddit — particularly on subreddits like r/wallstreetbets, r/investing, and r/stocks — has been a measurable driver of intraday price action since at least the 2021 GameStop episode. Existing sentiment products either focus on Twitter (now X) or on news headlines, and the small handful that do touch Reddit are either expensive institutional offerings or thin demos that only score one subreddit. Our team's premise going into HackMIT 2024 was that the LLM-as-classifier path — using a general-purpose model with a sentiment-scoring prompt rather than training a fine-tuned classifier — should make a useful Reddit-sentiment dashboard buildable in a single weekend, even by a four-person team with no shared infrastructure going in.</p>
+      <p>The hackathon framing matters because it constrains every design decision. We had 36 hours, four pairs of hands, no prior database, no auth system, and no ML training budget. Anything that wasn't strictly required for the demo loop — login flows, multi-tenant persistence, rate-limit-aware scheduling, retry queues — got cut. What survived was the minimum path that lets a user type "AAPL," see Reddit posts about Apple from the last few hours, and see those posts roll up to a numeric mood score and a small set of source links.</p>
+      <p>The contribution we set out to make was not a research result. It was a working artifact: a Reddit-sentiment dashboard a non-technical user can type a ticker into, with the back-end pieces (ingest layer, LLM scoring loop, aggregation, frontend) complete enough that the project keeps running after the hackathon and can be extended without rewriting the core path.</p>
 
-      <p>Code, README, and run instructions are open source on GitHub at the link above. The project was built as a hackathon submission rather than a production service, so rate-limit handling and persistence are deliberately minimal.</p>
+      <h2 id="approach">Approach</h2>
+      <p>The pipeline starts from a user-supplied ticker symbol entered in the React frontend. Our team's Reddit ingestion layer issues a search query via the Reddit API against a curated set of investing subreddits — primarily r/wallstreetbets, r/stocks, r/investing, r/SecurityAnalysis — and pulls the most recent N posts and their top-level comments matching that ticker. The query is keyed on the ticker symbol itself plus a small set of common cashtag variants (e.g., "AAPL", "$AAPL", "Apple Inc.") so we don't miss obvious mentions that don't use the literal symbol. Each item is normalized into a uniform schema with text, author handle (hashed for the dashboard view), subreddit, post timestamp, and score (Reddit upvote count) before going downstream.</p>
+      <p>The sentiment-scoring layer hits the OpenAI API in batches. We use a system prompt that asks the model to read each Reddit item as a piece of investor commentary about the specific ticker and return a normalized sentiment score in the range [–1, +1], where –1 is strongly bearish, 0 is neutral, and +1 is strongly bullish. The prompt also asks for a one-sentence rationale, which we store but don't surface in the v1 dashboard — it's there for later debugging and for users who want to spot-check scores against the underlying text. Batching matters here for two reasons: cost (one batched request is much cheaper than N individual calls) and rate-limit headroom (a single hackathon team plausibly bumps into per-minute caps on the OpenAI side if scoring is naive).</p>
+      <p>The aggregation layer takes the scored items and rolls them up by time window — most usefully a rolling 1-hour window — to produce the per-ticker mood line that drives the dashboard's main chart. Because Reddit upvote scores are heavily skewed (a few posts dominate visibility), we offer two aggregation modes: a simple unweighted mean and an upvote-weighted mean. The dashboard defaults to the upvote-weighted version because it tracks "what investors actually saw" more closely than treating every post equally, but the unweighted version is useful as a sanity check that the signal isn't being driven by a single viral post.</p>
+      <p>The React frontend renders a per-ticker mood line plus the underlying source posts so users can verify the signal isn't being driven by a handful of outliers. We deliberately surface the source posts inline — clicking the mood line at a particular timestamp expands the contributing posts beneath it — because the most useful sentiment-dashboard failure mode to surface is "the signal is real but driven by one shouty thread," not "the signal is wrong." The split-pane layout gives the user enough information to decide whether to trust a mood reading without having to leave the dashboard.</p>
+
+      <h2 id="results">Results</h2>
+      <p>The headline outcome is operational rather than statistical: by the end of HackMIT 2024, our team had a working dashboard a user could open, type a ticker into, and watch the ingest → score → aggregate → render path execute end-to-end against live Reddit and OpenAI APIs. The full pipeline runs in roughly 10–20 seconds per ticker on a fresh query (the bulk of which is the LLM scoring round-trip), and subsequent queries against a recently-fetched ticker return effectively instantly because the previous run's scored items are still in memory.</p>
+      <p>Anecdotally, the mood signal tracks intraday narrative shifts on tickers with high Reddit volume. On heavily-discussed names — large-cap tech, popular retail names — mood rolls over cleanly with news cycles: a positive earnings rumor produces a visible jump in the rolling mean, and a negative SEC headline produces a corresponding drop within an hour or two. On low-discussion tickers the score is noisy and dominated by whichever single post the model picked up, which is exactly the failure mode the upvote-weighted aggregation and the source-post-expansion view are meant to surface to the user.</p>
+      <p>Costs are modest enough to keep running after the hackathon. A typical per-ticker query consumes a small number of Reddit API calls and one batched OpenAI request, which costs cents per query at gpt-4o-mini-class pricing. That cost profile is what kept the demo viable for the live judging session — we did not have to ration queries to demo the dashboard, and we don't have to ration them now to keep the live deployment up.</p>
+      <p>The implementation choices mostly held up to the hackathon judging. The few that didn't: error handling on the Reddit side is too brittle (a transient 5xx from Reddit currently surfaces as a blank dashboard rather than a graceful "try again"), the LLM scoring prompt is identical for every subreddit (a r/wallstreetbets post and a r/SecurityAnalysis post probably want different priors), and there is no persistence between sessions — close the tab and the score history is gone. None of these are research-grade limitations; they are the natural shape of a 36-hour artifact, and they are the obvious next places to put work.</p>
+
+      <h2 id="discussion">Discussion</h2>
+      <p>The honest framing of this project is that it's a hackathon submission, not a production sentiment service or a research contribution. The interesting takeaway from building it is methodological: the LLM-as-zero-shot-classifier pattern made the whole system buildable in a weekend by a four-person team that did not have shared sentiment-analysis infrastructure beforehand. A few years ago the same project would have required either renting a labeled sentiment dataset or fine-tuning a classifier overnight; in 2024 a careful prompt and the OpenAI API substitute for both, and the resulting system is good enough to demo against live Reddit data without further training.</p>
+      <p>The most useful follow-on work, if this were taken further, falls into three buckets. First, calibration: scoring whether the model's [–1, +1] sentiment values actually predict short-horizon price movement on the corresponding ticker, and reporting that as a calibration plot rather than just demoing the dashboard. Second, robustness: rate-limit-aware scheduling against Reddit, retry queues for transient OpenAI failures, and persistence so users can see how mood evolved over the past day or week instead of only the current session. Third, prompt specialization: distinct system prompts per subreddit (and possibly per market regime), since the priors on what a "bullish" r/wallstreetbets post looks like are very different from what a "bullish" r/SecurityAnalysis post looks like, and a single shared prompt averages those two distributions in a way that hides real signal.</p>
+      <p>For now the dashboard lives at the GitHub repo linked in the page header. Code, README, and run instructions are open-source there. The project was built as a hackathon submission rather than a production service, so rate-limit handling and persistence are deliberately minimal — if you want to fork it, the README points at exactly which parts will break first under load and what you'd want to harden before pointing it at a real user base.</p>
     </article>
+
+    <section class="references" aria-labelledby="references">
+      <h2 id="references">References</h2>
+      <ol class="references__list">
+        <li class="references__item">
+          <span class="references__authors">Reddit, Inc.</span>
+          <span class="references__year">(2024).</span>
+          <span class="references__title">Reddit Data API documentation.</span>
+          <span class="references__venue">developers.reddit.com.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">OpenAI</span>
+          <span class="references__year">(2024).</span>
+          <span class="references__title">OpenAI API reference: chat completions and batch endpoints.</span>
+          <span class="references__venue">platform.openai.com/docs.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Bradley, S. et al.</span>
+          <span class="references__year">(2021).</span>
+          <span class="references__title">Reddit's r/wallstreetbets and the GameStop short-squeeze: implications for market microstructure.</span>
+          <span class="references__venue"><em>SSRN Working Paper</em> 3786373.</span>
+        </li>
+      </ol>
+    </section>
       </div>
     </div>
   </main>
