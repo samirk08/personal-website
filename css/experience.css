@@ -11,6 +11,12 @@
   padding-block: 0;
 }
 
+/* Visible gap between cards so they don't sit flush against each other. */
+.timeline {
+  display: grid;
+  gap: var(--space-6);
+}
+
 /* ===== Card head (always visible) ===== */
 .timeline__head {
   display: grid;
@@ -21,7 +27,7 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-6) var(--space-7);
   text-align: start;
   font: inherit;
   color: inherit;
@@ -112,12 +118,12 @@
    thrash. */
 
 .timeline__body {
-  margin-block-start: var(--space-2);
+  margin-block-start: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-block-start: none;
   border-radius: 0 0 var(--radius-md) var(--radius-md);
-  padding: var(--space-4) var(--space-5) var(--space-5);
+  padding: var(--space-6) var(--space-7);
 }
 @media (prefers-reduced-motion: no-preference) {
   .timeline__body {
@@ -136,18 +142,25 @@
   border-block-end-color: transparent;
 }
 
-.timeline__summary {
-  font-size: var(--text-base);
-  color: var(--text);
-  margin: 0;
-  max-inline-size: var(--measure);
-  line-height: 1.55;
+/* ===== Period sub-blocks (multi-stint roles, e.g. SESCO 2024 + 2025) =====
+   The .timeline__body may contain one or more .timeline__period wrappers, each
+   carrying its own date label + bullet list. Adjacent periods are separated
+   by a thin top border so they read as distinct stints within one card. */
+.timeline__period {
+  padding-block-start: var(--space-2);
+  padding-block-end: var(--space-2);
 }
-
-.timeline__body > .timeline__summary + .timeline__bullets {
-  margin-block-start: var(--space-4);
-  padding-block-start: var(--space-4);
+.timeline__period + .timeline__period {
   border-block-start: 1px solid var(--border);
+  padding-block-start: var(--space-4);
+  margin-block-start: var(--space-4);
+}
+.timeline__period-when {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin: 0 0 var(--space-3);
+  letter-spacing: 0.02em;
 }
 
 /* ===== Bullet list with accent disc bullets ===== */
@@ -189,6 +202,9 @@
   margin: 0;
   margin-block-start: var(--space-5);
   margin-block-end: var(--space-2);
+  /* Separator above the tech section, since the summary divider is gone. */
+  border-block-start: 1px solid var(--border);
+  padding-block-start: var(--space-5);
 }
 
 .timeline__tech-chips {
@@ -213,16 +229,19 @@
 /* ===== Mobile tweaks (≤ 600px): stack dates onto a new line below the title
    so the head doesn't squeeze and remains readable. ===== */
 @media (max-width: 600px) {
+  .timeline {
+    gap: var(--space-5);
+  }
   .timeline__head {
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "text   toggle"
       "when   when";
     row-gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-4) var(--space-5);
   }
   .timeline__head-text { grid-area: text; }
   .timeline__when      { grid-area: when; text-align: start; }
   .timeline__toggle    { grid-area: toggle; }
-  .timeline__body      { padding: var(--space-4); }
+  .timeline__body      { padding: var(--space-5); }
 }
