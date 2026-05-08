@@ -6,7 +6,15 @@
   <title>Clustering Soccer Playing Styles — Samir Kadariya</title>
   <meta name="description" content="MIT 6.3732 project — PCA + K-means + ANOVA on StatsBomb event data spanning World Cup 2022, Euro 2024, Copa America 2024, and Barcelona 2006-21.">
   <meta name="theme-color" content="#0F4C81">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Clustering Soccer Playing Styles — Samir Kadariya">
+  <meta property="og:description" content="MIT 6.3732 project — PCA + K-means + ANOVA on StatsBomb event data spanning World Cup 2022, Euro 2024, Copa America 2024, and Barcelona 2006-21.">
+  <meta property="og:image" content="https://personal-website-pink-pi.vercel.app/assets/og/soccer-clustering.png">
+  <meta property="og:url" content="https://personal-website-pink-pi.vercel.app/projects/soccer-clustering/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/main.css?v=20260507-3">
 </head>
@@ -104,18 +112,26 @@
       <p>I run K-means with K from 2 to 10 and pick K by the elbow plot of within-cluster sum of squared distances; I cross-check K with a t-SNE projection. In every case study the elbow is clean at K = 3, which is also where the t-SNE plot shows three visually separate point groups. With clusters in hand I label each by inspecting feature centroids: Cluster 0 in every case ends up as the defensive/reactive style (lowest possession share, highest clearance counts, lowest passes per minute), Cluster 1 as a possession-oriented but less-incisive middle, and Cluster 2 as the proactive/attacking style (highest progressive passing, highest goalkeeper line, highest carry rates).</p>
 
       <figure class="figure">
-        <img src="/assets/img/soccer-clustering/wcpca.jpeg"
-             alt="PCA projection of World-Cup-2022 team play-style features showing 3 clusters separated cleanly along the first two principal components: defensive teams on the left, attacking on the right."
-             width="600" height="500" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/soccer-clustering/wcpca.avif" type="image/avif">
+          <source srcset="/assets/img/soccer-clustering/wcpca.webp" type="image/webp">
+          <img src="/assets/img/soccer-clustering/wcpca.jpeg"
+               alt="PCA projection of World-Cup-2022 team play-style features showing 3 clusters separated cleanly along the first two principal components: defensive teams on the left, attacking on the right."
+               width="600" height="500" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 1: PCA projection of WC 2022 team play styles. Three clusters separate cleanly on the first two principal components — defensive teams on the left, attacking teams on the right.</figcaption>
       </figure>
 
       <p>For interpretation I add a time-series step: I align event data by significant xG events and compute the correlation of every metric with the occurrence of a chance, both leading up to and at the moment of the chance. The "leading indicators" tell me what each cluster relies on to <em>create</em> chances — for example, the proactive cluster shows progressive-pass rate and average carry length as strong leading indicators, while the defensive cluster's leading indicators include clearances and opponent turnovers (i.e., they create chances on the back of forced errors). For statistical inference I use ANOVA on cluster-vs-goal-difference, a 10,000-permutation test on the same to handle the moderate sample sizes, a chi-square test on cluster-vs-win-frequency, and a bootstrap (1,000+ resamples) for cluster-specific 95% CIs on win rate and goal difference.</p>
 
       <figure class="figure">
-        <img src="/assets/img/soccer-clustering/wctsne.jpeg"
-             alt="t-SNE projection of the WC 2022 team play-style features confirming the same three-cluster structure visible in the PCA, with somewhat tighter cluster separation."
-             width="1200" height="900" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/soccer-clustering/wctsne.avif" type="image/avif">
+          <source srcset="/assets/img/soccer-clustering/wctsne.webp" type="image/webp">
+          <img src="/assets/img/soccer-clustering/wctsne.jpeg"
+               alt="t-SNE projection of the WC 2022 team play-style features confirming the same three-cluster structure visible in the PCA, with somewhat tighter cluster separation."
+               width="1200" height="900" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 2: t-SNE projection of WC 2022 team play styles. The same three clusters are visible with tighter separation, validating that the K = 3 choice is not a PCA artifact.</figcaption>
       </figure>
 
@@ -124,9 +140,13 @@
       <p>For the World Cup 2022, ANOVA on cluster-vs-goal-difference is significant (F = 6.71, p ≈ 0.0017) and the permutation test confirms it (p ≈ 0.0014). The chi-square on cluster-vs-win-frequency is not significant (χ² = 1.49, p = 0.48) — Cluster 2 won 46.9% and Cluster 0 won 33.3%, but with the modest sample size and the high draw rate in tournament play, that gap does not clear the chi-square bar. The interpretation I take from the split is that style affects how decisively wins arrive (goal differentials) more than whether they happen (binary win/loss), at least at this sample size.</p>
 
       <figure class="figure">
-        <img src="/assets/img/soccer-clustering/bootstrapwc.jpeg"
-             alt="Bootstrap-resampled match-outcome win-rates per cluster with 95% confidence intervals: Cluster 2 (proactive) shows the highest mean win rate but with the largest interval; Cluster 0 (defensive) is the worst."
-             width="1394" height="597" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/soccer-clustering/bootstrapwc.avif" type="image/avif">
+          <source srcset="/assets/img/soccer-clustering/bootstrapwc.webp" type="image/webp">
+          <img src="/assets/img/soccer-clustering/bootstrapwc.jpeg"
+               alt="Bootstrap-resampled match-outcome win-rates per cluster with 95% confidence intervals: Cluster 2 (proactive) shows the highest mean win rate but with the largest interval; Cluster 0 (defensive) is the worst."
+               width="1394" height="597" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 3: Bootstrap CIs for cluster outcomes in WC 2022. Cluster 2 (proactive/attacking) is best on average; Cluster 0 (ultra-defensive) is worst. Cluster 0's goal-difference CI does not overlap Cluster 2's.</figcaption>
       </figure>
 
