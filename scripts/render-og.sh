@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # scripts/render-og.sh — regenerate every OG image from assets/og/template.svg.
-# Output: 14 PNGs in assets/og/<key>.png at 1200×630.
+# Output: 15 PNGs in assets/og/<key>.png at 1200×630.
 # Re-run any time the template or titles change.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -21,6 +21,7 @@ entries=(
   "encoding-attacks-llm|Encoding-Based Attacks on LLMs — Samir Kadariya"
   "soccer-clustering|Clustering Soccer Playing Styles — Samir Kadariya"
   "market-mood|Market Mood — HackMIT 2024 — Samir Kadariya"
+  "transformers-vs-lstms|Transformers vs LSTMs — Samir Kadariya"
   "lobbying-networks|Targeted Lobbying on Council Networks — Samir Kadariya"
   "taxicab-numbers|Properties of Taxicab Numbers — Samir Kadariya"
   "branching-cancer|Branching-Process Models for Cancer (Survey) — Samir Kadariya"
@@ -39,4 +40,4 @@ for entry in "${entries[@]}"; do
   echo "wrote $OUTDIR/${key}.png ($(wc -c < "$OUTDIR/${key}.png" | tr -d ' ') bytes)"
 done
 
-echo "✓ 14 OG PNGs rendered"
+echo "✓ 15 OG PNGs rendered"
