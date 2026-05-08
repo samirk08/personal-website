@@ -302,7 +302,11 @@
     box-sizing: border-box;
     position: relative;
     z-index: 1;
-    transition: background 150ms;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .article-toc .article-toc__list .article-toc__item .article-toc__dot {
+      transition: background 150ms;
+    }
   }
 
   /* Allow long labels to wrap without pushing the dot or breaking the layout. */
