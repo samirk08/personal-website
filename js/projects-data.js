@@ -12,6 +12,15 @@
 // D-03 verified numerics ("ship the numbers") REQUIRED for nlp-tariff, sepsis-prediction, encoding-attacks-llm.
 // Academic-credentials suppression per D-04 — no credential figures appear here.
 // PDF hosting suppressed per D-06 — every links.paper is null; HTML renditions land in Phase 3.
+//
+// `icon` field (added 2026-05-07, quick task projects-experience-polish):
+// Inline Lucide SVG body (paths/lines/circles, no <svg> wrapper) per project. Rendered at 32×32
+// inside card grid (left of title) and at 56×56 inside detail-page article-header (next to H1).
+// Lucide is ISC-licensed; markup is shipped inline so there is no CDN/build dependency.
+// All icons use stroke="currentColor" so theme changes flow through without per-icon overrides.
+// The wrapper `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+//   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">` is added in render-projects.js
+// and in the per-detail-page article-header inline SVGs.
 
 export const projects = [
   // CS-1
@@ -28,6 +37,8 @@ export const projects = [
     coauthors: [],
     myContribution: null,
     techChips: ['Python', 'GPT-4', 'MPNet', 'Selenium'],
+    icon: 'line-chart',
+    iconSvg: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/>',
     claims: [
       { text: '~79% HS-6 retention across 1989-2022', source: '_src/papers/nlp-tariff/main.tex' }
     ],
@@ -52,6 +63,8 @@ export const projects = [
     coauthors: [],
     myContribution: 'Co-authored class project (3-person team). Designed and tested in-context cipher prompts on Claude 3.5 Sonnet using HarmBench — purely prompt-level attacks, no model modification.',
     techChips: ['Python', 'LLM', 'Claude 3.5', 'HarmBench'],
+    icon: 'shield-alert',
+    iconSvg: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
     claims: [
       { text: 'ASR drops from ~80% (5 quiet terms) to 0% (25 quiet terms) on Claude 3.5 Sonnet / HarmBench',
         source: '_src/papers/encoding-attacks-llm/iclr2024_conference.tex' }
@@ -77,6 +90,8 @@ export const projects = [
     coauthors: [],
     myContribution: null,
     techChips: ['Python', 'scikit-learn', 'PCA', 't-SNE'],
+    icon: 'radar',
+    iconSvg: '<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>',
     claims: [],
     figures: [
       { src: 'assets/img/soccer-clustering/cluster-projection', alt: 'PCA projection of team play-style clusters', caption: 'Figure 1' }
@@ -99,6 +114,8 @@ export const projects = [
     coauthors: [],
     myContribution: 'Hackathon team project (4-person team). Built parts of the Reddit sentiment ingestion + dashboard during HackMIT 2024 (specifics scoped in Phase 3 detail page).',
     techChips: ['Python', 'OpenAI API', 'Reddit API', 'React'],
+    icon: 'trending-up',
+    iconSvg: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
     claims: [],
     figures: [],
     links: { repo: 'https://github.com/samirk08/market-mood', paper: null, live: null },
@@ -119,6 +136,8 @@ export const projects = [
     coauthors: [],
     myContribution: 'Co-authored class project (2-person team). Applied the existing Katz-Bonacich centrality framework to a council-network voting setting; under linear voting the optimal lobbying target is the Katz-Bonacich-maximizing node with decay beta-over-c.',
     techChips: ['Game Theory', 'Network Centrality', 'Katz-Bonacich'],
+    icon: 'network',
+    iconSvg: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
     claims: [],
     figures: [
       { src: 'assets/img/lobbying-networks/council-graph', alt: 'Council network with lobbying weights', caption: 'Figure 1' }
@@ -141,6 +160,8 @@ export const projects = [
     coauthors: [],
     myContribution: 'Co-authored class project (3-person team). Proved a mod-63 sieve result and identified a parametric family of non-trivial taxicab numbers.',
     techChips: ['Number Theory', 'Modular Arithmetic', 'Diophantine'],
+    icon: 'box',
+    iconSvg: '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
     claims: [],
     figures: [
       { src: 'assets/img/taxicab-numbers/mod63-sieve', alt: 'Mod-63 residue sieve excluded classes', caption: 'Figure 1' }
@@ -163,6 +184,8 @@ export const projects = [
     coauthors: [],
     myContribution: 'Co-authored survey paper (2-person team) summarizing Cheek-Antal, McDonald-Kimmel, and Durrett branching-process models applied to cancer evolution. No original mathematical contribution — this is explicitly a survey.',
     techChips: ['Branching Processes', 'Probability', 'Mathematical Biology'],
+    icon: 'git-branch',
+    iconSvg: '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
     claims: [],
     figures: [
       { src: 'assets/img/branching-cancer/sfs-heavy-tail', alt: 'Site-frequency-spectrum heavy-tail distribution', caption: 'Figure 1' }
@@ -185,6 +208,8 @@ export const projects = [
     coauthors: [],
     myContribution: 'Group project (6-person team). My contribution: built the LSTM model (utility 0.261). The Transformer (utility 0.578) and Autoencoder+kNN (utility 0.04) were built by other team members.',
     techChips: ['PyTorch', 'LSTM', 'Time-Series', 'Healthcare'],
+    icon: 'activity',
+    iconSvg: '<path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.5.5 0 0 1-.96 0L9.24 2.18a.5.5 0 0 0-.96 0l-2.35 8.36A2 2 0 0 1 4 12H2"/>',
     claims: [
       { text: 'Transformer model achieved utility 0.578 on the sepsis prediction task',
         source: '_src/papers/sepsis-prediction/main.tex' },
@@ -214,6 +239,8 @@ export const projects = [
     coauthors: [],
     myContribution: null,
     techChips: ['Number Theory', 'Modular Arithmetic'],
+    icon: 'divide',
+    iconSvg: '<circle cx="12" cy="6" r="1"/><line x1="5" x2="19" y1="12" y2="12"/><circle cx="12" cy="18" r="1"/>',
     claims: [],
     figures: [
       { src: 'assets/img/decimal-expansions/period-bounds', alt: 'Decimal-expansion period bounds illustration', caption: 'Figure 1' }
