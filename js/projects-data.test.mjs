@@ -24,13 +24,13 @@ const checks = [];
 function check(name, fn) { checks.push({ name, fn }); }
 
 // INV-1
-check('INV-1 projects.length === 9', () => {
-  strictEqual(projects.length, 9, `expected 9 projects, got ${projects.length}`);
+check('INV-1 projects.length === 10', () => {
+  strictEqual(projects.length, 10, `expected 10 projects, got ${projects.length}`);
 });
 
-// INV-2
+// INV-2 (updated 2026-05-08: added transformers-vs-lstms; sepsis stays but now CS)
 const expectedSlugs = [
-  'nlp-tariff','encoding-attacks-llm','soccer-clustering','market-mood',
+  'nlp-tariff','encoding-attacks-llm','soccer-clustering','market-mood','transformers-vs-lstms',
   'lobbying-networks','taxicab-numbers','branching-cancer','sepsis-prediction','decimal-expansions'
 ];
 check('INV-2 slugs match D-12 list exactly', () => {
@@ -38,14 +38,14 @@ check('INV-2 slugs match D-12 list exactly', () => {
   deepStrictEqual(actual, [...expectedSlugs].sort());
 });
 
-// INV-3
-check('INV-3 CS section has exactly 4 entries', () => {
-  strictEqual(projects.filter(p => p.section === 'cs').length, 4);
+// INV-3 (updated 2026-05-08: was 4, now 6 — added transformers-vs-lstms; sepsis reclassified math→cs)
+check('INV-3 CS section has exactly 6 entries', () => {
+  strictEqual(projects.filter(p => p.section === 'cs').length, 6);
 });
 
-// INV-4
-check('INV-4 Math section has exactly 5 entries', () => {
-  strictEqual(projects.filter(p => p.section === 'math').length, 5);
+// INV-4 (updated 2026-05-08: was 5, now 4 — sepsis moved to CS)
+check('INV-4 Math section has exactly 4 entries', () => {
+  strictEqual(projects.filter(p => p.section === 'math').length, 4);
 });
 
 // INV-5 — every non-solo project declares a non-trivial groupSize and an empty coauthors array (D-13)
@@ -125,9 +125,11 @@ check('INV-13 market-mood GitHub URL is correct (D-02)', () => {
   strictEqual(e.links.repo, 'https://github.com/samirk08/market-mood');
 });
 
-// INV-14
-check('INV-14 sepsis-prediction GitHub URL is Deep-Learning-Final (D-02)', () => {
-  const e = projects.find(p => p.slug === 'sepsis-prediction');
+// INV-14 (updated 2026-05-08: the Deep-Learning-Final repo is actually the
+// transformers-vs-lstms project, not the AI-for-Medicine sepsis project. The
+// repo URL moved to that entry; sepsis's repo is now null.)
+check('INV-14 transformers-vs-lstms GitHub URL is Deep-Learning-Final (D-02)', () => {
+  const e = projects.find(p => p.slug === 'transformers-vs-lstms');
   strictEqual(e.links.repo, 'https://github.com/samirk08/Deep-Learning-Final');
 });
 
