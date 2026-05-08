@@ -15,7 +15,7 @@ function start() {
   initProjectFilter();        // /projects All|CS|Math pill filter + URL-hash routing (no-op elsewhere)
   initAnimations();           // Observe .reveal elements, trigger hero entrance
   initArticleToc();           // Scroll-spy for left-rail TOC on /projects/<slug>/ pages
-  initExperienceAccordion();  // Cole Ruehle-style expandable role cards on /experience
+  initExperienceAccordion();  // Expandable role cards on /experience
 }
 
 if (document.readyState === 'loading') {

@@ -1,4 +1,4 @@
-// js/experience-accordion.js — Cole Ruehle-style expandable cards on /experience.
+// js/experience-accordion.js — expandable cards on /experience.
 // Each card head is a <button> with aria-expanded + aria-controls. Clicking or
 // pressing Enter/Space (native <button> behavior) toggles the body via
 // [hidden]. Esc on a focused open head collapses it. Multiple cards may be
