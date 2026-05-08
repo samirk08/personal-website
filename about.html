@@ -6,7 +6,15 @@
   <title>About — Samir Kadariya</title>
   <meta name="description" content="Samir Kadariya — MIT '26 senior in AI + Decision Making and Mathematics, focused on statistical inference and applied data science. Languages, interests, bio.">
   <meta name="theme-color" content="#0F4C81">
+  <!-- Open Graph -->
+  <meta property="og:title" content="About — Samir Kadariya">
+  <meta property="og:description" content="Samir Kadariya — MIT '26 senior in AI + Decision Making and Mathematics, focused on statistical inference and applied data science. Languages, interests, bio.">
+  <meta property="og:image" content="https://personal-website-pink-pi.vercel.app/assets/og/about.png">
+  <meta property="og:url" content="https://personal-website-pink-pi.vercel.app/about">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/main.css?v=20260507-3">
 </head>
@@ -37,7 +45,9 @@
     <section class="page-body">
       <div class="about__layout">
         <picture class="about__photo">
-          <img src="/assets/img/about/headshot.jpeg" alt="Samir Kadariya" width="400" height="400" loading="lazy" decoding="async">
+          <source srcset="/assets/img/about/headshot.avif" type="image/avif">
+          <source srcset="/assets/img/about/headshot.webp" type="image/webp">
+          <img src="/assets/img/about/headshot.jpeg" alt="Samir Kadariya" width="400" height="400" fetchpriority="high" decoding="async">
         </picture>
         <div class="about__bio">
           <p>I'm a senior at MIT studying AI + Decision Making and Mathematics, with a focus on statistical inference and applied data science.</p>
