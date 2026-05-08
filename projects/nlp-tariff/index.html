@@ -6,7 +6,15 @@
   <title>Concordance Mapping of U.S. Tariffs Over 250 Years — Samir Kadariya</title>
   <meta name="description" content="NLP pipeline mapping every U.S. tariff line from 1789 to the modern HS code system using GPT-4 + MPNet — ~79% HS-6 retention.">
   <meta name="theme-color" content="#0F4C81">
+  <!-- Open Graph -->
+  <meta property="og:title" content="NLP Tariff Concordance — Samir Kadariya">
+  <meta property="og:description" content="NLP pipeline mapping every U.S. tariff line from 1789 to the modern HS code system using GPT-4 + MPNet — ~79% HS-6 retention.">
+  <meta property="og:image" content="https://personal-website-pink-pi.vercel.app/assets/og/nlp-tariff.png">
+  <meta property="og:url" content="https://personal-website-pink-pi.vercel.app/projects/nlp-tariff/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/main.css?v=20260507-3">
 </head>
@@ -105,9 +113,13 @@
       <p>The system has four cooperating components. A Selenium scraper pulls historical schedules from the U.S. International Trade Commission and Census archives. A GPT-4 prompt modernizes archaic phrasing one year at a time, so the back-walk never has to bridge more than ~12 months of linguistic drift. An MPNet sentence-transformer (specifically <code>all-mpnet-base-v2</code>) produces L2-normalized embeddings of every description. And a composite similarity score combines cosine similarity on the embeddings with two character-level signals, which together govern when the pipeline trusts an automatic match versus falling through to verification.</p>
 
       <figure class="figure">
-        <img src="/assets/img/nlp-tariff/tariff-evolution.jpeg"
-             alt="Timeline showing four U.S. tariff coding regimes since 1789: pre-TSUS (paragraph codes only), TSUS adopted 1963, TSUSA from 1972, HTSUS from 1989."
-             width="1920" height="1080" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/nlp-tariff/tariff-evolution.avif" type="image/avif">
+          <source srcset="/assets/img/nlp-tariff/tariff-evolution.webp" type="image/webp">
+          <img src="/assets/img/nlp-tariff/tariff-evolution.jpeg"
+               alt="Timeline showing four U.S. tariff coding regimes since 1789: pre-TSUS (paragraph codes only), TSUS adopted 1963, TSUSA from 1972, HTSUS from 1989."
+               width="1920" height="1080" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 1: Evolution of U.S. tariff coding systems, 1789–present. Before 1963 tariff acts listed goods without a standardized numeric scheme; the TSUS was introduced in 1963, the TSUSA in 1972, and the HTSUS in 1989.</figcaption>
       </figure>
 
@@ -119,9 +131,13 @@
       <p>I evaluate the pipeline on three public schedules that exercise different parts of the design: the 1989 schedule (first U.S. machine-readable HS file, tests an HS-to-HS hop), the 1963 inaugural TSUS schedule (tests the TSUS→HS bridge), and the 1789 Tariff Act (425 free-text lines, tests the full modernization chain with no numeric ground truth). The 2023 schedule (13,776 HS-8 lines) supplies the canonical embedding matrix.</p>
 
       <figure class="figure">
-        <img src="/assets/img/nlp-tariff/mean_similarity_1789_2022.jpeg"
-             alt="Mean composite similarity by source year falls from ~1.0 in 2022 toward ~0.45 in 1789, with sharp visible cliffs at 1930 (Smoot-Hawley) and 1963 (TSUS adoption)."
-             width="1389" height="790" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/nlp-tariff/mean_similarity_1789_2022.avif" type="image/avif">
+          <source srcset="/assets/img/nlp-tariff/mean_similarity_1789_2022.webp" type="image/webp">
+          <img src="/assets/img/nlp-tariff/mean_similarity_1789_2022.jpeg"
+               alt="Mean composite similarity by source year falls from ~1.0 in 2022 toward ~0.45 in 1789, with sharp visible cliffs at 1930 (Smoot-Hawley) and 1963 (TSUS adoption)."
+               width="1389" height="790" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 2: Mean composite similarity by source year, 1789–2022. The two visible cliffs at 1930 (Smoot-Hawley) and 1963 (TSUS adoption) match the years U.S. tariff law was rewritten from scratch.</figcaption>
       </figure>
 
@@ -129,9 +145,13 @@
       <p>Restricting to the HTSUS era (1989–2022) — the window where HS-6 codes are directly comparable across years — the pipeline retains the original HS-6 code in roughly 79% of cases. An additional 8.9% drop only to HS-4 (i.e., the chapter and heading match but the subheading differs), 5.5% drop to HS-2, and just 6.8% jump into a completely different chapter. This is the headline number for the project: across more than three decades and several WCO revision cycles, four out of five tariff lines stay in their exact six-digit subheading.</p>
 
       <figure class="figure">
-        <img src="/assets/img/nlp-tariff/H.S.digitdistribution.jpeg"
-             alt="HS digit-retention distribution across the 1989-2022 mapping: ~79% of lines retain the full HS-6 code, 8.9% drop to HS-4, 5.5% to HS-2, 6.8% land in a different chapter."
-             width="1180" height="980" loading="lazy" decoding="async">
+        <picture>
+          <source srcset="/assets/img/nlp-tariff/H.S.digitdistribution.avif" type="image/avif">
+          <source srcset="/assets/img/nlp-tariff/H.S.digitdistribution.webp" type="image/webp">
+          <img src="/assets/img/nlp-tariff/H.S.digitdistribution.jpeg"
+               alt="HS digit-retention distribution across the 1989-2022 mapping: ~79% of lines retain the full HS-6 code, 8.9% drop to HS-4, 5.5% to HS-2, 6.8% land in a different chapter."
+               width="1180" height="980" loading="lazy" decoding="async">
+        </picture>
         <figcaption>Figure 3: HS digit-retention distribution across the 1989–2022 mapping. The mode at 6/6 retention contains ~79% of items; only 6.8% jump chapter.</figcaption>
       </figure>
 
