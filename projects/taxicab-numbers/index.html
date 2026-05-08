@@ -44,7 +44,7 @@
         <span class="chip">class project</span>
         <span class="article-header__course">MIT 18.821</span>
       </p>
-      <p class="article-header__role">Co-authored class project · 3-person team · MIT 18.821</p>
+      <p class="article-header__role">Co-authored class project · 3-person team · MIT 18.821 (paper 2)</p>
       <div class="article-header__chips">
         <span class="chip chip--tech">Number Theory</span>
         <span class="chip chip--tech">Modular Arithmetic</span>
@@ -63,9 +63,33 @@
             </a>
           </li>
           <li class="article-toc__item">
-            <a href="#key-results" data-toc-target="key-results">
+            <a href="#introduction" data-toc-target="introduction">
               <span class="article-toc__dot" aria-hidden="true"></span>
-              <span class="article-toc__label">Key results</span>
+              <span class="article-toc__label">Introduction</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#second-and-family" data-toc-target="second-and-family">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Second taxicab and infinite family</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#density" data-toc-target="density">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Density and growth</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#sieve" data-toc-target="sieve">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Mod-63 sieve</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
+            <a href="#discussion" data-toc-target="discussion">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Discussion</span>
             </a>
           </li>
           <li class="article-toc__item">
@@ -81,50 +105,93 @@
       <h2 id="abstract">Abstract</h2>
       <p>Taxicab numbers are a unique category of integers that can be represented as the sum of two cubes in multiple distinct ways. By analyzing taxicab numbers, we can illuminate many properties of cubic sums and the structure of modular cubes. Within this paper, we will analyze some of the properties of taxicab numbers, including determining the second taxicab number, proving that infinitely many taxicab numbers exist, creating a generating formula for taxicab numbers, and putting bounds on the growth rate and density of the set of taxicab numbers. In doing so we form a clearer understanding of the structure of the set of taxicab numbers.</p>
 
-      <aside class="my-role">
-        <strong>My role:</strong> Co-authored class project (3-person team). Proved a mod-63 sieve result and identified a parametric family of non-trivial taxicab numbers.
-      </aside>
-
-      <h2 id="key-results">Key results</h2>
-      <p>A taxicab number is a positive integer $N$ expressible as a sum of two positive cubes in at least two distinct ways: there exist $a, b, c, d \in \mathbb{Z}^+$ with $a^3 + b^3 = N = c^3 + d^3$ and $\{a, b\} \neq \{c, d\}$. The canonical example, due to Ramanujan, is
-      $$1729 = 1^3 + 12^3 = 9^3 + 10^3.$$
-      We start by verifying that $4104 = 2^3 + 16^3 = 9^3 + 15^3$ is the second taxicab number — no integer strictly between $1729$ and $4104$ admits two cube-sum decompositions — and then turn to existence and density questions.</p>
-
       <noscript>
         <p><code>1729 = 1^3 + 12^3 = 9^3 + 10^3</code> — Ramanujan's first taxicab number.</p>
       </noscript>
 
-      <p>Trivial scaling ($N \mapsto t^3 N$) generates infinitely many cube-sum identities from any single one. The substantive question is whether infinitely many taxicab numbers exist that are pairwise <em>non-trivially</em> related — that is, not rescalings of each other. We answer this constructively by exhibiting a one-parameter family. For each positive integer $n$, set
-      $$a_n = 1 + 6n^3,\qquad b_n = 1 - 9n^4 + ... \quad \text{(parametric family)} ,$$
-      with the property that $a_n^3 + b_n^3 = c_n^3 + d_n^3$ for explicit $c_n, d_n$ derived from algebraic identities on cubes. We then prove no two members of the family are scalar multiples of one another, so the family witnesses infinitely many non-trivially related taxicab numbers.</p>
+      <aside class="my-role">
+        <strong>My role:</strong> Co-authored class project (3-person team). Proved a mod-63 sieve result and identified a parametric family of non-trivial taxicab numbers.
+      </aside>
 
-      <p>Density bounds follow from elementary counting: the number of taxicab numbers up to $X$ is bounded
-      $$\Omega(X^{1/3}) \;\le\; \#\{\text{taxicab } N \le X\} \;\le\; O(X^{2/3}),$$
-      with a tighter conjectural lower bound $\Omega(X^{1/3 + \epsilon})$ supported by numerical fits. Restricting to <em>pairwise non-trivially related</em> taxicab numbers up to $X$ tightens the lower bound to $\Omega(X^{1/9})$; the upper bound stays $O(X^{2/3})$.</p>
+      <h2 id="introduction">Introduction</h2>
+      <p>A taxicab number is a positive integer expressible as the sum of two positive cubes in at least two distinct ways. Formally, $N \in \mathbb{Z}^+$ is a <em>taxicab number</em> if there exist $a, b, c, d \in \mathbb{Z}^+$ with $a^3 + b^3 = N = c^3 + d^3$ and $\{a, b\} \neq \{c, d\}$. The name traces to a famous anecdote of Srinivasa Ramanujan: visiting G. H. Hardy in hospital, Ramanujan declared the cab number $1729$ to be the smallest such integer, since
+      $$1729 \;=\; 1^3 + 12^3 \;=\; 9^3 + 10^3.$$
+      The next member of the sequence, $4104 = 2^3 + 16^3 = 9^3 + 15^3$, follows much further along the integers — and the entire infinite list of taxicab numbers thins rapidly as one looks higher.</p>
+
+      <p>Our paper studies the basic structural properties of this set. We open by verifying that $4104$ is the second taxicab number — no integer strictly between $1729$ and $4104$ admits two distinct cube-sum decompositions — using a finite case analysis driven by tight bounds on the four bases. We then turn to existence in the large: trivial scaling $N \mapsto t^3 N$ generates infinitely many cube-sum identities from any single one, but produces structurally redundant copies. The substantive question is whether there exist infinitely many <em>non-trivially related</em> taxicab numbers, where two identities are trivially related if their bases are proportional under some rational $\lambda > 0$. We answer this constructively by exhibiting a one-parameter family of taxicab identities, indexed by positive integers $n$, and proving no two members of the family are rescalings of each other.</p>
+
+      <p>From there we ask how rare taxicab numbers actually are. Let $S(X)$ denote the count of taxicab numbers up to $X$. Elementary counting on cube-sum representations gives the bracket $\Omega(X^{1/3}) \leq S(X) \leq O(X^{2/3})$, with corresponding growth bounds on the $n$-th taxicab number. Restricting to non-trivially related taxicab numbers, the upper bound stays $O(X^{2/3})$ while the lower bound weakens to $\Omega(X^{1/9})$, since the scaling family that drove the original $\Omega(X^{1/3})$ is no longer admissible. Empirical fits suggest the truth is closer to $\Theta(X^{1/2})$, but we leave this as a conjecture.</p>
+
+      <p>The paper closes with a modular-arithmetic obstruction. Computing the achievable residues of $a^3 + b^3$ modulo $9$ and modulo $7$ and combining via the Chinese Remainder Theorem, we show that $38$ of the $63$ residue classes modulo $63$ contain no sum of two cubes — a sieve that immediately rules out infinitely many integers from being taxicab numbers. We then prove this fraction $\tfrac{38}{63}$ cannot be improved by any modulus built from primes $3$ and $7$ together with any prime $p \equiv 2 \pmod{3}$, and conjecture, supported by computation up to $p = 10{,}000$, that the bound is optimal across all moduli.</p>
+
+      <h2 id="second-and-family">Second taxicab and infinite family</h2>
+      <p>The second-taxicab proof is a finite-case argument: we suppose for contradiction that $1729 < N < 4104$ is a taxicab number with $N = a^3 + b^3 = c^3 + d^3$, normalize $a > c \geq d > b$ (forced by the inequality $a > c$ together with $a^3 + b^3 = c^3 + d^3$), and cascade tight bounds on each variable. The crude bounds $a^3 < 4104$, $2c^3 > 1729$, and $2d^3 < 4104$ give $a < 16$, $c > 9$, $d < 13$, so $(a, b, c, d) \in [11, 15] \times [1, 10] \times [10, 14] \times [2, 11]$. The key combinatorial lever is the cube residue table: for $b \in [1, 10]$, the value $b^3$ takes one of the ten values $\{1, 8, 27, 64, 125, 216, 343, 512, 729, 1000\}$. Any candidate $(a, c, d)$ must satisfy $-a^3 + c^3 + d^3 = b^3$, which collapses each subcase to a small number of integer constraints checkable directly. Sweeping the $(a, c, d)$ grid eliminates every combination, leaving no candidate — so $N$ does not exist and $4104$ is the second taxicab number.</p>
+
+      <p>To go from "two taxicab numbers exist" to "infinitely many genuinely distinct taxicab numbers exist," we exhibit a one-parameter family. Two cubes of the same parity can always be written symmetrically as $(m+k)^3 + (m-k)^3 = 2m^3 + 6mk^2 = 2m(m^2 + 3k^2)$. Two such sums collide whenever pairs $(m_1, k_1)$ and $(m_2, k_2)$ satisfy $m_1(m_1^2 + 3k_1^2) = m_2(m_2^2 + 3k_2^2)$. We searched for such collisions computationally on the function $f(m, k) = m(m^2 + 3k^2)$ with $m > k$, found hundreds of pairs, and noticed a polynomial pattern in their indices: fitting yielded $m_1 = 3n(3n^2 + 1)$, $k_1 = 3n^2$, $m_2 = 9n^3$, $k_2 = 6n^2 + 1$. Translating back to bases gives the family:
+      $$a_n \;=\; 3n(3n^2 + n + 1), \qquad b_n \;=\; 3n(3n^2 - n + 1),$$
+      $$c_n \;=\; 9n^3 + 6n^2 + 1, \qquad d_n \;=\; 9n^3 - 6n^2 - 1.$$
+      Direct expansion verifies $a_n^3 + b_n^3 = c_n^3 + d_n^3 = 54n^3(27n^6 + 36n^4 + 12n^2 + 1)$ for every positive integer $n$, so each $n$ produces a valid taxicab identity.</p>
+
+      <p>Two ingredients show the family is genuinely infinite. First, a direct ordering check confirms $c_n > a_n > b_n > d_n > 0$ for every $n \geq 1$: subtracting in pairs gives $c_n - a_n = 3n(n-1) + 1 \geq 1$, $a_n - b_n = 6n^2$, $b_n - d_n = 3n^2 + 3n + 1$, and $d_n = n^2(9n - 6) - 1 > 0$ for $n \geq 1$, all strictly positive. The strict ordering forces any rescaling $\lambda$ between two family members to map corresponding terms in the same position, so $a_n = \lambda a_m$, $b_n = \lambda b_m$, $c_n = \lambda c_m$, $d_n = \lambda d_m$ simultaneously. Second, dividing $a_n / b_n = a_m / b_m$ and cross-multiplying simplifies to $(n - m)(2 - 6nm) = 0$. For distinct positive integers $n \neq m$, this forces $nm = \tfrac{1}{3}$ — impossible. So no two distinct members of the family are trivially related, and the family witnesses infinitely many pairwise non-trivially related taxicab numbers.</p>
+
+      <h2 id="density">Density and growth</h2>
+      <p>How dense are the taxicab numbers among the integers? Let $S(X) = \#\{n \leq X : n \text{ is a taxicab number}\}$ and let $T(n)$ be the $n$-th taxicab number. The first count we estimate is $R(X)$, the number of pairs $(a, b) \in \mathbb{N}^2$ with $1 \leq a \leq b$ and $a^3 + b^3 \leq X$. Since $b^3 < a^3 + b^3 \leq X$ implies $b \leq \lfloor X^{1/3} \rfloor$, we have
+      $$R(X) \;\leq\; \sum_{b=1}^{\lfloor X^{1/3} \rfloor} b \;\leq\; \frac{X^{1/3}(X^{1/3} + 1)}{2} \;\leq\; X^{2/3}$$
+      for $X \geq 1$. Each integer $n \leq X$ admitting at least one cube-sum representation contributes $r(n) \geq 1$ to $R(X)$; a taxicab number contributes $r(n) \geq 2$. So $R(X) \geq 2 S(X)$, giving $S(X) \leq X^{2/3} / 2 = O(X^{2/3})$.</p>
+
+      <p>For the lower bound, the trivial scaling lemma supplies a clean construction: $1729\, t^3$ is a taxicab number for every positive integer $t$, and the condition $1729\, t^3 \leq X$ gives $t \leq (X / 1729)^{1/3}$. Thus $S(X) \geq \lfloor (X/1729)^{1/3} \rfloor \geq \tfrac{1}{25} X^{1/3}$ for sufficiently large $X$, which establishes $S(X) = \Omega(X^{1/3})$. Inverting the inequality gives the growth bound on the $n$-th taxicab number: $T(n) \leq 25^3 n^3 = O(n^3)$.</p>
 
       <figure class="figure">
         <img src="/assets/img/taxicab-numbers/powerlaw_plot.jpeg"
              alt="Power-law fit on the cumulative count of taxicab numbers up to N, log-log plot showing slope consistent with the conjectured exponent."
              width="1589" height="590" loading="lazy" decoding="async">
-        <figcaption>Figure 1: Power-law fit for taxicab number density.</figcaption>
+        <figcaption>Figure 1: Power-law fit T(n) ≈ 694.34 · n^{1.923} for the first 1585 taxicab numbers (R² = 0.9985), with residuals on the right.</figcaption>
       </figure>
 
-      <p>Section 5 turns to the modular structure of $a^3 + b^3$. Computing the achievable residues modulo 9 and modulo 7 and combining via the Chinese Remainder Theorem, we show
-      $$|\{r \pmod{63} : r \not\equiv a^3 + b^3 \text{ for any } a, b\}| = 38,$$
-      so 38 of the 63 residue classes mod 63 contain no sum of two cubes — and therefore no taxicab number. We then prove this fraction $\tfrac{38}{63}$ is optimal: no larger modulus built from primes $3$ and $7$ does better, and adding any prime $p \equiv 2 \pmod{3}$ leaves the fraction unchanged. Computational verification up to $p = 10{,}000$ supports the conjecture that $\tfrac{38}{63}$ is optimal across all moduli.</p>
+      <p>Empirically, the $O(n^3)$ bound looks far from tight. Fitting a linear model to $\log_{10} T(n)$ versus $\log_{10} n$ for the first $1585$ taxicab numbers yields $T(n) \approx 694.34 \cdot n^{1.923}$ with $R^2 = 0.9985$. The exponent $\approx 1.923$ is much closer to $2$ than to the proven $3$, so a substantially tighter growth bound should be achievable. To probe this, we computed $S(X)$ directly for large $X$ and plotted $\log S(X)$ against $\log X$. Our theoretical bound predicts a log–log slope at most $2/3 \approx 0.667$, but the empirical fit gives slope $\approx 0.510$, much closer to $1/2$, and the slope is stable across the range of data we examined.</p>
+
+      <figure class="figure">
+        <img src="/assets/img/taxicab-numbers/taxicab_density_plot.jpeg"
+             alt="Empirical density of taxicab numbers as N grows, with log-log plots comparing all taxicab numbers vs non-trivially related taxicab numbers against the theoretical O(N^{2/3}) bound."
+             width="1600" height="1371" loading="lazy" decoding="async">
+        <figcaption>Figure 2: Empirical S(X) (top) and S_nt(X) (bottom). Solid red is the O(X^{2/3}) bound; dashed green is the empirical fit (slopes ≈ 0.510 and ≈ 0.483 respectively).</figcaption>
+      </figure>
+
+      <p>This leads us to conjecture $S(X) = \Theta(X^{1/2})$. A probabilistic heuristic supports it indirectly: there are $R(X) \approx X^{2/3}$ representations of integers up to $X$ as sums of two cubes, distributed among roughly $X$ integer slots. If representations were spread uniformly at random, a birthday-paradox calculation predicts roughly $\binom{R(X)}{2} / X \approx X^{1/3} / 2$ collisions — a heuristic lower bound of $\Omega(X^{1/3})$ matching the proven bound. The empirical $\sqrt{X}$ growth therefore tells us that sums of two cubes are <em>not</em> distributed uniformly: certain values are systematically more likely to admit multiple representations, a phenomenon plausibly explained by the modular structure we analyze next.</p>
+
+      <p>Restricting to non-trivially related taxicab numbers tightens the upper bound and weakens the lower bound. Letting $S_{\text{nt}}(X)$ count non-trivial taxicab numbers up to $X$, replace the unrestricted pair count with coprime pairs: for $\gcd(a, b) = 1$, the number of valid $a \in [1, b]$ is at most $\phi(b)$ (Euler's totient), so
+      $$R_{\text{nt}}(X) \;\leq\; \sum_{b=1}^{\lfloor X^{1/3} \rfloor} \phi(b) \;\leq\; \frac{3}{\pi^2}\, X^{2/3} + o(X^{2/3}),$$
+      using the asymptotic $\sum_{b \leq k} \phi(b) \sim \tfrac{3}{\pi^2} k^2$. The factor-of-two crowd-counting argument then gives $S_{\text{nt}}(X) \leq \tfrac{3}{2\pi^2} X^{2/3}$ for sufficiently large $X$. The constant $\tfrac{3}{2\pi^2} \approx 0.152$ is smaller than the unrestricted $\tfrac{1}{2}$, reflecting the sparsity of coprime pairs. For the lower bound, the scaling family $\{1729\, t^3\}$ is no longer available — $\gcd(ta, tb) = t$ rescalings are trivially related — but our infinite parametric family supplies a substitute. The largest base $r_n = 9n^3 + 6n^2 + 1 \sim 9n^3$, so $N(n) \sim 729 n^9$, and $N(n) \leq X$ holds whenever $n \leq (X/729)^{1/9}$. Therefore $S_{\text{nt}}(X) \geq \lfloor (X/729)^{1/9} \rfloor = \Omega(X^{1/9})$. Empirically, a log–log fit for $S_{\text{nt}}(X)$ yields slope $\approx 0.483$ — close to $\tfrac{1}{2}$, well within the proven range $[\tfrac{1}{9}, \tfrac{2}{3}]$.</p>
+
+      <h2 id="sieve">Mod-63 sieve</h2>
+      <p>A complementary question to "how many taxicab numbers are there?" is "which integers can <em>not</em> be taxicab numbers?" Modular arithmetic gives a clean obstruction: for any modulus $m$, the achievable residues of $a^3 + b^3 \pmod{m}$ form a strict subset of $\mathbb{Z}/m\mathbb{Z}$, and any integer whose residue lies outside this subset is immediately disqualified. We work this out at $m = 9$ and $m = 7$ and combine via the Chinese Remainder Theorem.</p>
+
+      <p>Modulo 9: writing $n = 3q + r$ with $r \in \{0, 1, 2\}$ and expanding $n^3 = (3q + r)^3$ shows $n^3 \pmod 9 \in \{0, 1, 8\}$ for all integers $n$. The pairwise sums of two cube residues are then $\{0+0, 0+1, 0+8, 1+1, 1+8, 8+8\}$, which reduce modulo $9$ to exactly $\{0, 1, 2, 7, 8\}$. So the four residue classes $\{3, 4, 5, 6\}$ modulo $9$ contain no sum of two cubes, giving $f(9) = 5/9$, where $f(m) := |A_m|/m$ measures the achievable fraction of residues modulo $m$.</p>
+
+      <p>Modulo 7: by Fermat's Little Theorem, $n^6 \equiv 1 \pmod 7$ for $7 \nmid n$, so $n^3$ is a square root of $1$ modulo the prime $7$. Since $x^2 - 1 = (x-1)(x+1)$ has only the roots $\pm 1$ in a field, $n^3 \in \{0, 1, 6\} \pmod 7$. Pairwise sums give $\{0, 1, 2, 5, 6\}$, so $\{3, 4\}$ are excluded and $f(7) = 5/7$.</p>
+
+      <p>Combining via CRT: since $63 = 9 \cdot 7$ and $\gcd(9, 7) = 1$, specifying a residue modulo $63$ is equivalent to independently specifying residues modulo $9$ and $7$. Any sum of two cubes must satisfy <em>both</em> achievability constraints simultaneously, so the achievable residues modulo $63$ correspond exactly to the Cartesian product
+      $$A_{63} \;\subseteq\; \{0, 1, 2, 7, 8\} \times \{0, 1, 2, 5, 6\},$$
+      which has $5 \times 5 = 25$ elements. Therefore $f(63) \leq 25/63$, giving at least $63 - 25 = 38$ excluded residue classes:
+      $$|\{r \pmod{63} : r \neq a^3 + b^3 \text{ for any } a, b \in \mathbb{Z}\}| \;\geq\; 38.$$
+      A computer check confirms equality. Since taxicab numbers are themselves sums of two cubes, no taxicab number can have residue in those 38 excluded classes — a substantial structural obstruction.</p>
 
       <noscript>
         <p><code>|{r mod 63 : r is not a sum of two cubes}| = 38</code> — mod-63 sieve excludes 38/63 residue classes.</p>
       </noscript>
 
-      <figure class="figure">
-        <img src="/assets/img/taxicab-numbers/taxicab_density_plot.jpeg"
-             alt="Cumulative density of taxicab numbers as N grows, showing slow but steady growth consistent with theoretical predictions."
-             width="1600" height="1371" loading="lazy" decoding="async">
-        <figcaption>Figure 2: Density growth of taxicab numbers.</figcaption>
-      </figure>
+      <p>Is $\tfrac{38}{63}$ optimal? The natural way to do better would be to use a modulus with more prime factors. We rule out two natural extensions. For higher prime powers, we prove that achievability is preserved: every residue class modulo $3^k$ whose remainder modulo $9$ lies in $\{0, 1, 2, 7, 8\}$ is itself achievable as a sum of two cubes modulo $3^k$, and analogously for powers of $7$. The lifting mechanism is the binomial expansion of $(a + u p^k)^3$. For odd primes $p \neq 3$, if $a^3 + b^3 \equiv n \pmod{p^k}$ with $p \nmid a$, then for every $t \in \{0, \ldots, p-1\}$ there exists $u$ with $(a + u p^k)^3 + b^3 \equiv n + t p^k \pmod{p^{k+1}}$. The proof reduces to solving the linear congruence $s + 3 a^2 u \equiv t \pmod p$, which is well-posed because $p \neq 3$ makes $3 a^2$ invertible. Iterating gives $f(p^k) = 1$ whenever $f(p) = 1$, so no power of $7$ improves on $\tfrac{38}{63}$ and no power of $3$ improves on the modulo-9 bound.</p>
 
-      <p>Together, the parametric family and the mod-63 sieve give us both an existence and an obstruction picture: infinitely many taxicab numbers exist (and we can write them down), but more than half of all residue classes modulo 63 are forbidden — so taxicab numbers are abundant but sparse, and their distribution carries strong modular structure.</p>
+      <p>For other primes, we show that any prime $p \equiv 2 \pmod 3$ has $f(p) = 1$ — every residue is achievable as a sum of two cubes modulo $p$. The argument uses that the cube map $x \mapsto x^3$ is a bijection on $\mathbb{Z}/p\mathbb{Z}$ when $\gcd(3, p - 1) = 1$, which holds precisely when $p \equiv 2 \pmod 3$. Combined with the lifting result, this means moduli built from primes in $\{3, 7\} \cup \{p : p \equiv 2 \pmod 3\}$ achieve excluded fraction exactly $\tfrac{38}{63}$. Computational verification up to $p = 10{,}000$ confirms the same bound for primes $p \equiv 1 \pmod 3$ (other than 7), supporting the conjecture that $\tfrac{38}{63}$ is in fact optimal across all moduli.</p>
+
+      <h2 id="discussion">Discussion</h2>
+      <p>The four results assemble into a coherent picture of the structure of taxicab numbers. The second-taxicab proof is small-scale — a finite-case argument applied to a tightly bounded grid — but it confirms that taxicab numbers are not artifacts of $1729$. The infinite parametric family answers the existence question constructively: not only do taxicab numbers exist beyond $1729$, but we can write down infinitely many of them whose pairwise structure is genuinely different. The density results show how rare they are: between $\Omega(X^{1/3})$ and $O(X^{2/3})$, with empirical fits consistent with $\Theta(X^{1/2})$. The mod-63 sieve gives a complementary obstruction: more than half of all residue classes modulo $63$ are forbidden, and this obstruction is preserved under all natural prime-power refinements.</p>
+
+      <p>Several open questions are immediate. The empirical $\sqrt{X}$ density is the most striking gap between proof and observation: the heuristic $\Omega(X^{1/3})$ from random representations is too low, the proven $O(X^{2/3})$ is too high, and the truth seems to live at $X^{1/2}$. Closing that gap likely requires deeper analytic tools — the circle method, modular-form analysis of the cube-sum theta function, or perhaps a connection to the ranks of the relevant elliptic curves $x^3 + y^3 = N$. The mod-63 sieve's optimality is similarly conjectural beyond the prime classes we handle: if computational verification persists at higher primes, a unified proof would settle a clean question about cube-sum residues across all moduli.</p>
+
+      <p>More speculatively, the parametric family has a structure that may generalize. Our family was discovered by polynomial-fitting collisions of $f(m, k) = m(m^2 + 3k^2)$, but other quadratic-in-$k$ forms produce analogous collision families on different cube-sum identities. Cataloguing which polynomial families produce non-trivially related taxicab numbers — and whether they exhaust the supply — is an attractive next step. A separate direction is the "third taxicab number" question generalized: the smallest integer expressible as a sum of two cubes in <em>three</em> distinct ways is $87539319$, and the growth of these higher-multiplicity counts $T_k(n)$ is known empirically only out to small $k$. The same combinatorial-sieve techniques should adapt directly.</p>
+
+      <p>Finally, the project sits at a natural intersection of computational experimentation and elementary proof. Most of our progress depended on computer searches: collision-finding for the parametric family, density fits, residue-class verifications. The corresponding human work is to reduce computer-found patterns to closed-form proofs that hold for every $n$, $X$, or $m$. That dynamic — empirical pattern, then proof, then conjecture beyond proof — is the texture of working number theory at this scale.</p>
     </article>
 
     <section class="references" aria-labelledby="references">
@@ -137,28 +204,34 @@
           <span class="references__venue">(6th ed.). <em>Oxford University Press</em>.</span>
         </li>
         <li class="references__item">
+          <span class="references__authors">Ramanujan, S.</span>
+          <span class="references__year">(1915).</span>
+          <span class="references__title">On the Expression of a Number in the Form $ax^2 + by^2 + cz^2 + du^2$.</span>
+          <span class="references__venue"><em>Proceedings of the Cambridge Philosophical Society</em>, 19, 11–21.</span>
+        </li>
+        <li class="references__item">
           <span class="references__authors">Silverman, J. H.</span>
-          <span class="references__year">(1993).</span>
-          <span class="references__title">Taxicabs and sums of two cubes.</span>
-          <span class="references__venue"><em>American Mathematical Monthly</em>, 100(4), 331–340.</span>
+          <span class="references__year">(2009).</span>
+          <span class="references__title">The Arithmetic of Elliptic Curves</span>
+          <span class="references__venue">(2nd ed.). <em>Graduate Texts in Mathematics</em>, 106. Springer.</span>
+        </li>
+        <li class="references__item">
+          <span class="references__authors">Ireland, K. &amp; Rosen, M.</span>
+          <span class="references__year">(1990).</span>
+          <span class="references__title">A Classical Introduction to Modern Number Theory</span>
+          <span class="references__venue">(2nd ed.). <em>Graduate Texts in Mathematics</em>, 84. Springer.</span>
         </li>
         <li class="references__item">
           <span class="references__authors">Guy, R. K.</span>
           <span class="references__year">(2004).</span>
           <span class="references__title">Unsolved Problems in Number Theory</span>
-          <span class="references__venue">(3rd ed.). <em>Springer</em>.</span>
+          <span class="references__venue">(3rd ed.). <em>Problem Books in Mathematics</em>. Springer.</span>
         </li>
         <li class="references__item">
-          <span class="references__authors">Hooley, C.</span>
-          <span class="references__year">(1964).</span>
-          <span class="references__title">On the numbers that are sums of two cubes.</span>
-          <span class="references__venue"><em>Journal für die reine und angewandte Mathematik</em>, 314, 146–173.</span>
-        </li>
-        <li class="references__item">
-          <span class="references__authors">Heath-Brown, D. R.</span>
-          <span class="references__year">(1992).</span>
-          <span class="references__title">The density of rational points on cubic surfaces.</span>
-          <span class="references__venue"><em>Acta Arithmetica</em>, 79, 17–30.</span>
+          <span class="references__authors">Cassels, J. W. S.</span>
+          <span class="references__year">(1991).</span>
+          <span class="references__title">Lectures on Elliptic Curves.</span>
+          <span class="references__venue"><em>London Mathematical Society Student Texts</em>, 24. Cambridge University Press.</span>
         </li>
       </ol>
     </section>
