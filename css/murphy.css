@@ -127,6 +127,30 @@
   color: var(--text);
 }
 
+/* ===== Roles sub-list — used inside an Education item to attach
+   leadership positions to the school they belong to. Lighter than a full
+   .m-list item; no border separators. ===== */
+.m-roles {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  max-inline-size: var(--measure);
+}
+.m-roles > li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text);
+  line-height: 1.5;
+}
+.m-roles > li .m-badge {
+  flex-shrink: 0;
+}
+
 /* ===== Mobile: tighten section + item rhythm ===== */
 @media (max-width: 600px) {
   .m-section {
