@@ -126,9 +126,47 @@
   opacity: 0.92; margin-block-end: var(--space-6);
 }
 .hero__cta { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+/* Animated, clickable scroll cue. Anchors to #summary so a click jumps the
+   reader past the hero into the Education / Recognition cards below. The
+   bouncing arrow + caps "Scroll" label are deliberately conspicuous so first-
+   time visitors realize there's content under the fold. */
 .hero__cue {
-  position: absolute; left: 50%; bottom: var(--space-6);
-  translate: -50% 0; color: var(--hero-text); opacity: 0.7;
+  position: absolute; left: 50%; bottom: var(--space-5);
+  translate: -50% 0;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--hero-text);
+  text-decoration: none;
+  opacity: 0.85;
+}
+.hero__cue:hover { opacity: 1; }
+.hero__cue:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+.hero__cue-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+}
+.hero__cue-arrow {
+  font-size: 1.5rem;
+  line-height: 1;
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero__cue-arrow {
+    animation: heroCueBounce 1.8s ease-in-out infinite;
+  }
+  @keyframes heroCueBounce {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(8px); }
+  }
 }
 
 /* ===== Buttons (UI-SPEC §Layout Grid + Card Spec tap-target) ===== */
