@@ -101,8 +101,14 @@ else
 fi
 
 SECTION "2. KaTeX scope regression (D-09)"
-MATH_PAGES="projects/lobbying-networks/index.html projects/taxicab-numbers/index.html projects/branching-cancer/index.html projects/sepsis-prediction/index.html"
-NON_MATH_PAGES="index.html about.html projects.html experience.html contact.html projects/nlp-tariff/index.html projects/encoding-attacks-llm/index.html projects/soccer-clustering/index.html projects/market-mood/index.html projects/decimal-expansions/index.html 404.html"
+# D-09 originally tied KaTeX to the 4 math-section pages. Per 2026-05-09 update:
+# decoupled from section labels — KaTeX loads on any detail page that actually
+# renders math. As of 2026-05-10 that is: lobbying-networks, taxicab-numbers,
+# branching-cancer, sepsis-prediction (CS but with utility-score math), and
+# decimal-expansions (math article re-typeset with KaTeX). transformers-vs-lstms
+# also loads KaTeX (Transformer attention + LSTM gate equations).
+MATH_PAGES="projects/lobbying-networks/index.html projects/taxicab-numbers/index.html projects/branching-cancer/index.html projects/sepsis-prediction/index.html projects/decimal-expansions/index.html projects/transformers-vs-lstms/index.html"
+NON_MATH_PAGES="index.html about.html projects.html experience.html contact.html projects/nlp-tariff/index.html projects/encoding-attacks-llm/index.html projects/soccer-clustering/index.html projects/market-mood/index.html 404.html"
 for f in $MATH_PAGES; do
   if grep -q 'katex.min.js' "$f"; then
     PASS "KaTeX present on $f"
