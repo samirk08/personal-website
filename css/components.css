@@ -114,20 +114,29 @@
 }
 
 /* Hero profile card — sits in the right grid cell of the hero on desktop,
-   replacing the prior oval headshot. White surface card on the himalayas
-   background carries photo + greeting + lede + meta chips. Stacks below the
+   replacing the prior oval headshot. Frosted-glass surface that lets the
+   himalayas show through (low-opacity white tint + backdrop blur), so the
+   card feels like part of the scene rather than a bright box punched into it.
+   Text inside is white to read against the dark backdrop. Stacks below the
    hero text on mobile. */
 .hero-card {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.20);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: var(--space-6);
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-4);
   inline-size: 100%;
-  max-inline-size: 300px;
-  /* Reset to dark text inside the card; hero parent is white-on-himalayas. */
-  color: var(--text);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  max-inline-size: 400px;
+  color: var(--hero-text);   /* white inside the frosted card */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+/* Browsers without backdrop-filter (rare in 2026): use a darker translucent
+   fill so the white text still has contrast without the blur. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hero-card { background: rgba(0, 0, 0, 0.40); }
 }
 @media (min-width: 768px) {
   .hero-card { justify-self: end; }
@@ -142,16 +151,16 @@
   border-radius: var(--radius-md);
 }
 .hero-card__greeting {
-  font-size: var(--text-xl);
+  font-size: var(--text-3xl);
   font-weight: 700;
-  color: var(--text);
+  color: var(--hero-text);
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.15;
   letter-spacing: -0.01em;
 }
 .hero-card__lede {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
   line-height: 1.5;
 }
@@ -168,9 +177,9 @@
   align-items: center;
   gap: var(--space-1);
   font-size: var(--text-xs);
-  color: var(--text-muted);
-  background: var(--surface-muted);
-  border: 1px solid var(--border);
+  color: rgba(255, 255, 255, 0.90);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   padding: 4px var(--space-2);
   border-radius: var(--radius-md);
   white-space: nowrap;
@@ -179,11 +188,12 @@
   inline-size: 12px;
   block-size: 12px;
   flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.90);
 }
 @media (max-width: 767px) {
   .hero-card {
     justify-self: center;
-    max-inline-size: 280px;
+    max-inline-size: 340px;
     margin-block-start: var(--space-6);
   }
 }
