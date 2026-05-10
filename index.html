@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260510-4">
+  <link rel="stylesheet" href="/css/main.css?v=20260510-5">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -56,11 +56,25 @@
             <a class="btn btn--solid" href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a>
           </div>
         </div>
-        <picture class="hero__photo">
-          <source srcset="/assets/img/about/headshot.avif" type="image/avif">
-          <source srcset="/assets/img/about/headshot.webp" type="image/webp">
-          <img src="/assets/img/about/headshot.jpeg" alt="Photo of Samir Kadariya" width="320" height="400" loading="eager" decoding="async">
-        </picture>
+        <aside class="hero-card">
+          <picture class="hero-card__photo">
+            <source srcset="/assets/img/about/headshot.avif" type="image/avif">
+            <source srcset="/assets/img/about/headshot.webp" type="image/webp">
+            <img src="/assets/img/about/headshot.jpeg" alt="Photo of Samir Kadariya" width="280" height="280" loading="eager" decoding="async">
+          </picture>
+          <h2 class="hero-card__greeting">Hi, I'm Samir.</h2>
+          <p class="hero-card__lede">Senior at MIT working on statistical inference and applied data science, with a side of pure math.</p>
+          <ul class="hero-card__chips">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Cambridge, MA</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              <span>MIT '26 · AI + Math</span>
+            </li>
+          </ul>
+        </aside>
       </div>
       <a class="hero__cue" href="#summary" aria-label="Scroll to summary">
         <span class="hero__cue-label">Scroll</span>

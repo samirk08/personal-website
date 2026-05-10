@@ -112,6 +112,84 @@
 @media (max-width: 374px) {
   .hero__photo { display: none; }       /* suppress under 375 px */
 }
+
+/* Hero profile card — sits in the right grid cell of the hero on desktop,
+   replacing the prior oval headshot. White surface card on the himalayas
+   background carries photo + greeting + lede + meta chips. Stacks below the
+   hero text on mobile. */
+.hero-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+  inline-size: 100%;
+  max-inline-size: 300px;
+  /* Reset to dark text inside the card; hero parent is white-on-himalayas. */
+  color: var(--text);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+@media (min-width: 768px) {
+  .hero-card { justify-self: end; }
+}
+.hero-card__photo { display: block; margin: 0; inline-size: 100%; }
+.hero-card__photo img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+.hero-card__greeting {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.hero-card__lede {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+.hero-card__chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.hero-card__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  padding: 4px var(--space-2);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+.hero-card__chips svg {
+  inline-size: 12px;
+  block-size: 12px;
+  flex-shrink: 0;
+}
+@media (max-width: 767px) {
+  .hero-card {
+    justify-self: center;
+    max-inline-size: 280px;
+    margin-block-start: var(--space-6);
+  }
+}
+@media (max-width: 374px) {
+  .hero-card { display: none; }
+}
 .hero__name {
   font-size: var(--text-display); font-weight: 600;
   letter-spacing: -0.025em; line-height: 1.05;
