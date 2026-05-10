@@ -24,12 +24,16 @@
   max-inline-size: var(--measure-grid);
 }
 
-/* ===== Card head (always visible) ===== */
+/* ===== Card head (always visible) =====
+   4 columns on desktop: logo | text | when | toggle.
+   The logo column is fixed at 200px so titles align across all cards
+   regardless of whether the logo is square (~48×48) or a wide wordmark
+   (up to ~191×48 for the MIT Political Science lockup). */
 .timeline__head {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 200px 1fr auto auto;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-5);
   inline-size: 100%;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -40,6 +44,24 @@
   color: inherit;
   cursor: pointer;
   min-block-size: 44px;          /* MOB-03 tap-target floor */
+}
+
+/* Company logo slot — vertically centered, height-locked to 48px so all
+   logos read at the same scale, width auto so wordmark lockups stay
+   readable at their natural aspect ratio. */
+.timeline__logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  block-size: 48px;
+  overflow: hidden;
+}
+.timeline__logo img {
+  display: block;
+  block-size: 48px;
+  inline-size: auto;
+  max-inline-size: 100%;
+  object-fit: contain;
 }
 @media (prefers-reduced-motion: no-preference) {
   .timeline__head { transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
@@ -282,4 +304,6 @@
   .timeline__when      { grid-area: when; text-align: start; }
   .timeline__toggle    { grid-area: toggle; }
   .timeline__body      { padding: var(--space-5); }
+  /* Logos hidden on mobile — head is already tight with title+role+date+toggle. */
+  .timeline__logo      { display: none; }
 }
