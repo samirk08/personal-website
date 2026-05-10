@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260510-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -43,6 +43,42 @@
       <p class="page-header__lede">Selected CS and math work from MIT coursework, research, and side projects.</p>
     </header>
     <section class="page-body">
+      <section class="m-section" aria-labelledby="featured-heading" style="margin-block-start:0;">
+        <h2 class="m-section__heading" id="featured-heading">Featured Work</h2>
+        <ol class="m-list">
+          <li>
+            <article class="m-item">
+              <h3 class="m-item__title"><a href="/projects/transformers-vs-lstms/">When Do Transformers Actually Beat LSTMs for Time Series Forecasting?</a></h3>
+              <p class="m-item__meta">
+                <span class="m-badge">Featured</span>
+                <span class="m-item__meta-sep">·</span>
+                <span>Deep Learning</span>
+                <span class="m-item__meta-sep">·</span>
+                <span>MIT 6.7960 · Fall 2025</span>
+                <span class="m-item__meta-sep">·</span>
+                <span>3-person team</span>
+              </p>
+              <p class="m-item__prose">A controlled comparison of <span class="m-metric">Transformer vs LSTM</span> architectures across three time-series forecasting datasets, with attention-pattern analysis and ablations isolating where each architecture genuinely wins.</p>
+              <a class="m-item__link" href="/projects/transformers-vs-lstms/">Read more</a>
+            </article>
+          </li>
+          <li>
+            <article class="m-item">
+              <h3 class="m-item__title"><a href="/projects/lobbying-networks/">Targeted Lobbying on Council Networks</a></h3>
+              <p class="m-item__meta">
+                <span class="m-badge">Featured</span>
+                <span class="m-item__meta-sep">·</span>
+                <span>Game Theory</span>
+                <span class="m-item__meta-sep">·</span>
+                <span>MIT 14.18</span>
+              </p>
+              <p class="m-item__prose">Game-theoretic analysis of how a strategic outsider should target lobbying effort across a council network — using <span class="m-metric">Katz–Bonacich centrality</span> to identify members whose votes propagate furthest through the influence graph.</p>
+              <a class="m-item__link" href="/projects/lobbying-networks/">Read more</a>
+            </article>
+          </li>
+        </ol>
+      </section>
+
       <div class="project-filter" role="tablist" aria-label="Filter projects">
         <button class="project-filter__btn" type="button" role="tab" aria-selected="true" aria-pressed="true" data-filter="all">All</button>
         <button class="project-filter__btn" type="button" role="tab" aria-selected="false" aria-pressed="false" data-filter="cs">CS</button>
@@ -77,6 +113,7 @@
           <li><a href="/projects/encoding-attacks-llm/">Encoding-Based Attacks on Large Language Models</a></li>
           <li><a href="/projects/soccer-clustering/">Clustering Soccer Playing Styles</a></li>
           <li><a href="/projects/market-mood/">Market Mood — Reddit Sentiment Dashboard</a></li>
+          <li><a href="/projects/transformers-vs-lstms/">When Do Transformers Actually Beat LSTMs for Time Series Forecasting?</a></li>
           <li><a href="/projects/lobbying-networks/">Targeted Lobbying on Council Networks</a></li>
           <li><a href="/projects/taxicab-numbers/">Properties of Taxicab Numbers</a></li>
           <li><a href="/projects/branching-cancer/">Branching Process Models for Cancer (Survey)</a></li>
