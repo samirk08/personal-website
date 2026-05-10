@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260510-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260510-3">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -56,13 +56,105 @@
             <a class="btn btn--solid" href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a>
           </div>
         </div>
-        <picture class="hero__photo">
-          <source srcset="/assets/img/about/headshot.avif" type="image/avif">
-          <source srcset="/assets/img/about/headshot.webp" type="image/webp">
-          <img src="/assets/img/about/headshot.jpeg" alt="Photo of Samir Kadariya" width="320" height="400" loading="eager" decoding="async">
-        </picture>
       </div>
       <span class="hero__cue" aria-hidden="true">↓</span>
+    </section>
+
+    <section class="profile" id="profile" aria-labelledby="profile-greeting">
+      <aside class="profile__card">
+        <picture class="profile__photo">
+          <source srcset="/assets/img/about/headshot.avif" type="image/avif">
+          <source srcset="/assets/img/about/headshot.webp" type="image/webp">
+          <img src="/assets/img/about/headshot.jpeg" alt="Samir Kadariya" width="400" height="400" loading="eager" decoding="async">
+        </picture>
+        <h2 class="profile__greeting" id="profile-greeting">Hi, I'm Samir.</h2>
+        <p class="profile__lede">Senior at MIT working on statistical inference and applied data science, with a side of pure math.</p>
+        <ul class="profile__chips">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Cambridge, MA</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span>MIT '26 · AI + Math</span>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="profile__sections">
+        <article class="profile__section">
+          <h2 class="m-section__heading">Featured Work</h2>
+          <ol class="m-list">
+            <li>
+              <article class="m-item">
+                <h3 class="m-item__title"><a href="/projects/transformers-vs-lstms/">When Do Transformers Actually Beat LSTMs for Time Series Forecasting?</a></h3>
+                <p class="m-item__meta">
+                  <span class="m-badge">Featured</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>Deep Learning</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>MIT 6.7960 · Fall 2025</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>3-person team</span>
+                </p>
+                <p class="m-item__prose">A controlled comparison of <span class="m-metric">Transformer vs LSTM</span> architectures across three time-series forecasting datasets, with attention-pattern analysis and ablations isolating where each architecture genuinely wins.</p>
+                <a class="m-item__link" href="/projects/transformers-vs-lstms/">Read more</a>
+              </article>
+            </li>
+            <li>
+              <article class="m-item">
+                <h3 class="m-item__title"><a href="/projects/lobbying-networks/">Targeted Lobbying on Council Networks</a></h3>
+                <p class="m-item__meta">
+                  <span class="m-badge">Featured</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>Game Theory</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>MIT 14.18</span>
+                </p>
+                <p class="m-item__prose">Game-theoretic analysis of how a strategic outsider should target lobbying effort across a council network — using <span class="m-metric">Katz–Bonacich centrality</span> to identify members whose votes propagate furthest through the influence graph.</p>
+                <a class="m-item__link" href="/projects/lobbying-networks/">Read more</a>
+              </article>
+            </li>
+          </ol>
+        </article>
+
+        <article class="profile__section">
+          <h2 class="m-section__heading">Education</h2>
+          <ol class="m-list">
+            <li>
+              <article class="m-item">
+                <h3 class="m-item__title">Massachusetts Institute of Technology</h3>
+                <p class="m-item__meta">
+                  <span class="m-badge">Undergraduate</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>BS AI + Decision Making · BS Mathematics</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>2022 – 2026</span>
+                </p>
+                <p class="m-item__prose">Coursework concentrated in statistical inference, machine learning, optimization, and number theory — including 6.7960 Deep Learning, 14.18 Mathematical Economic Modeling, 18.821 Project Lab in Mathematics, and 18.619 Discrete Probability.</p>
+              </article>
+            </li>
+          </ol>
+          <p style="margin-block-start: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm);"><a href="/about" style="color: var(--accent); text-decoration: none;">More on /about →</a></p>
+        </article>
+
+        <article class="profile__section">
+          <h2 class="m-section__heading">Recognition</h2>
+          <ol class="m-list">
+            <li>
+              <article class="m-item">
+                <h3 class="m-item__title">Gates Scholarship</h3>
+                <p class="m-item__meta">
+                  <span class="m-badge">Scholarship</span>
+                  <span class="m-item__meta-sep">·</span>
+                  <span>Bill &amp; Melinda Gates Foundation</span>
+                </p>
+                <p class="m-item__prose">A <span class="m-metric">full-cost, last-dollar undergraduate scholarship</span> awarded annually to a small cohort of high-achieving, Pell-eligible minority students across the U.S.</p>
+              </article>
+            </li>
+          </ol>
+        </article>
+      </div>
     </section>
   </main>
 

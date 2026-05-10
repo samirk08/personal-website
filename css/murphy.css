@@ -127,6 +127,118 @@
   color: var(--text);
 }
 
+/* ===== Profile section (homepage) — two-column with sticky profile card
+   on the left and stacked content cards on the right. Inspired by the
+   christianmurphydesign.com landing layout the user pointed at. ===== */
+.profile {
+  display: grid;
+  grid-template-columns: minmax(320px, 380px) 1fr;
+  gap: var(--space-6);
+  max-inline-size: var(--measure-grid);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+  padding-block: var(--space-12) var(--space-14);
+  align-items: start;
+}
+
+.profile__card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: grid;
+  gap: var(--space-5);
+  position: sticky;
+  inset-block-start: var(--space-6);
+}
+.profile__photo {
+  display: block;
+  inline-size: 100%;
+}
+.profile__photo img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+.profile__greeting {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.profile__lede {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+  max-inline-size: var(--measure);
+}
+.profile__chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.profile__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  padding: 4px var(--space-2);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+.profile__chips svg {
+  inline-size: 14px;
+  block-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Stacked content cards on the right. Each is a rounded surface containing
+   one .m-section's worth of Murphy-styled content. */
+.profile__sections {
+  display: grid;
+  gap: var(--space-5);
+  min-inline-size: 0;
+}
+.profile__section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7) var(--space-6);
+}
+.profile__section .m-section,
+.profile__section .m-section:first-of-type {
+  /* Override the default m-section top margin since the card already pads. */
+  margin-block-start: 0;
+}
+
+@media (max-width: 768px) {
+  .profile {
+    grid-template-columns: 1fr;
+    padding-block: var(--space-10);
+  }
+  .profile__card {
+    position: static;
+    max-inline-size: 480px;
+    margin-inline: auto;
+    inline-size: 100%;
+  }
+  .profile__greeting {
+    font-size: var(--text-2xl);
+  }
+}
+
 /* ===== Roles sub-list — used inside an Education item to attach
    leadership positions to the school they belong to. Lighter than a full
    .m-list item; no border separators. ===== */
