@@ -46,14 +46,16 @@
   min-block-size: 44px;          /* MOB-03 tap-target floor */
 }
 
-/* Company logo slot — vertically centered, height-locked to 48px so all
-   logos read at the same scale, width auto so wordmark lockups stay
-   readable at their natural aspect ratio. */
+/* Company logo slot — centered horizontally and vertically in the 200px column.
+   Square icon logos (SESCO, CSAIL) get bumped to 64px so they read at the same
+   visual weight as the wordmark logos that naturally fill the column width.
+   Wordmark logos (PoliSci, Eachday) stay at 48px so they don't overpower the
+   title row. */
 .timeline__logo {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  block-size: 48px;
+  justify-content: center;
+  block-size: 64px;
   overflow: hidden;
 }
 .timeline__logo img {
@@ -62,6 +64,11 @@
   inline-size: auto;
   max-inline-size: 100%;
   object-fit: contain;
+}
+/* Square icon logos: bump to 64px so the detail (CSAIL especially) is legible. */
+.timeline__logo img[src*="sesco"],
+.timeline__logo img[src*="csail"] {
+  block-size: 64px;
 }
 @media (prefers-reduced-motion: no-preference) {
   .timeline__head { transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
