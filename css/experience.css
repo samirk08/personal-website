@@ -256,6 +256,14 @@
   white-space: nowrap;
 }
 
+/* ===== Footnote ("See Resume (PDF) for full detail.") =====
+   Push it well below the last card so it doesn't crowd against it. */
+.timeline__footnote {
+  margin-block-start: var(--space-10);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
 /* ===== Mobile tweaks (≤ 600px): stack dates onto a new line below the title
    so the head doesn't squeeze and remains readable. ===== */
 @media (max-width: 600px) {
