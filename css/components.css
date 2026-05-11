@@ -141,6 +141,12 @@
 @media (min-width: 768px) {
   .hero-card { justify-self: end; }
 }
+/* On wide viewports, pull the card past the 1200px container's right edge so
+   it reads as anchored to the right side of the screen rather than the right
+   side of the centered content column. */
+@media (min-width: 1280px) {
+  .hero-card { margin-inline-end: calc(var(--space-10) * -1); }
+}
 .hero-card__photo { display: block; margin: 0; inline-size: 100%; }
 .hero-card__photo img {
   display: block;
