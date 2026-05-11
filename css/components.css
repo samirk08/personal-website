@@ -129,7 +129,7 @@
   display: grid;
   gap: var(--space-4);
   inline-size: 100%;
-  max-inline-size: 400px;
+  max-inline-size: 520px;
   color: var(--hero-text);   /* white inside the frosted card */
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
 }
