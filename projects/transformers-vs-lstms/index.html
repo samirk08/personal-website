@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260515-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260515-2">
 
   <style>
     /* ===== Paper-style wrapper for existing matplotlib screenshot figures =====
@@ -99,6 +99,86 @@
       dominant-baseline: central;
     }
     .fig2-legend-label--accent { fill: var(--accent); font-weight: 700; }
+
+    /* ===== Figure 5: cross-dataset MAE comparison (native SVG) =====
+       3 horizontal-bar mini-groups stacked vertically, one per dataset.
+       Winner accented, runner-up dark gray, LSTM baseline mid gray. */
+    .fig5-section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      fill: var(--text-muted);
+      dominant-baseline: central;
+    }
+    .fig5-model-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      fill: var(--text);
+      dominant-baseline: central;
+    }
+    .fig5-model-label--win { fill: var(--accent); font-weight: 700; }
+    .fig5-bar--win { fill: var(--accent); }
+    .fig5-bar--mid { fill: #4a4a4a; }
+    .fig5-bar--low { fill: #8a8a8a; }
+    .fig5-value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      fill: var(--text);
+      dominant-baseline: central;
+    }
+    .fig5-value--win { fill: var(--accent); font-weight: 700; }
+
+    /* ===== Figure 6: Pareto plot (native SVG) =====
+       Plain 2D scatter — training time vs accuracy gain over LSTM. Pareto
+       frontier dashed accent line. Drops the bubble-as-memory encoding. */
+    .fig6-grid { stroke: rgba(26,26,26,0.07); stroke-width: 1; stroke-dasharray: 2 4; fill: none; }
+    .fig6-axis { stroke: rgba(26,26,26,0.30); stroke-width: 1; fill: none; }
+    .fig6-tick-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      fill: var(--text-muted);
+    }
+    .fig6-axis-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      fill: var(--text);
+    }
+    .fig6-pareto-line {
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      stroke-dasharray: 5 4;
+      fill: none;
+      opacity: 0.75;
+    }
+    .fig6-pareto-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      fill: var(--accent);
+    }
+    .fig6-dot { stroke: var(--surface); stroke-width: 2; }
+    .fig6-dot--win { fill: var(--accent); }
+    .fig6-dot--neutral { fill: #4a4a4a; }
+    .fig6-dot--baseline { fill: #8a8a8a; }
+    .fig6-dot-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      fill: var(--text);
+      font-weight: 700;
+    }
+    .fig6-dot-label--win { fill: var(--accent); }
+    .fig6-dot-sublabel {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--text-muted);
+    }
 
     /* ===== Interactive Regime Explorer widget =====
        Replaces nothing — placed beside Figure 5 to let the reader toggle
@@ -588,42 +668,129 @@
         <div class="regime-winner" data-regime-winner aria-live="polite"></div>
       </section>
 
-      <figure class="figure">
-        <picture>
-          <source srcset="/assets/img/transformers-vs-lstms/unified_model_comparison.avif" type="image/avif">
-          <source srcset="/assets/img/transformers-vs-lstms/unified_model_comparison.webp" type="image/webp">
-          <img src="/assets/img/transformers-vs-lstms/unified_model_comparison.jpeg"
-               alt="Unified model comparison across electricity, traffic, and flu showing PatchTST and TFT outperforming LSTM baselines on the two larger datasets while the gap shrinks to within noise on the small flu dataset."
-               width="1600" height="551" loading="lazy" decoding="async">
-        </picture>
-        <figcaption>Figure 5: Unified comparison across all three datasets. On electricity, PatchTST achieves a 16–19% MAE improvement over TFT and 37–40% over the best LSTM baseline at 720h. On traffic, channel independence is decisive: PatchTST delivers a 19–21% improvement over TFT and 56–58% over LSTM. On flu, with only 38 training weeks, TFT slightly edges PatchTST, but the differences are within noise — data scarcity is the limiting factor, not architecture.</figcaption>
+      <figure class="figure figure--svg">
+        <div class="figure__plot">
+          <svg viewBox="0 0 720 360" role="img" aria-labelledby="fig5-title fig5-desc" preserveAspectRatio="xMidYMid meet">
+            <title id="fig5-title">Cross-dataset comparison: PatchTST vs TFT vs LSTM on electricity, traffic, and flu</title>
+            <desc id="fig5-desc">Three horizontal bar groups, one per dataset. Lower is better. On electricity (MAE at 720h), PatchTST wins at 0.365 versus TFT 0.445 and LSTM 0.595. On traffic (normalized MSE at the 12-week horizon), PatchTST wins at 0.504 versus TFT 0.620 and LSTM 1.170. On flu (MAE averaged across regions), TFT marginally wins at 0.540 versus PatchTST 0.550 and LSTM 0.620 — within noise.</desc>
+
+            <!-- ELECTRICITY -->
+            <text class="fig5-section-label" x="110" y="18">ELECTRICITY · MAE at 720h</text>
+            <text class="fig5-model-label fig5-model-label--win" x="100" y="40" text-anchor="end">PatchTST</text>
+            <rect class="fig5-bar--win" x="110" y="33" width="288.2" height="14" rx="2"/>
+            <text class="fig5-value fig5-value--win" x="406" y="40">0.365</text>
+
+            <text class="fig5-model-label" x="100" y="66" text-anchor="end">TFT</text>
+            <rect class="fig5-bar--mid" x="110" y="59" width="351.5" height="14" rx="2"/>
+            <text class="fig5-value" x="469" y="66">0.445</text>
+
+            <text class="fig5-model-label" x="100" y="92" text-anchor="end">LSTM</text>
+            <rect class="fig5-bar--low" x="110" y="85" width="470" height="14" rx="2"/>
+            <text class="fig5-value" x="588" y="92">0.595</text>
+
+            <!-- TRAFFIC -->
+            <text class="fig5-section-label" x="110" y="138">TRAFFIC · normalized MSE @ 12 weeks</text>
+            <text class="fig5-model-label fig5-model-label--win" x="100" y="160" text-anchor="end">PatchTST</text>
+            <rect class="fig5-bar--win" x="110" y="153" width="202.5" height="14" rx="2"/>
+            <text class="fig5-value fig5-value--win" x="320" y="160">0.504</text>
+
+            <text class="fig5-model-label" x="100" y="186" text-anchor="end">TFT</text>
+            <rect class="fig5-bar--mid" x="110" y="179" width="249.1" height="14" rx="2"/>
+            <text class="fig5-value" x="367" y="186">0.620</text>
+
+            <text class="fig5-model-label" x="100" y="212" text-anchor="end">LSTM</text>
+            <rect class="fig5-bar--low" x="110" y="205" width="470" height="14" rx="2"/>
+            <text class="fig5-value" x="588" y="212">1.170</text>
+
+            <!-- FLU -->
+            <text class="fig5-section-label" x="110" y="258">FLU · MAE (4-region avg)</text>
+            <text class="fig5-model-label fig5-model-label--win" x="100" y="280" text-anchor="end">TFT</text>
+            <rect class="fig5-bar--win" x="110" y="273" width="409.4" height="14" rx="2"/>
+            <text class="fig5-value fig5-value--win" x="527" y="280">0.540</text>
+
+            <text class="fig5-model-label" x="100" y="306" text-anchor="end">PatchTST</text>
+            <rect class="fig5-bar--mid" x="110" y="299" width="416.9" height="14" rx="2"/>
+            <text class="fig5-value" x="535" y="306">0.550</text>
+
+            <text class="fig5-model-label" x="100" y="332" text-anchor="end">LSTM</text>
+            <rect class="fig5-bar--low" x="110" y="325" width="470" height="14" rx="2"/>
+            <text class="fig5-value" x="588" y="332">0.620</text>
+          </svg>
+        </div>
+        <figcaption>Figure 5: Cross-dataset comparison. Lower is better; the winner in each row is shown in accent. On electricity, PatchTST achieves a 16–19% MAE improvement over TFT and 37–40% over the best LSTM baseline at 720h. On traffic, channel independence is decisive: PatchTST delivers a 19–21% improvement over TFT and 56–58% over LSTM. On flu, with only 38 training weeks, TFT marginally edges PatchTST and the differences are within noise — data scarcity, not architecture, is the limiting factor.</figcaption>
       </figure>
 
       <p>The pattern is clear by dataset. On <strong>electricity</strong> (large, rich exogenous), every architecture trains well and the ranking is PatchTST &lt; TFT &lt; LSTM family in MAE; the gap between PatchTST and the LSTM ceiling is roughly 37–40% at 720h. On <strong>traffic</strong> (small, high-dimensional), the vanilla Transformer fails outright; Crossformer's two-stage attention recovers most of that loss; PatchTST's channel independence beats both Crossformer and the LSTM line by another 15–25%. On <strong>flu</strong> (small, multi-output), no architecture has enough data to separate from the others — TFT and PatchTST end up within noise of each other and only modestly ahead of LSTM. The Transformer advantage, in other words, lives entirely in the regimes where the architecture brings the right inductive bias <em>and</em> where the data is large enough to use it.</p>
 
-      <figure class="figure">
-        <picture>
-          <source srcset="/assets/img/transformers-vs-lstms/computational_accuracy_tradeoff.avif" type="image/avif">
-          <source srcset="/assets/img/transformers-vs-lstms/computational_accuracy_tradeoff.webp" type="image/webp">
-          <img src="/assets/img/transformers-vs-lstms/computational_accuracy_tradeoff.jpeg"
-               alt="Pareto plot of accuracy versus training cost: PatchTST achieves the largest accuracy gains per unit of compute, TFT trades accuracy for interpretability, and LSTM remains the lowest-cost option."
-               width="1600" height="1113" loading="lazy" decoding="async">
-        </picture>
-        <figcaption>Figure 6: Accuracy versus computational cost. PatchTST is Pareto-optimal in our experiments — roughly 27.5% accuracy gain per unit of training time vs. TFT's 15.8%. TFT pays for its 4× compute with interpretable variable-selection weights, valuable when audits or regulatory reviews require model explanations. LSTM remains the cheapest option and the right choice under strict latency or budget constraints.</figcaption>
+      <figure class="figure figure--svg">
+        <div class="figure__plot">
+          <svg viewBox="0 0 720 380" role="img" aria-labelledby="fig6-title fig6-desc" preserveAspectRatio="xMidYMid meet">
+            <title id="fig6-title">Pareto plot: training cost versus accuracy gain over the LSTM baseline</title>
+            <desc id="fig6-desc">Scatter plot. X-axis is training time as a multiple of the LSTM baseline. Y-axis is peak accuracy gain over LSTM in percent. LSTM sits at one times cost and zero gain, PatchTST at two-and-a-half times cost and roughly 38 percent gain, TFT at four times cost and roughly 28 percent gain. LSTM and PatchTST lie on the Pareto frontier (dashed accent line); TFT is dominated.</desc>
+
+            <g class="fig6-grid">
+              <line x1="80" y1="312"   x2="600" y2="312"/>
+              <line x1="80" y1="257.6" x2="600" y2="257.6"/>
+              <line x1="80" y1="203.2" x2="600" y2="203.2"/>
+              <line x1="80" y1="148.8" x2="600" y2="148.8"/>
+              <line x1="80" y1="94.4"  x2="600" y2="94.4"/>
+              <line x1="80" y1="40"    x2="600" y2="40"/>
+            </g>
+            <g class="fig6-grid">
+              <line x1="145" y1="40" x2="145" y2="312"/>
+              <line x1="275" y1="40" x2="275" y2="312"/>
+              <line x1="405" y1="40" x2="405" y2="312"/>
+              <line x1="535" y1="40" x2="535" y2="312"/>
+            </g>
+
+            <g class="fig6-axis">
+              <line x1="80" y1="40"  x2="80"  y2="312"/>
+              <line x1="80" y1="312" x2="600" y2="312"/>
+            </g>
+
+            <g class="fig6-tick-label" text-anchor="end" dominant-baseline="central">
+              <text x="72" y="312">0%</text>
+              <text x="72" y="257.6">10%</text>
+              <text x="72" y="203.2">20%</text>
+              <text x="72" y="148.8">30%</text>
+              <text x="72" y="94.4">40%</text>
+              <text x="72" y="40">50%</text>
+            </g>
+            <g class="fig6-tick-label" text-anchor="middle">
+              <text x="145" y="328">1×</text>
+              <text x="275" y="328">2×</text>
+              <text x="405" y="328">3×</text>
+              <text x="535" y="328">4×</text>
+            </g>
+
+            <text class="fig6-axis-title" x="340" y="356" text-anchor="middle">Training time (× LSTM baseline)</text>
+            <text class="fig6-axis-title" x="22"  y="176" text-anchor="middle" transform="rotate(-90 22 176)">Accuracy gain over LSTM</text>
+
+            <!-- Pareto frontier: LSTM → PatchTST -->
+            <line class="fig6-pareto-line" x1="145" y1="312" x2="340" y2="105.3"/>
+            <text class="fig6-pareto-label" x="242.5" y="200" text-anchor="middle" transform="rotate(-46.6 242.5 200)">PARETO FRONTIER</text>
+
+            <!-- Data points -->
+            <circle class="fig6-dot fig6-dot--baseline" cx="145" cy="312" r="7"/>
+            <circle class="fig6-dot fig6-dot--win"      cx="340" cy="105.3" r="9"/>
+            <circle class="fig6-dot fig6-dot--neutral"  cx="535" cy="159.7" r="7"/>
+
+            <!-- Labels -->
+            <text class="fig6-dot-label"            x="158" y="298" text-anchor="start" dominant-baseline="central">LSTM</text>
+            <text class="fig6-dot-sublabel"         x="158" y="313" text-anchor="start" dominant-baseline="central">baseline · 1× cost</text>
+
+            <text class="fig6-dot-label fig6-dot-label--win" x="340" y="84"  text-anchor="middle">PatchTST</text>
+            <text class="fig6-dot-sublabel"                  x="340" y="70"  text-anchor="middle">~38% gain · 2.5× cost</text>
+
+            <text class="fig6-dot-label"    x="535" y="138" text-anchor="middle">TFT</text>
+            <text class="fig6-dot-sublabel" x="535" y="124" text-anchor="middle">~28% gain · 4× cost</text>
+            <text class="fig6-dot-sublabel" x="535" y="180" text-anchor="middle" style="font-style: italic;">interior (dominated)</text>
+          </svg>
+        </div>
+        <figcaption>Figure 6: Accuracy gain over the LSTM baseline versus training time. PatchTST is Pareto-optimal in our experiments — roughly 27.5% accuracy gain per unit of training time vs. TFT's 15.8% — placing it on the frontier alongside LSTM. TFT pays for its 4× compute with interpretable variable-selection weights, valuable when audits or regulatory reviews require model explanations. LSTM remains the cheapest option and the right choice under strict latency or budget constraints.</figcaption>
       </figure>
 
       <p>Compute cost is the second axis that breaks ties. TFT runs roughly 4× the LSTM training time; PatchTST runs roughly 2.5×. In a research setting both look modest, but at production scale — forecasting thousands of stores or sensors hourly — that multiplier becomes the deciding factor for what gets deployed. The Pareto plot above is the operational view of our central finding: PatchTST gives the largest accuracy gain per unit of compute, TFT buys interpretability rather than raw accuracy, and LSTM is what you pick when latency or budget caps the design.</p>
-
-      <figure class="figure">
-        <picture>
-          <source srcset="/assets/img/transformers-vs-lstms/summary_dashboard.avif" type="image/avif">
-          <source srcset="/assets/img/transformers-vs-lstms/summary_dashboard.webp" type="image/webp">
-          <img src="/assets/img/transformers-vs-lstms/summary_dashboard.jpeg"
-               alt="Summary dashboard collating MAE, RMSE, training time, and parameter counts across LSTM, Crossformer, TFT, and PatchTST on all three datasets."
-               width="1600" height="1031" loading="lazy" decoding="async">
-        </picture>
-        <figcaption>Figure 7: Summary dashboard. The dashboard collates per-dataset and per-horizon test metrics alongside training cost and parameter counts, making the regime-dependence of the Transformer advantage visible at a glance: large gains on electricity and traffic, marginal gains on flu, and never universally.</figcaption>
-      </figure>
 
       <p>Stepping back, four cross-cutting observations fall out of the experiments. First, <strong>architectural specialization is essential</strong>: vanilla Transformers fail catastrophically on traffic, and every Transformer variant that succeeds does so by adding a domain-specific inductive bias — Crossformer's spatial-temporal separation, TFT's variable selection, PatchTST's channel independence and patching. Basic LSTMs, by contrast, "just work" without that customization. Second, <strong>data efficiency remains a Transformer weakness</strong>: on flu, none of the Transformer variants meaningfully outperform each other or the LSTM line, because their quadratic attention layer needs more data to regularize than 38 weeks can supply. Third, <strong>sublinear horizon degradation is a property of data availability, not architecture</strong>: TFT and PatchTST exhibit power-law degradation $\mathrm{MAE}(h) \propto h^{0.16}$ on electricity, but the same models plateau on flu where the data simply runs out. Fourth, <strong>compute is a real deployment barrier</strong>: a 5% MAE improvement at 10× cost is rarely justified in production, which is why LSTM still appears in many real forecasting pipelines.</p>
 
