@@ -16,30 +16,29 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260514-3">
+  <link rel="stylesheet" href="/css/main.css?v=20260514-4">
 
   <!-- ===== Interactive widget styles (self-contained, this page only) ===== -->
   <style>
-    .lobby-widget {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: var(--space-6) var(--space-7);
-      margin-block: var(--space-6) var(--space-6);
-      box-shadow: var(--shadow-sm);
+    /* No card chrome on the widget wrapper — it flows on the article
+       background and the inner panels (graph, controls, clawback panels)
+       are the only things with their own subtle surface-muted backgrounds.
+       A 2px accent-blue top hairline announces "new section". This sidesteps
+       the unwinnable fight to make a fixed-width white box look "wide" inside
+       a 65ch reading column. */
+    .lobby-widget,
+    .clawback-widget {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      padding: var(--space-5) 0 var(--space-3);
+      margin-block: var(--space-10);
+      border-block-start: 2px solid color-mix(in oklch, var(--accent) 60%, transparent);
     }
-    /* Once the two-column TOC layout engages (≥1024px) the article-page
-       container has horizontal slack between the 65ch article-body column
-       and the article-page right edge. The amount of slack scales with the
-       viewport: at 1024px viewport it's ~52px; at 1200px+ it's ~228px.
-       Pull the widget's right edge into ALL of that slack so the white box
-       is as wide as the layout allows on every desktop viewport.
-
-       Math: article-page-content = min(1200px, 100vw - 32px ≈ 100vw).
-             TOC + gap = 220px. body = 65ch ≈ 720px. body padding negligible.
-             slack = article-page-content - 220 - 720 = min(1200, 100vw) - 940.
-             margin-end = -slack = 940 - min(1200, 100vw) ≈ 972 - min(...)
-             (small fudge for the article-page's own 32px padding-inline). */
+    /* On wide viewports the widget still stretches right into the article-page
+       slack so the inner panels can be wider — but now the stretch makes the
+       panels bigger, not a card wrapper that fights its column. */
     @media (min-width: 1024px) {
       .lobby-widget,
       .clawback-widget {
@@ -307,15 +306,8 @@
     .paper-figure .pf-bar--leaf { fill: #3a8a3a; }
     .paper-figure .pf-bar--center { fill: #d97706; }
 
-    /* ===== Greedy vs Clawback animation widget ===== */
-    .clawback-widget {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: var(--space-6) var(--space-7);
-      margin-block: var(--space-6);
-      box-shadow: var(--shadow-sm);
-    }
+    /* ===== Greedy vs Clawback slide deck — wrapper styles are shared with
+       .lobby-widget above (transparent, top accent line, no card chrome). ===== */
     .clawback-widget__eyebrow {
       font-family: var(--font-mono);
       font-size: var(--text-xs);
