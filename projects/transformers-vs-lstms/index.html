@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260515-2">
+  <link rel="stylesheet" href="/css/main.css?v=20260515-3">
 
   <style>
     /* ===== Paper-style wrapper for existing matplotlib screenshot figures =====
@@ -768,16 +768,17 @@
 
             <!-- Pareto frontier: LSTM → PatchTST -->
             <line class="fig6-pareto-line" x1="145" y1="312" x2="340" y2="105.3"/>
-            <text class="fig6-pareto-label" x="242.5" y="200" text-anchor="middle" transform="rotate(-46.6 242.5 200)">PARETO FRONTIER</text>
+            <!-- Frontier label, rotated parallel to the line, offset ~26 px perpendicular into the empty upper-left wedge so it clears the dashes -->
+            <text class="fig6-pareto-label" x="208" y="180" text-anchor="middle" dominant-baseline="central" transform="rotate(-46.6 208 180)">PARETO FRONTIER</text>
 
             <!-- Data points -->
             <circle class="fig6-dot fig6-dot--baseline" cx="145" cy="312" r="7"/>
             <circle class="fig6-dot fig6-dot--win"      cx="340" cy="105.3" r="9"/>
             <circle class="fig6-dot fig6-dot--neutral"  cx="535" cy="159.7" r="7"/>
 
-            <!-- Labels -->
-            <text class="fig6-dot-label"            x="158" y="298" text-anchor="start" dominant-baseline="central">LSTM</text>
-            <text class="fig6-dot-sublabel"         x="158" y="313" text-anchor="start" dominant-baseline="central">baseline · 1× cost</text>
+            <!-- LSTM labels — lifted above the dot so they don't sit on top of the line emerging upper-right from it -->
+            <text class="fig6-dot-label"    x="145" y="296" text-anchor="middle" dominant-baseline="central">LSTM</text>
+            <text class="fig6-dot-sublabel" x="145" y="282" text-anchor="middle" dominant-baseline="central">baseline · 1× cost</text>
 
             <text class="fig6-dot-label fig6-dot-label--win" x="340" y="84"  text-anchor="middle">PatchTST</text>
             <text class="fig6-dot-sublabel"                  x="340" y="70"  text-anchor="middle">~38% gain · 2.5× cost</text>
