@@ -16,7 +16,206 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260514-5">
+
+  <style>
+    /* ===== Paper-style wrapper for existing matplotlib screenshot figures =====
+       Wraps each <figure class="figure"> in a subtle surface-muted card with
+       a thin border, lifts the caption into a mono-styled "FIGURE N" label, and
+       constrains the caption to a readable measure. Keeps the screenshots
+       as-is (no re-render needed) but makes them feel framed and intentional. */
+    .article .figure {
+      margin-block: var(--space-7) var(--space-7);
+      padding: var(--space-4) var(--space-4) var(--space-3);
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      max-inline-size: 100%;
+    }
+    .article .figure picture {
+      display: block;
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .article .figure img {
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+    }
+    .article .figure figcaption {
+      margin-block-start: var(--space-3);
+      padding-inline: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      line-height: 1.55;
+      max-inline-size: 65ch;
+    }
+
+    /* ===== Interactive Regime Explorer widget =====
+       Replaces nothing — placed beside Figure 5 to let the reader toggle
+       between the three datasets and see how the model ranking shifts. */
+    .regime-widget {
+      margin-block: var(--space-10);
+      padding: var(--space-5) 0 var(--space-3);
+      border-block-start: 2px solid color-mix(in oklch, var(--accent) 60%, transparent);
+    }
+    @media (min-width: 1024px) {
+      .regime-widget { margin-inline-end: calc(972px - min(1200px, 100vw)); }
+    }
+    .regime-widget__eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 var(--space-2);
+    }
+    .regime-widget__title {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin: 0 0 var(--space-2);
+      color: var(--text);
+    }
+    .regime-widget__intro {
+      font-size: var(--text-base);
+      line-height: 1.55;
+      margin: 0 0 var(--space-4);
+      max-inline-size: 60ch;
+      color: var(--text);
+    }
+    .regime-widget__tabs {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--surface-muted);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      border: 1px solid var(--border);
+      margin-block-end: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .regime-widget__tab {
+      background: transparent;
+      border: none;
+      padding: 8px 14px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: background 180ms ease, color 180ms ease;
+    }
+    .regime-widget__tab:hover { color: var(--text); }
+    .regime-widget__tab.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+    .regime-widget__tab:focus-visible {
+      outline: 2px solid var(--ring);
+      outline-offset: 2px;
+    }
+    .regime-widget__body {
+      display: grid;
+      gap: var(--space-4);
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 760px) {
+      .regime-widget__body { grid-template-columns: minmax(220px, 0.95fr) 1.4fr; }
+    }
+    .regime-card {
+      background: var(--surface-muted);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-5);
+    }
+    .regime-card__meta {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 var(--space-3);
+    }
+    .regime-card__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin: 0 0 var(--space-3);
+      padding: 0;
+      list-style: none;
+    }
+    .regime-card__chip {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3px var(--space-2);
+      border-radius: var(--radius-sm);
+    }
+    .regime-card__story {
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      margin: 0;
+      color: var(--text);
+    }
+    .regime-chart {
+      background: var(--surface-muted);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-4) var(--space-3);
+    }
+    .regime-chart svg {
+      inline-size: 100%;
+      block-size: auto;
+      max-block-size: 320px;
+    }
+    .regime-chart__caption {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin: var(--space-2) 0 0;
+      text-align: center;
+    }
+    .regime-winner {
+      margin-block-start: var(--space-4);
+      padding: var(--space-3) var(--space-4);
+      background: color-mix(in oklch, var(--accent) 7%, var(--surface-muted));
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .regime-winner strong { color: var(--accent); font-weight: 700; }
+    /* SVG bar styles */
+    .rg-bar { transition: fill 280ms ease-out, width 380ms ease-out; }
+    .rg-bar--win { fill: var(--accent); }
+    .rg-bar--neutral { fill: #8a8a8a; }
+    .rg-bar--fail { fill: #c03030; }
+    .rg-bar-label,
+    .rg-bar-value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      fill: var(--text);
+      dominant-baseline: central;
+    }
+    .rg-bar-value { fill: var(--text-muted); font-size: 11px; }
+    .rg-bar-label--win { font-weight: 700; fill: var(--accent); }
+    .rg-bar-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: #c03030;
+      dominant-baseline: central;
+      font-style: italic;
+    }
+  </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
         integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
@@ -235,6 +434,32 @@
       <h2 id="results">Model Comparison</h2>
       <p>With the LSTM and Transformer halves measured under the same evaluation protocol, the central question becomes concrete: across our three datasets and horizon sweeps, when does each Transformer variant clear the LSTM line, and when does it not?</p>
 
+      <section class="regime-widget" id="regime-explorer" aria-label="Interactive regime explorer">
+        <p class="regime-widget__eyebrow">Interactive · Regime explorer</p>
+        <h3 class="regime-widget__title">Which model wins, where, and why?</h3>
+        <p class="regime-widget__intro">The same architecture can be the best by 40% on one dataset and indistinguishable from a vanilla LSTM on another. Toggle a regime to see how the model ranking shifts and which inductive bias is doing the work.</p>
+
+        <div class="regime-widget__tabs" role="tablist" aria-label="Forecasting regime">
+          <button class="regime-widget__tab active" type="button" role="tab" aria-selected="true" data-regime="electricity">Electricity</button>
+          <button class="regime-widget__tab" type="button" role="tab" aria-selected="false" data-regime="traffic">Traffic</button>
+          <button class="regime-widget__tab" type="button" role="tab" aria-selected="false" data-regime="flu">Flu (ILI)</button>
+        </div>
+
+        <div class="regime-widget__body">
+          <div class="regime-card">
+            <p class="regime-card__meta"><span data-regime-name>Electricity</span> · <span data-regime-metric>MAE @ 720h</span></p>
+            <ul class="regime-card__chips" data-regime-chips></ul>
+            <p class="regime-card__story" data-regime-story></p>
+          </div>
+          <div class="regime-chart">
+            <div data-regime-chart></div>
+            <p class="regime-chart__caption" data-regime-axis>error metric on this regime</p>
+          </div>
+        </div>
+
+        <div class="regime-winner" data-regime-winner aria-live="polite"></div>
+      </section>
+
       <figure class="figure">
         <picture>
           <source srcset="/assets/img/transformers-vs-lstms/unified_model_comparison.avif" type="image/avif">
@@ -355,5 +580,124 @@
   </footer>
 
   <script type="module" src="/js/main.js"></script>
+
+  <!-- ===== Regime Explorer widget — interactive bar chart, three regimes ===== -->
+  <script>
+  (function regimeWidget() {
+    'use strict';
+    var widget = document.getElementById('regime-explorer');
+    if (!widget) return;
+
+    var REGIMES = {
+      electricity: {
+        name: 'Electricity',
+        metric: 'MAE @ 720h',
+        axisLabel: 'mean absolute error (lower is better)',
+        chips: ['~26k training hours', 'rich exogenous (weather, calendar)', '~50 series'],
+        story: 'Large, rich-exogenous regime. Transformers have enough data to learn long-range patterns from scratch. Both TFT (variable selection) and PatchTST (channel independence) decisively clear the LSTM ceiling.',
+        bars: [
+          { model: 'LSTM family',  value: 0.595, kind: 'neutral' },
+          { model: 'TFT',          value: 0.445, kind: 'neutral' },
+          { model: 'PatchTST',     value: 0.365, kind: 'win' }
+        ],
+        winner: '<strong>PatchTST wins by ≈ 39%</strong> over the LSTM ceiling and ≈ 18% over TFT. Patching gives each token enough local context to encode short-term dynamics; channel independence avoids negative transfer across loosely-coupled series.'
+      },
+      traffic: {
+        name: 'Traffic',
+        metric: 'Normalized MSE @ 12 weeks',
+        axisLabel: 'normalized mean squared error (lower is better)',
+        chips: ['~100 training weeks', 'high-dimensional (100 sensors)', 'no exogenous'],
+        story: 'Small, high-dimensional regime. The vanilla Transformer cannot learn 100-dim spatial correlations from 100 weeks of data and collapses. Crossformer\'s dimension-stage attention and PatchTST\'s channel independence both fix the failure — by opposite means.',
+        bars: [
+          { model: 'Vanilla Transformer', value: 1.430, kind: 'fail', note: 'collapses' },
+          { model: 'LSTM family',         value: 1.170, kind: 'neutral' },
+          { model: 'Crossformer',         value: 0.820, kind: 'neutral' },
+          { model: 'TFT',                 value: 0.620, kind: 'neutral' },
+          { model: 'PatchTST',            value: 0.504, kind: 'win' }
+        ],
+        winner: '<strong>PatchTST wins by ≈ 57%</strong> over the LSTM ceiling and ≈ 19% over TFT. Channel independence is the decisive prior: 100 univariate problems in parallel are easier than one 100-dim joint problem when data is scarce.'
+      },
+      flu: {
+        name: 'Flu (ILI)',
+        metric: 'MAE (averaged)',
+        axisLabel: 'mean absolute error (lower is better)',
+        chips: ['~38 training weeks', 'multi-output (4 regions)', 'tiny dataset'],
+        story: 'Tiny-data regime. No architecture has enough signal to fully exploit its inductive bias. TFT slightly edges PatchTST; both are modestly ahead of LSTM, but all differences are within noise. Data scarcity, not architecture, is the limiting factor.',
+        bars: [
+          { model: 'LSTM family', value: 0.620, kind: 'neutral' },
+          { model: 'PatchTST',    value: 0.550, kind: 'neutral' },
+          { model: 'TFT',         value: 0.540, kind: 'win', note: 'marginal' }
+        ],
+        winner: '<strong>TFT (marginal)</strong> — all three models within ≈ 13% of each other. The lesson: when data is the bottleneck, architecture choice is largely irrelevant.'
+      }
+    };
+
+    function renderChart(data) {
+      var bars = data.bars;
+      var maxVal = Math.max.apply(null, bars.map(function (b) { return b.value; }));
+      var ROW_H = 38;
+      var PAD_TOP = 8;
+      var W = 560;
+      var H = bars.length * ROW_H + PAD_TOP + 8;
+      var labelCol = 160;
+      var valueCol = 60;
+      var barMax = W - labelCol - valueCol - 8;
+
+      var parts = ['<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart of ' + data.metric + ' by model">'];
+
+      // baseline + subtle gridline at 0
+      parts.push('<line x1="' + labelCol + '" y1="' + PAD_TOP + '" x2="' + labelCol + '" y2="' + (H - 8) + '" stroke="rgba(26,26,26,0.25)" stroke-width="1"/>');
+
+      bars.forEach(function (bar, i) {
+        var y = PAD_TOP + i * ROW_H;
+        var barH = 22;
+        var barY = y + (ROW_H - barH) / 2;
+        var barW = Math.max(2, (bar.value / maxVal) * barMax);
+        var fillClass = 'rg-bar rg-bar--' + bar.kind;
+        var winSuffix = bar.kind === 'win' ? ' ★' : '';
+
+        parts.push('<text class="rg-bar-label' + (bar.kind === 'win' ? ' rg-bar-label--win' : '') + '" x="' + (labelCol - 8) + '" y="' + (y + ROW_H / 2) + '" text-anchor="end">' + bar.model + winSuffix + '</text>');
+        parts.push('<rect class="' + fillClass + '" x="' + labelCol + '" y="' + barY + '" width="' + barW + '" height="' + barH + '" rx="2"/>');
+        var valueX = labelCol + barW + 8;
+        parts.push('<text class="rg-bar-value" x="' + valueX + '" y="' + (y + ROW_H / 2) + '">' + bar.value.toFixed(3) + '</text>');
+        if (bar.note) {
+          parts.push('<text class="rg-bar-tag" x="' + (valueX + 50) + '" y="' + (y + ROW_H / 2) + '">(' + bar.note + ')</text>');
+        }
+      });
+
+      parts.push('</svg>');
+      return parts.join('');
+    }
+
+    function renderChips(chips) {
+      return chips.map(function (c) { return '<li class="regime-card__chip">' + c + '</li>'; }).join('');
+    }
+
+    function apply(regimeKey) {
+      var data = REGIMES[regimeKey];
+      if (!data) return;
+
+      widget.querySelectorAll('.regime-widget__tab').forEach(function (t) {
+        var on = t.dataset.regime === regimeKey;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+
+      widget.querySelector('[data-regime-name]').textContent = data.name;
+      widget.querySelector('[data-regime-metric]').textContent = data.metric;
+      widget.querySelector('[data-regime-chips]').innerHTML = renderChips(data.chips);
+      widget.querySelector('[data-regime-story]').textContent = data.story;
+      widget.querySelector('[data-regime-chart]').innerHTML = renderChart(data);
+      widget.querySelector('[data-regime-axis]').textContent = data.axisLabel;
+      widget.querySelector('[data-regime-winner]').innerHTML = data.winner;
+    }
+
+    widget.querySelectorAll('.regime-widget__tab').forEach(function (t) {
+      t.addEventListener('click', function () { apply(t.dataset.regime); });
+    });
+
+    apply('electricity');
+  })();
+  </script>
 </body>
 </html>
