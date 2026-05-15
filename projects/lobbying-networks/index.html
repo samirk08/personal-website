@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260514-2">
+  <link rel="stylesheet" href="/css/main.css?v=20260514-3">
 
   <!-- ===== Interactive widget styles (self-contained, this page only) ===== -->
   <style>
@@ -28,14 +28,22 @@
       margin-block: var(--space-6) var(--space-6);
       box-shadow: var(--shadow-sm);
     }
-    /* On wide viewports (≥1240px) the article-page container (1200px) has
-       ~260px of horizontal slack to the right of the 65ch article-body column.
-       Pull the widget into that slack so it has room for the sliders + value
-       readouts without the right edge feeling cramped. */
-    @media (min-width: 1240px) {
+    /* Once the two-column TOC layout engages (≥1024px) the article-page
+       container has horizontal slack between the 65ch article-body column
+       and the article-page right edge. The amount of slack scales with the
+       viewport: at 1024px viewport it's ~52px; at 1200px+ it's ~228px.
+       Pull the widget's right edge into ALL of that slack so the white box
+       is as wide as the layout allows on every desktop viewport.
+
+       Math: article-page-content = min(1200px, 100vw - 32px ≈ 100vw).
+             TOC + gap = 220px. body = 65ch ≈ 720px. body padding negligible.
+             slack = article-page-content - 220 - 720 = min(1200, 100vw) - 940.
+             margin-end = -slack = 940 - min(1200, 100vw) ≈ 972 - min(...)
+             (small fudge for the article-page's own 32px padding-inline). */
+    @media (min-width: 1024px) {
       .lobby-widget,
       .clawback-widget {
-        margin-inline-end: -180px;
+        margin-inline-end: calc(972px - min(1200px, 100vw));
       }
     }
     .lobby-widget__eyebrow {
