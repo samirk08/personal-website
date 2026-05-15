@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260514-5">
+  <link rel="stylesheet" href="/css/main.css?v=20260515-1">
 
   <style>
     /* ===== Paper-style wrapper for existing matplotlib screenshot figures =====
@@ -52,6 +52,53 @@
       line-height: 1.55;
       max-inline-size: 65ch;
     }
+    /* Native SVG figure variant — same outer chrome, but the inner plot
+       container replaces <picture>/<img> with an <svg>. */
+    .article .figure--svg .figure__plot {
+      display: block;
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      padding: var(--space-3) var(--space-3) var(--space-2);
+    }
+    .article .figure--svg svg {
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+    }
+    /* ===== Figure 2: LSTM horizon comparison (native SVG line chart) ===== */
+    .fig2-grid { stroke: rgba(26,26,26,0.07); stroke-width: 1; stroke-dasharray: 2 4; fill: none; }
+    .fig2-axis { stroke: rgba(26,26,26,0.30); stroke-width: 1; fill: none; }
+    .fig2-tick-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      fill: var(--text-muted);
+    }
+    .fig2-axis-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      fill: var(--text);
+    }
+    .fig2-line { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .fig2-line--accent { stroke: var(--accent); stroke-width: 2.5; }
+    .fig2-line--g1 { stroke: #3a3a3a; stroke-width: 1.6; }
+    .fig2-line--g2 { stroke: #7a7a7a; stroke-width: 1.6; }
+    .fig2-line--g3 { stroke: #b0b0b0; stroke-width: 1.6; }
+    .fig2-dot--accent { fill: var(--accent); }
+    .fig2-dot--g1 { fill: #3a3a3a; }
+    .fig2-dot--g2 { fill: #7a7a7a; }
+    .fig2-dot--g3 { fill: #b0b0b0; }
+    .fig2-legend-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      fill: var(--text);
+      dominant-baseline: central;
+    }
+    .fig2-legend-label--accent { fill: var(--accent); font-weight: 700; }
 
     /* ===== Interactive Regime Explorer widget =====
        Replaces nothing — placed beside Figure 5 to let the reader toggle
@@ -379,15 +426,96 @@
 
       <p>On electricity, the LSTM family trained smoothly across all four horizons we tried (96h, 192h, 336h, 720h). Training and validation losses dropped together with no sign of divergence; the gap between curves was modest for vanilla LSTM and GRU and slightly wider for seq2seq+attention because of its extra decoder parameters. Test error grew with horizon, as expected, but the growth was gradual: even at 720h (30 days ahead) the LSTMs produced sensible forecasts rather than collapsing to a flat mean. The horizon comparison plot below makes the point visually — the curves separate, but they never blow up.</p>
 
-      <figure class="figure">
-        <picture>
-          <source srcset="/assets/img/transformers-vs-lstms/electricity_horizon_comparison.avif" type="image/avif">
-          <source srcset="/assets/img/transformers-vs-lstms/electricity_horizon_comparison.webp" type="image/webp">
-          <img src="/assets/img/transformers-vs-lstms/electricity_horizon_comparison.jpeg"
-               alt="Test error across forecast horizons on the electricity dataset for four LSTM variants — vanilla LSTM, GRU, seq2seq with attention, and stacked BiLSTM — with error rising gradually from 96h to 720h."
-               width="1400" height="928" loading="lazy" decoding="async">
-        </picture>
-        <figcaption>Figure 2: Horizon comparison on electricity for the four LSTM-family baselines. Error increases gradually with horizon — graceful degradation, not catastrophic collapse — and the four variants stay tightly bunched, showing that architectural complexity inside the recurrent family does not, by itself, buy meaningful accuracy.</figcaption>
+      <figure class="figure figure--svg">
+        <div class="figure__plot">
+          <svg viewBox="0 0 720 360" role="img" aria-labelledby="fig2-title fig2-desc" preserveAspectRatio="xMidYMid meet">
+            <title id="fig2-title">Test MAE versus forecast horizon for four LSTM-family baselines on the electricity dataset</title>
+            <desc id="fig2-desc">Four lines — vanilla LSTM, GRU, seq2seq with attention, and stacked BiLSTM — rise gradually from roughly 0.32 MAE at the 96-hour horizon to roughly 0.60 at the 720-hour horizon. The four variants remain tightly bunched across all four horizons.</desc>
+
+            <g class="fig2-grid">
+              <line x1="72" y1="304"   x2="552" y2="304"/>
+              <line x1="72" y1="265.1" x2="552" y2="265.1"/>
+              <line x1="72" y1="226.3" x2="552" y2="226.3"/>
+              <line x1="72" y1="187.4" x2="552" y2="187.4"/>
+              <line x1="72" y1="148.6" x2="552" y2="148.6"/>
+              <line x1="72" y1="109.7" x2="552" y2="109.7"/>
+              <line x1="72" y1="70.9"  x2="552" y2="70.9"/>
+              <line x1="72" y1="32"    x2="552" y2="32"/>
+            </g>
+
+            <g class="fig2-axis">
+              <line x1="72" y1="32"  x2="72"  y2="304"/>
+              <line x1="72" y1="304" x2="552" y2="304"/>
+            </g>
+
+            <g class="fig2-tick-label" text-anchor="end" dominant-baseline="central">
+              <text x="64" y="304">0.30</text>
+              <text x="64" y="265.1">0.35</text>
+              <text x="64" y="226.3">0.40</text>
+              <text x="64" y="187.4">0.45</text>
+              <text x="64" y="148.6">0.50</text>
+              <text x="64" y="109.7">0.55</text>
+              <text x="64" y="70.9">0.60</text>
+              <text x="64" y="32">0.65</text>
+            </g>
+
+            <g class="fig2-tick-label" text-anchor="middle">
+              <text x="72"  y="322">96h</text>
+              <text x="232" y="322">192h</text>
+              <text x="392" y="322">336h</text>
+              <text x="552" y="322">720h</text>
+            </g>
+
+            <text class="fig2-axis-title" x="312" y="350" text-anchor="middle">Forecast horizon</text>
+            <text class="fig2-axis-title" x="22"  y="168" text-anchor="middle" transform="rotate(-90 22 168)">Test MAE</text>
+
+            <polyline class="fig2-line fig2-line--g3" points="72,255.8 232,192.9 392,122.9 552,62.3"/>
+            <polyline class="fig2-line fig2-line--g2" points="72,258.9 232,194.4 392,129.9 552,63.9"/>
+            <polyline class="fig2-line fig2-line--g1" points="72,279.9 232,220.1 392,157.9 552,75.5"/>
+            <polyline class="fig2-line fig2-line--accent" points="72,286.9 232,227.8 392,167.2 552,84.8"/>
+
+            <g>
+              <circle class="fig2-dot--g3" cx="72"  cy="255.8" r="3"/>
+              <circle class="fig2-dot--g3" cx="232" cy="192.9" r="3"/>
+              <circle class="fig2-dot--g3" cx="392" cy="122.9" r="3"/>
+              <circle class="fig2-dot--g3" cx="552" cy="62.3"  r="3"/>
+
+              <circle class="fig2-dot--g2" cx="72"  cy="258.9" r="3"/>
+              <circle class="fig2-dot--g2" cx="232" cy="194.4" r="3"/>
+              <circle class="fig2-dot--g2" cx="392" cy="129.9" r="3"/>
+              <circle class="fig2-dot--g2" cx="552" cy="63.9"  r="3"/>
+
+              <circle class="fig2-dot--g1" cx="72"  cy="279.9" r="3"/>
+              <circle class="fig2-dot--g1" cx="232" cy="220.1" r="3"/>
+              <circle class="fig2-dot--g1" cx="392" cy="157.9" r="3"/>
+              <circle class="fig2-dot--g1" cx="552" cy="75.5"  r="3"/>
+
+              <circle class="fig2-dot--accent" cx="72"  cy="286.9" r="4"/>
+              <circle class="fig2-dot--accent" cx="232" cy="227.8" r="4"/>
+              <circle class="fig2-dot--accent" cx="392" cy="167.2" r="4"/>
+              <circle class="fig2-dot--accent" cx="552" cy="84.8"  r="4"/>
+            </g>
+
+            <g transform="translate(580, 56)">
+              <line class="fig2-line fig2-line--accent" x1="0" y1="6" x2="20" y2="6"/>
+              <circle class="fig2-dot--accent" cx="10" cy="6" r="4"/>
+              <text class="fig2-legend-label fig2-legend-label--accent" x="28" y="6">Vanilla LSTM</text>
+
+              <line class="fig2-line fig2-line--g1" x1="0" y1="34" x2="20" y2="34"/>
+              <circle class="fig2-dot--g1" cx="10" cy="34" r="3"/>
+              <text class="fig2-legend-label" x="28" y="34">GRU</text>
+
+              <line class="fig2-line fig2-line--g2" x1="0" y1="62" x2="20" y2="62"/>
+              <circle class="fig2-dot--g2" cx="10" cy="62" r="3"/>
+              <text class="fig2-legend-label" x="28" y="62">seq2seq + attn</text>
+
+              <line class="fig2-line fig2-line--g3" x1="0" y1="90" x2="20" y2="90"/>
+              <circle class="fig2-dot--g3" cx="10" cy="90" r="3"/>
+              <text class="fig2-legend-label" x="28" y="90">BiLSTM</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>Figure 2: Test MAE versus forecast horizon for the four LSTM-family baselines on the electricity dataset. Error rises gradually from roughly 0.32 at 96 hours to roughly 0.60 at 720 hours — graceful degradation, not catastrophic collapse — and the four variants stay tightly bunched, showing that architectural complexity inside the recurrent family does not, by itself, buy meaningful accuracy.</figcaption>
       </figure>
 
       <p>Two consistent patterns showed up across all three datasets. First, vanilla LSTM and GRU were typically the best variants in the family — adding attention or stacking BiLSTM layers rarely produced a gain large enough to justify the extra parameters, echoing the conclusions of Zeng et al.<sup><a href="#ref1">[1]</a></sup> and Li et al.<sup><a href="#ref2">[2]</a></sup> that simpler baselines often suffice. Second, the LSTMs handled all three regimes — rich-exogenous (electricity), high-dimensional small-data (traffic), and multi-output spatial (flu) — without any pathological failure mode. They are not the ceiling, but they are a real ceiling: any Transformer claim has to clear this line, not a strawman.</p>
