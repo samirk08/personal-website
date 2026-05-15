@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260512-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260514-1">
 
   <!-- ===== Interactive widget styles (self-contained, this page only) ===== -->
   <style>
@@ -27,6 +27,16 @@
       padding: var(--space-6) var(--space-7);
       margin-block: var(--space-6) var(--space-6);
       box-shadow: var(--shadow-sm);
+    }
+    /* On wide viewports (≥1240px) the article-page container (1200px) has
+       ~260px of horizontal slack to the right of the 65ch article-body column.
+       Pull the widget into that slack so it has room for the sliders + value
+       readouts without the right edge feeling cramped. */
+    @media (min-width: 1240px) {
+      .lobby-widget,
+      .clawback-widget {
+        margin-inline-end: -180px;
+      }
     }
     .lobby-widget__eyebrow {
       font-family: var(--font-mono);
@@ -126,6 +136,18 @@
       text-transform: uppercase;
       color: var(--text-muted);
       margin-block-end: var(--space-2);
+    }
+    /* Opt math symbols (β, b) out of the surrounding text-transform: uppercase
+       so the Greek lowercase β doesn't get rendered as Β/B. */
+    .lobby-control__label .math-sym {
+      text-transform: none;
+      font-style: italic;
+      font-family: "Times New Roman", "Cambria", serif;
+      font-size: 1.15em;
+      font-weight: 600;
+      letter-spacing: 0;
+      color: var(--accent);
+      margin-inline-start: 2px;
     }
     .lobby-control__value {
       color: var(--accent);
@@ -732,7 +754,7 @@
           <div class="lobby-controls">
             <div class="lobby-control">
               <div class="lobby-control__label">
-                <span>Peer effect β</span>
+                <span>Peer effect <span class="math-sym">β</span></span>
                 <span class="lobby-control__value" id="lobby-beta-val">0.40</span>
               </div>
               <input type="range" id="lobby-beta" min="0.05" max="0.65" step="0.05" value="0.4" aria-label="Peer effect strength beta">
@@ -740,7 +762,7 @@
 
             <div class="lobby-control">
               <div class="lobby-control__label">
-                <span>Symmetric baseline b</span>
+                <span>Symmetric baseline <span class="math-sym">b</span></span>
                 <span class="lobby-control__value" id="lobby-b-val">0.0</span>
               </div>
               <input type="range" id="lobby-b" min="0" max="3" step="0.1" value="0" aria-label="Symmetric baseline b">
@@ -1107,12 +1129,14 @@
     var widget = document.getElementById('clawback-widget');
     if (!widget) return;
 
-    // Phase boundaries in seconds (animation timeline)
-    var T_STEP1 = 1.6;        // 0      -> 1.6   : step 1 (raise t_2 to 1)
-    var T_CLAWBACK = 2.2;     // 1.6    -> 2.2   : clawback (clawback panel only: t_2 1 -> 0.5)
-    var T_PAUSE = 2.6;        // 2.2    -> 2.6   : brief pause
-    var T_STEP2 = 4.2;        // 2.6    -> 4.2   : step 2 (raise t_1 to 0.5; clawback panel also drops t_2 0.5 -> 0.25)
-    var T_DONE = 4.6;         // settle and reveal summary
+    // Phase boundaries in seconds (animation timeline).
+    // Tuned for readability: each status message gets ~2-3s of legible airtime,
+    // critical phases (clawback ramp + step 2 with lockstep refund) get longer.
+    var T_STEP1    = 2.6;     // 0    -> 2.6  : step 1 (raise t_2 to 1) — 2.6s
+    var T_CLAWBACK = 4.4;     // 2.6  -> 4.4  : clawback (clawback panel only: t_2 1 -> 0.5) — 1.8s
+    var T_PAUSE    = 6.0;     // 4.4  -> 6.0  : pause so the contrast (over-bribed vs binding) reads — 1.6s
+    var T_STEP2    = 9.4;     // 6.0  -> 9.4  : step 2 (raise t_1 to 0.5; clawback also drops t_2 0.5 -> 0.25) — 3.4s
+    var T_DONE     = 10.4;    // 9.4  -> 10.4 : settle, reveal summary — 1.0s
 
     var BETA = 0.5;
     var TARGET = 2.5;
