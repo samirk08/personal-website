@@ -16,7 +16,199 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260511-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260512-1">
+
+  <!-- ===== Interactive widget styles (self-contained, this page only) ===== -->
+  <style>
+    .lobby-widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6) var(--space-7);
+      margin-block: var(--space-6) var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+    .lobby-widget__eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 var(--space-2);
+    }
+    .lobby-widget__title {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin: 0 0 var(--space-3);
+      color: var(--text);
+    }
+    .lobby-widget__intro {
+      font-size: var(--text-base);
+      color: var(--text);
+      margin: 0 0 var(--space-5);
+      line-height: 1.55;
+      max-inline-size: 60ch;
+    }
+    .lobby-widget__layout {
+      display: grid;
+      gap: var(--space-5);
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    @media (min-width: 760px) {
+      .lobby-widget__layout {
+        grid-template-columns: minmax(280px, 360px) 1fr;
+        gap: var(--space-6);
+      }
+    }
+    .lobby-widget__graph {
+      background: var(--surface-muted);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .lobby-widget__graph svg {
+      inline-size: 100%;
+      block-size: auto;
+      max-block-size: 220px;
+    }
+    .lobby-edge {
+      stroke: rgba(26, 26, 26, 0.35);
+      stroke-width: 2.5;
+    }
+    .lobby-node {
+      fill: var(--surface);
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      transition: r 220ms ease-out, fill 220ms ease-out, stroke-width 220ms ease-out;
+    }
+    .lobby-node.argmax {
+      fill: var(--accent);
+      stroke-width: 3.5;
+    }
+    .lobby-node-label {
+      fill: var(--text);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+      transition: fill 220ms ease-out;
+    }
+    .lobby-node-label.argmax {
+      fill: #ffffff;
+    }
+    .lobby-node-centrality {
+      fill: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-anchor: middle;
+    }
+    .lobby-controls {
+      display: grid;
+      gap: var(--space-4);
+      min-inline-size: 0;
+    }
+    .lobby-control__label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-block-end: var(--space-2);
+    }
+    .lobby-control__value {
+      color: var(--accent);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .lobby-control input[type="range"] {
+      inline-size: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .lobby-control input[type="range"]:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .lobby-mode {
+      display: inline-flex;
+      background: var(--surface-muted);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      border: 1px solid var(--border);
+      gap: 4px;
+    }
+    .lobby-mode button {
+      background: transparent;
+      border: none;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: background 180ms ease, color 180ms ease;
+    }
+    .lobby-mode button.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+    .lobby-mode button:focus-visible {
+      outline: 2px solid var(--ring);
+      outline-offset: 2px;
+    }
+    .lobby-result {
+      background: var(--surface-muted);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+      line-height: 1.55;
+    }
+    .lobby-result p { margin: 0; }
+    .lobby-result p + p { margin-block-start: var(--space-1); }
+    .lobby-result strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .lobby-result code {
+      font-family: var(--font-mono);
+      font-size: 0.92em;
+      color: var(--text);
+    }
+    .lobby-result__flip {
+      margin-block-start: var(--space-2);
+      padding-block-start: var(--space-2);
+      border-block-start: 1px dashed var(--border);
+      font-size: var(--text-sm);
+    }
+    .lobby-result__flip[data-tone="flip"] strong { color: #b45309; /* amber for "rank flip" */ }
+    .lobby-result__flip[data-tone="warn"] strong { color: #b91c1c; /* red for warning */ }
+    .lobby-widget__noscript {
+      padding: var(--space-4);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface-muted);
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+  </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
         integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
@@ -191,6 +383,70 @@
       $$a_i^* \;=\; \sigma\!\left(\frac{b_i + t_i + \beta \sum_{j \in N} g_{ij}\, a_j^*}{\kappa}\right), \qquad \sigma(x) \;:=\; \frac{1}{1 + e^{-x}},$$
       with noise parameter $\kappa > 0$. Differentiating implicitly in $t$ and aggregating gives a marginal targeting return that factors as $\tilde v_j = a_j^*(1 - a_j^*) \cdot [\text{modified Bonacich centrality}]_j$. The first factor is the swing-voter slope $\sigma'(a_j^*) = a_j^*(1 - a_j^*)$: large when $j$ is on the fence, small when $j$ is locked in. The second factor sums over walks reweighted by the swing slopes of members along each walk. The product can flip the centrality ranking — a peripheral leaf on the fence beats a hostile central member — confirming that slope weighting is not an artifact of the Taylor expansion but a structural feature of any model where vote responsiveness varies across members.</p>
 
+      <section class="lobby-widget" aria-label="Interactive targeting explorer for the three-node path">
+        <p class="lobby-widget__eyebrow">Interactive · 3-node path</p>
+        <h3 class="lobby-widget__title">Who should the lobbyist target?</h3>
+        <p class="lobby-widget__intro">Move the sliders to see how the optimal target changes with peer-effect strength <span class="m-metric">β</span> and the council's symmetric baseline <span class="m-metric">b</span>. Toggle the voting rule to see how concavity can flip the Katz ranking once the central member saturates.</p>
+
+        <noscript>
+          <div class="lobby-widget__noscript">
+            The interactive demo requires JavaScript. The static numbers in the example above (Katz–Bonacich <code>v ≈ (2.06, 2.65, 2.06)</code> at <code>β = 0.4</code>, <code>c = 1</code>, <code>b = 0</code>) summarize what the widget would show.
+          </div>
+        </noscript>
+
+        <div class="lobby-widget__layout">
+          <div class="lobby-widget__graph">
+            <svg viewBox="0 0 320 200" role="img" aria-label="Three-node path graph: members 1, 2, 3 with edges 1-2 and 2-3">
+              <line class="lobby-edge" x1="60" y1="100" x2="160" y2="100"/>
+              <line class="lobby-edge" x1="160" y1="100" x2="260" y2="100"/>
+              <circle class="lobby-node argmax" id="lobby-n1" cx="60"  cy="100" r="22"/>
+              <circle class="lobby-node argmax" id="lobby-n2" cx="160" cy="100" r="22"/>
+              <circle class="lobby-node argmax" id="lobby-n3" cx="260" cy="100" r="22"/>
+              <text class="lobby-node-label argmax" id="lobby-l1" x="60"  y="100">1</text>
+              <text class="lobby-node-label argmax" id="lobby-l2" x="160" y="100">2</text>
+              <text class="lobby-node-label argmax" id="lobby-l3" x="260" y="100">3</text>
+              <text class="lobby-node-centrality" id="lobby-c1" x="60"  y="160">v=—</text>
+              <text class="lobby-node-centrality" id="lobby-c2" x="160" y="160">v=—</text>
+              <text class="lobby-node-centrality" id="lobby-c3" x="260" y="160">v=—</text>
+            </svg>
+          </div>
+
+          <div class="lobby-controls">
+            <div class="lobby-control">
+              <div class="lobby-control__label">
+                <span>Peer effect β</span>
+                <span class="lobby-control__value" id="lobby-beta-val">0.40</span>
+              </div>
+              <input type="range" id="lobby-beta" min="0.05" max="0.65" step="0.05" value="0.4" aria-label="Peer effect strength beta">
+            </div>
+
+            <div class="lobby-control">
+              <div class="lobby-control__label">
+                <span>Symmetric baseline b</span>
+                <span class="lobby-control__value" id="lobby-b-val">0.0</span>
+              </div>
+              <input type="range" id="lobby-b" min="0" max="3" step="0.1" value="0" aria-label="Symmetric baseline b">
+            </div>
+
+            <div class="lobby-control">
+              <div class="lobby-control__label">
+                <span>Voting rule</span>
+              </div>
+              <div class="lobby-mode" role="tablist" aria-label="Voting rule">
+                <button id="lobby-mode-linear" class="active" type="button" role="tab" aria-selected="true">Linear</button>
+                <button id="lobby-mode-sigmoid" type="button" role="tab" aria-selected="false">Sigmoid</button>
+              </div>
+            </div>
+
+            <div class="lobby-result" id="lobby-result">
+              <p><strong>Optimal target:</strong> <span id="lobby-target">—</span></p>
+              <p><strong>Centralities:</strong> <span id="lobby-summary">—</span></p>
+              <p class="lobby-result__flip" id="lobby-flip" hidden></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <h2 id="bounded-actions">Bounded actions</h2>
       <p>Both prior results treat each member's action as an unbounded real variable disciplined by a quadratic cost. A natural relaxation keeps the linear passage rule but caps each member's action at $a_i \in [0,1]$. Substantively, this enforces that no amount of effort can push a single member past a hard ceiling — a representative can speak in favor of the bill, whip aggressively, and offer every plausible amendment, but cannot do more than one ``maximally supportive vote.'' Mathematically, the ceiling shifts the lobbyist's problem from a single-corner LP to a piecewise-linear convex program with multiple active-set regimes. We characterize the optimum in this regime and identify exactly where a naive ``greedy by Katz–Bonacich centrality'' heuristic breaks down.</p>
 
@@ -276,5 +532,165 @@
   </footer>
 
   <script type="module" src="/js/main.js"></script>
+
+  <!-- ===== Interactive targeting widget (3-node path Katz–Bonacich / slope-weighted) ===== -->
+  <script>
+  (function lobbyTargetingWidget() {
+    'use strict';
+    var root = document.getElementById('lobby-beta');
+    if (!root) return; // widget not on page
+
+    var c = 1.0; // cost parameter pinned to 1 for the demo
+
+    function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+    function sigDeriv(x) { var s = sigmoid(x); return s * (1 - s); }
+
+    // Closed-form M = (cI - βG)^(-1) for the 3-node path G = [[0,1,0],[1,0,1],[0,1,0]].
+    // det(cI - βG) = c(c² - 2β²); cofactor inversion gives entries below.
+    function computeM(beta) {
+      var det = c * (c * c - 2 * beta * beta);
+      return {
+        M11: (c * c - beta * beta) / det,
+        M22: (c * c) / det,
+        M12: (beta * c) / det,
+        M13: (beta * beta) / det
+      };
+    }
+
+    function compute(beta, b, mode) {
+      var m = computeM(beta);
+      // Row sums = Katz–Bonacich vector v
+      var v1 = m.M11 + m.M12 + m.M13;
+      var v2 = 2 * m.M12 + m.M22;
+      var v3 = v1; // path symmetry
+      var v = [v1, v2, v3];
+
+      if (mode === 'linear') {
+        return { mode: mode, v: v, vals: v };
+      }
+
+      // Smooth (centered sigmoid): a^0 = M·(b·1) = b·v under uniform baseline
+      var a0 = [b * v1, b * v2, b * v3];
+      var s = a0.map(sigDeriv);
+      // w_j = Σ_i M_{ij} · slopes_i (M symmetric)
+      var w1 = m.M11 * s[0] + m.M12 * s[1] + m.M13 * s[2];
+      var w2 = m.M12 * s[0] + m.M22 * s[1] + m.M12 * s[2];
+      var w3 = m.M13 * s[0] + m.M12 * s[1] + m.M11 * s[2];
+      var w = [w1, w2, w3];
+      return { mode: mode, v: v, w: w, vals: w, a0: a0, slopes: s };
+    }
+
+    function argmaxIdx(arr) {
+      var best = 0;
+      for (var i = 1; i < arr.length; i++) if (arr[i] > arr[best]) best = i;
+      return best;
+    }
+
+    var currentMode = 'linear';
+
+    function update() {
+      var beta = parseFloat(document.getElementById('lobby-beta').value);
+      var b = parseFloat(document.getElementById('lobby-b').value);
+
+      document.getElementById('lobby-beta-val').textContent = beta.toFixed(2);
+      document.getElementById('lobby-b-val').textContent = b.toFixed(1);
+
+      var flip = document.getElementById('lobby-flip');
+
+      // Spectral condition: β · λ_max(G) = β·√2 < c = 1 ⇒ β < 1/√2 ≈ 0.707.
+      // Our slider caps at 0.65 so this is safe but we guard anyway.
+      if (beta * Math.sqrt(2) >= c - 1e-9) {
+        document.getElementById('lobby-target').textContent = 'Spectral condition violated';
+        document.getElementById('lobby-summary').textContent = 'Pick β so that β·√2 < c (= 1).';
+        flip.hidden = true;
+        return;
+      }
+
+      var r = compute(beta, b, currentMode);
+      var vals = r.vals;
+      var ax = argmaxIdx(vals);
+
+      // Normalize centralities to [18, 32] px radius for visual prominence
+      var vmin = Math.min(vals[0], vals[1], vals[2]);
+      var vmax = Math.max(vals[0], vals[1], vals[2]);
+      var span = vmax - vmin || 1;
+      for (var i = 0; i < 3; i++) {
+        var node = document.getElementById('lobby-n' + (i + 1));
+        var lbl = document.getElementById('lobby-l' + (i + 1));
+        var cent = document.getElementById('lobby-c' + (i + 1));
+        var norm = (vals[i] - vmin) / span;
+        var radius = 18 + 14 * norm;
+        node.setAttribute('r', radius);
+        if (i === ax) {
+          node.classList.add('argmax');
+          lbl.classList.add('argmax');
+        } else {
+          node.classList.remove('argmax');
+          lbl.classList.remove('argmax');
+        }
+        var prefix = currentMode === 'linear' ? 'v=' : 'w=';
+        var precision = currentMode === 'linear' ? 2 : 4;
+        cent.textContent = prefix + vals[i].toFixed(precision);
+      }
+
+      // Summary
+      var label = currentMode === 'linear' ? 'Katz–Bonacich v' : 'Slope-weighted w';
+      var precision2 = currentMode === 'linear' ? 3 : 4;
+      var summary = label + ' = (' +
+        vals[0].toFixed(precision2) + ', ' +
+        vals[1].toFixed(precision2) + ', ' +
+        vals[2].toFixed(precision2) + ')';
+      document.getElementById('lobby-summary').textContent = summary;
+
+      var targetName = (ax === 1)
+        ? 'Member 2 (center)'
+        : 'Member ' + (ax + 1) + ' (peripheral leaf)';
+      document.getElementById('lobby-target').textContent = targetName;
+
+      // Educational flip message
+      if (currentMode === 'sigmoid' && ax !== 1 && b > 0.05) {
+        flip.hidden = false;
+        flip.setAttribute('data-tone', 'flip');
+        flip.innerHTML = '<strong>Rank flip!</strong> The peripheral leaves now beat the center. ' +
+          'Concavity of the sigmoid penalizes the saturated central member: ' +
+          'baseline pushes a₂⁰ into the flat tail of σ′(·), where the slope weight collapses.';
+      } else if (currentMode === 'sigmoid' && ax === 1 && b > 0.05) {
+        flip.hidden = false;
+        flip.setAttribute('data-tone', 'flip');
+        flip.innerHTML = 'Center still wins. Raise the baseline further to push member 2 into the sigmoid’s saturated tail and watch the leaves overtake.';
+      } else if (currentMode === 'sigmoid') {
+        flip.hidden = false;
+        flip.setAttribute('data-tone', 'flip');
+        flip.innerHTML = 'At b = 0 every member has slope σ′(0) = ¼, so w is just ¼ · v and the Katz ranking holds. Raise b to activate the slope channel.';
+      } else {
+        flip.hidden = true;
+      }
+    }
+
+    document.getElementById('lobby-beta').addEventListener('input', update);
+    document.getElementById('lobby-b').addEventListener('input', update);
+    document.getElementById('lobby-mode-linear').addEventListener('click', function () {
+      currentMode = 'linear';
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
+      var other = document.getElementById('lobby-mode-sigmoid');
+      other.classList.remove('active');
+      other.setAttribute('aria-selected', 'false');
+      document.getElementById('lobby-b').disabled = false; // still visible in linear, doesn't affect target identity though
+      update();
+    });
+    document.getElementById('lobby-mode-sigmoid').addEventListener('click', function () {
+      currentMode = 'sigmoid';
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
+      var other = document.getElementById('lobby-mode-linear');
+      other.classList.remove('active');
+      other.setAttribute('aria-selected', 'false');
+      update();
+    });
+
+    update();
+  })();
+  </script>
 </body>
 </html>
