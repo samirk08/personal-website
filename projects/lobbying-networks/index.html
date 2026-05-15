@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Targeted Lobbying on Council Networks — Samir Kadariya</title>
-  <meta name="description" content="MIT 14.18 paper: game-theoretic proof that under linear voting, optimal lobbying targets the Katz-Bonacich-maximizing node with decay beta-over-c.">
+  <meta name="description" content="MIT 14.18 paper. Linear voting selects Katz-Bonacich centrality; smooth voting selects slope-weighted Bonacich centrality. Plus a bounded-action greedy-with-clawback algorithm and a probabilistic-vote companion model.">
   <meta name="theme-color" content="#0F4C81">
   <!-- Open Graph -->
   <meta property="og:title" content="Targeted Lobbying on Council Networks — Samir Kadariya">
-  <meta property="og:description" content="MIT 14.18 paper: game-theoretic proof that under linear voting, optimal lobbying targets the Katz-Bonacich-maximizing node with decay beta-over-c.">
+  <meta property="og:description" content="MIT 14.18 paper. Linear voting selects Katz-Bonacich centrality; smooth voting selects slope-weighted Bonacich centrality.">
   <meta property="og:image" content="https://personal-website-pink-pi.vercel.app/assets/og/lobbying-networks.png">
   <meta property="og:url" content="https://personal-website-pink-pi.vercel.app/projects/lobbying-networks/">
   <meta property="og:type" content="article">
@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260511-1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
         integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
@@ -57,11 +57,12 @@
         <span class="chip">class project</span>
         <span class="article-header__course">MIT 14.18</span>
       </p>
-      <p class="article-header__role">Co-authored class project · 2-person team · MIT 14.18</p>
+      <p class="article-header__role">Co-authored class project · 2-person team · MIT 14.18 · Spring 2026</p>
       <div class="article-header__chips">
         <span class="chip chip--tech">Game Theory</span>
         <span class="chip chip--tech">Network Centrality</span>
         <span class="chip chip--tech">Katz-Bonacich</span>
+        <span class="chip chip--tech">Convex Optimization</span>
       </div>
     </header>
 
@@ -100,6 +101,12 @@
             </a>
           </li>
           <li class="article-toc__item">
+            <a href="#bounded-actions" data-toc-target="bounded-actions">
+              <span class="article-toc__dot" aria-hidden="true"></span>
+              <span class="article-toc__label">Bounded actions</span>
+            </a>
+          </li>
+          <li class="article-toc__item">
             <a href="#discussion" data-toc-target="discussion">
               <span class="article-toc__dot" aria-hidden="true"></span>
               <span class="article-toc__label">Discussion</span>
@@ -116,9 +123,9 @@
       <div class="article-body">
     <article class="article">
       <h2 id="abstract">Abstract</h2>
-      <p>A lobbyist with a limited budget must decide whom to push. Network ties mean that pressure on one council member can spill over to others. We study this problem with a static linear–quadratic network game, following Galeotti, Golub, and Goyal (2020), and add a voting rule that turns members' actions into passage or failure. The main result is simple. With a linear passage rule, the cheapest plan puts the whole budget on the member with the highest Katz–Bonacich centrality with decay $\beta/c$. With any smooth strictly increasing passage rule, the small-budget target is the member with the largest <em>slope-weighted Bonacich return</em>
+      <p>A lobbyist with a limited budget must decide not only how hard to push a bill but <em>whom</em> to push, since influence cascades through a council's network of party, committee, and personal ties. We model this as a static network game in the linear–quadratic tradition of Galeotti, Golub, and Goyal (2020) and embed it in a voting institution that aggregates members' actions into a passage decision. The headline finding is a clean dichotomy: <em>linear voting selects Katz–Bonacich centrality; smooth voting selects slope-weighted Bonacich centrality.</em> Concretely, (i) under a linear passage rule, the cost-minimizing lobbyist concentrates the entire budget on the member with the highest Katz–Bonacich centrality with decay $\beta/c$, refining the eigenvector-centrality result of Galeotti et al. (2020); and (ii) under any smooth strictly increasing vote-aggregation rule, the small-budget optimal target is the member with the largest <em>slope-weighted Bonacich return</em>
       $$w_j \;=\; \sum_i f'(a_i^0)\, M_{ij}, \qquad a^0 \;=\; M b,$$
-      where $a^0$ is the no-lobbying equilibrium. If $f$ is linear or baseline actions are zero, this is just Katz–Bonacich centrality. If baselines differ and $f$ is concave, the ranking can flip: a peripheral member on the fence can be cheaper to target than a central member whose action is already saturated. We show this on a three-member path and then sketch a probabilistic-vote version where the same force appears as a swing-voter slope.</p>
+      where $a^0$ is the no-lobbying equilibrium. When $f$ is linear or baseline actions are zero, $w$ collapses to Katz–Bonacich centrality; when baselines differ and $f$ is concave, slope-weighting can overturn the Katz ranking, so a peripheral fence-sitter can be cheaper to target than a saturated central partisan. Two extensions follow: a bounded-action variant solved exactly by a greedy-with-clawback algorithm (positive externalities only), and a probabilistic-vote companion model in which the swing-voter slope $\sigma'(a^*_i) = a^*_i(1-a^*_i)$ plays the same role as $f'(a^0_i)$.</p>
 
       <noscript>
         <p><code>w_j = sum_i f'(a_i^0) * M_{ij}, where a^0 = M*b</code> — slope-weighted Bonacich return.</p>
@@ -184,14 +191,33 @@
       $$a_i^* \;=\; \sigma\!\left(\frac{b_i + t_i + \beta \sum_{j \in N} g_{ij}\, a_j^*}{\kappa}\right), \qquad \sigma(x) \;:=\; \frac{1}{1 + e^{-x}},$$
       with noise parameter $\kappa > 0$. Differentiating implicitly in $t$ and aggregating gives a marginal targeting return that factors as $\tilde v_j = a_j^*(1 - a_j^*) \cdot [\text{modified Bonacich centrality}]_j$. The first factor is the swing-voter slope $\sigma'(a_j^*) = a_j^*(1 - a_j^*)$: large when $j$ is on the fence, small when $j$ is locked in. The second factor sums over walks reweighted by the swing slopes of members along each walk. The product can flip the centrality ranking — a peripheral leaf on the fence beats a hostile central member — confirming that slope weighting is not an artifact of the Taylor expansion but a structural feature of any model where vote responsiveness varies across members.</p>
 
+      <h2 id="bounded-actions">Bounded actions</h2>
+      <p>Both prior results treat each member's action as an unbounded real variable disciplined by a quadratic cost. A natural relaxation keeps the linear passage rule but caps each member's action at $a_i \in [0,1]$. Substantively, this enforces that no amount of effort can push a single member past a hard ceiling — a representative can speak in favor of the bill, whip aggressively, and offer every plausible amendment, but cannot do more than one ``maximally supportive vote.'' Mathematically, the ceiling shifts the lobbyist's problem from a single-corner LP to a piecewise-linear convex program with multiple active-set regimes. We characterize the optimum in this regime and identify exactly where a naive ``greedy by Katz–Bonacich centrality'' heuristic breaks down.</p>
+
+      <p>The bounded-action best response is the truncation of the unbounded one:
+      $$a_i^*(t) \;=\; \max\!\Bigl\{0,\, \min\!\Bigl\{1,\, \tfrac{1}{c}\bigl(b_i + t_i + \beta\textstyle\sum_{j} g_{ij}\, a_j^*\bigr)\Bigr\}\Bigr\},$$
+      and the projection map $T = \mathrm{proj}_{[0,1]^n} \circ \phi$ is a strict contraction whenever $\beta\,\lambda_{\max}(G)/c < 1$, so the bounded equilibrium $a^*(t)$ is unique. Parametrizing the lobbyist's program by the desired action profile $a$ rather than by the transfer vector $t$, the minimum transfer to sustain $a$ is $t_i(a) = \max\{0, c\, a_i - b_i - \beta \sum_j g_{ij}\, a_j\}$. Substituting gives the equivalent convex piecewise-linear program
+      $$\min_{a \in [0,1]^n}\; \sum_i \max\!\bigl\{0,\, c\, a_i - b_i - \beta\textstyle\sum_j g_{ij}\, a_j\bigr\} \quad\text{s.t.}\quad \sum_i a_i \;\geq\; \bar T,$$
+      whose objective is convex piecewise-linear and whose feasible set is the intersection of the unit hypercube with a single half-space. Any KKT point of this program is therefore a global optimum, and the only question is algorithmic: how does the lobbyist find one efficiently?</p>
+
+      <p>A natural first attempt is to mimic the linear-rule corner solution: target the highest-Katz member, push them to saturation $a_i = 1$, then move on to the next-most-central, and so on. This procedure overpays. On the three-node path with $\beta = 0.5$, $b = 0$, $c = 1$, and $\bar T = 2.5$, naive greedy pushes member 2 to $a_2 = 1$ at cost $t_2 = 1$ (which raises the leaves to $a_1 = a_3 = 0.5$ via peer pressure), then pushes member 1 to $a_1 = 1$ at cost $t_1 = 0.5$, for total cost $1.5$. But once $a_1 = 1$, the peer pressure into member 2 has risen to $\beta(a_1 + a_3) = 0.75$, so $0.75$ of the original bribe to member 2 is now redundant — member 2 was already saturated by the cap, and the additional peer pressure just buys nothing.</p>
+
+      <p>The fix is a clawback step. As targeting raises neighbor actions, reduce previous bribes one-for-one with the new incoming peer pressure, keeping the equality $t_i + b_i + \beta \sum_k g_{ik} a_k = c$ for every saturated member $i$. Re-running the example: when the algorithm raises $t_1$ from $0$ toward $0.5$, member 1's action moves from $0.5$ to $1$, sending an extra $\beta \cdot 0.5 = 0.25$ of peer pressure to member 2; the clawback drops $t_2$ from $1$ to $0.75 - 0.5 = 0.25$ in lockstep. The final allocation is $t = (0.5, 0.25, 0)$ with actions $a = (1, 1, 0.5)$ and aggregate support $2.5$, for total cost $0.75$ — half the naive greedy cost.</p>
+
+      <p>Greedy-with-clawback solves the bounded-action program exactly when externalities are non-negative ($g_{ij} \geq 0$). The proof lifts the piecewise-linear program to the linear program
+      $$\min_{a \in [0,1]^n,\, z \in \mathbb{R}^n_+}\; \mathbf{1}^\top z \quad\text{s.t.}\quad z_i \;\geq\; c\, a_i - b_i - \beta \textstyle\sum_j g_{ij} a_j, \quad \sum_i a_i \;\geq\; \bar T,$$
+      and observes that the clawback step maintains $z_i = c - b_i - \beta(Ga)_i$ throughout the saturated set $S$ — exactly complementary slackness for the constraints binding at $z_i$. Because $g_{ij} \geq 0$, peer pressure into every member of $S$ is weakly increasing along the algorithm's trajectory, so the saturated set grows monotonically and the procedure terminates at a basic feasible solution of the lifted LP, which is a global optimum.</p>
+
+      <p>The monotonicity property is exactly what fails with signed networks. Consider a three-node council with $g_{12} = g_{13} = -1$, $g_{23} = +1$, baselines $b = (0.8, 0.2, 0.2)$, $c = 1$, $\beta = 0.5$, and threshold $\bar T = 2$. A greedy lobbyist sees member 1 as nearly a free vote: a small bribe $t_1 = 0.2$ pushes $a_1$ to the ceiling. But once $a_1 = 1$, the negative externalities collapse the peer-pressure floor at members 2 and 3 by $\beta \cdot 1 = 0.5$, pinning $a_2 = a_3 = 0$. The lobbyist is now stuck fighting $-0.5$ of peer pressure on the only remaining members. The global optimum is qualitatively different: skip member 1 entirely (leave $a_1 = 0.8$), and target the reinforcing pair $\{2,3\}$, who pull each other up. With $g_{23} = +1$, each of $\{2, 3\}$ needs only $t_2 = t_3 = 0.3$ to reach saturation, total cost $0.6$. Greedy with clawback never reaches this solution: it follows the steepest initial gradient at member 1 into a local trap. The bounded-action program is genuinely non-convex once $G$ admits negative entries; this signed-network case is left to future work.</p>
+
       <h2 id="discussion">Discussion</h2>
       <p>The two main results can be summarized in one line. Linear voting selects Katz–Bonacich centrality, while smooth voting selects slope-weighted Bonacich centrality. Theorem 1 is the LP-corner identification under linear passage; the slope-weighted theorem extends it to any smooth strictly increasing aggregator $f$ at small support gaps. These rules agree in the linear and zero-baseline cases, and otherwise can disagree because curvature makes some members more responsive at the margin than others. The probabilistic-vote companion model shows the same idea through the swing-voter slope $\sigma'(a^*) = a^*(1 - a^*)$.</p>
 
-      <p>Several limitations are worth flagging. The slope-weighted theorem is local — it applies when the support gap is small enough that equilibrium actions stay near the no-lobbying equilibrium. For larger gaps, curvature of $f$ matters more, and the LP corner may dissolve into an interior optimum spread across several members. The model is static and one-shot, so it leaves out the reputational and re-election dynamics behind Shleifer and Vishny (1993). The network $G$ is symmetric and undirected, ruling out hierarchy or one-way influence such as a committee chair influencing others without being influenced much herself. There is no opposing lobbyist; a competing interest could change the targeting rule.</p>
+      <p>Several limitations are worth flagging. The slope-weighted theorem is local — it applies when the support gap is small enough that equilibrium actions stay near the no-lobbying equilibrium. For larger gaps, curvature of $f$ matters more, and the LP corner may dissolve into an interior optimum spread across several members. The bounded-action result is exact rather than asymptotic, but relies on non-negative externalities; the signed-network counterexample above shows that the problem becomes genuinely non-convex once $g_{ij}$ can flip sign. The model is also static and one-shot, so it leaves out the reputational and re-election dynamics behind Shleifer and Vishny (1993). The network $G$ is symmetric and undirected, ruling out hierarchy or one-way influence such as a committee chair influencing others without being much influenced herself. And there is no opposing lobbyist; a competing interest could change the targeting rule.</p>
 
-      <p>Several extensions are natural. A polynomial-time algorithm for the sigmoid-on-line case would be a swing-aware analog of the linear concentration theorem: with sigmoid best responses on a path network, the equilibrium-support map has a recursive one-dimensional structure that we conjecture admits an efficient exact optimum. Dropping symmetry $G = G^\top$ separates two notions of centrality that coincide in the symmetric case: aggregate support becomes $\mathbf{1}^\top a^* = \mathbf{1}^\top M b + s^\top t$ with $s := M^\top \mathbf{1}$ measuring downstream-influence centrality, so a directed version would predict concentration on $\arg\max_j s_j$. Finally, embedding this static LP inside a richer dynamic — repeated lobbying with reputational concerns, opposing lobbyists, or endogenous network formation — would push the model closer to the empirical reality of legislative organizing while preserving the network-and-curvature geometry that drives our results.</p>
+      <p>Several extensions are natural. A polynomial-time algorithm for the sigmoid-on-line case would be a swing-aware analog of the linear concentration theorem: with sigmoid best responses on a path network, the equilibrium-support map has a recursive one-dimensional structure that we conjecture admits an efficient exact optimum. Dropping symmetry $G = G^\top$ separates two notions of centrality that coincide in the symmetric case: aggregate support becomes $\mathbf{1}^\top a^* = \mathbf{1}^\top M b + s^\top t$ with $s := M^\top \mathbf{1}$ measuring downstream-influence centrality, so a directed version would predict concentration on $\arg\max_j s_j$ — distinguishing who <em>receives</em> spillovers from who <em>sends</em> them. Embedding the static LP in a strategic model with multiple competing lobbyists is a further direction: with pro- and anti-passage interests $k = 1, \ldots, M$, the council observes the net targeting vector $\tau_i = \sum_k \mathrm{sgn}(V_k) m_i^{(k)}$ and the targeting statistics reappear inside each lobbyist's best response, but the equilibrium concept becomes Nash in transfer vectors and the new tension is co-targeting — multiple lobbyists may concentrate on the same Bonacich-maximizer, spending each other's budgets in offsetting transfers. Finally, the bounded-action analysis under mixed-sign networks remains an open combinatorial problem that may require explicit search over active sub-coalitions.</p>
 
-      <p>Relative to the existing literature, the contribution is to put a lobbying objective inside a network-game framework. Galeotti, Golub, and Goyal (2020) characterize welfare-maximizing interventions; we replace their planner with a budget-constrained lobbyist trying to clear a passage threshold. That switch turns the intervention problem into an LP and identifies Katz–Bonacich centrality, rather than eigenvector centrality, as the relevant network statistic. Relative to Shleifer and Vishny (1993), the change is the network: side payments still shift incentives, but now the cost of corruption depends on which member is captured, not just on the total rent being bought. The voting-rule extension is the substantive twist: once passage is curved, centrality alone is not enough — the lobbyist also has to care where the chamber sits before lobbying begins.</p>
+      <p>Relative to the existing literature, the contribution is to put a lobbying objective inside a network-game framework. Galeotti, Golub, and Goyal (2020) characterize welfare-maximizing interventions; we replace their planner with a budget-constrained lobbyist trying to clear a passage threshold. That switch turns the intervention problem into an LP and identifies Katz–Bonacich centrality, rather than eigenvector centrality, as the relevant network statistic — eigenvector targeting is recovered only in the near-critical limit $\beta \lambda_{\max}(G) \to c^-$. Relative to Shleifer and Vishny (1993), the change is the network: side payments still shift incentives, but now the cost of corruption depends on which member is captured, not just on the total rent being bought. The voting-rule extension is the substantive twist: once passage is curved, centrality alone is not enough — the lobbyist also has to care where the chamber sits before lobbying begins.</p>
     </article>
 
     <section class="references" aria-labelledby="references">
@@ -246,7 +272,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+    <p>Samir Kadariya · 2026 · Last updated 2026-05-12</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

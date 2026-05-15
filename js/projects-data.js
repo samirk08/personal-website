@@ -171,7 +171,7 @@ export const projects = [
     role: 'co-authored',
     groupSize: 2,
     coauthors: [],
-    myContribution: 'Co-authored class project (2-person team). Applied the existing Katz-Bonacich centrality framework to a council-network voting setting; under linear voting the optimal lobbying target is the Katz-Bonacich-maximizing node with decay beta-over-c.',
+    myContribution: 'Co-authored class project (2-person team) for MIT 14.18 Mathematical Economic Modeling, Spring 2026. Characterized optimal targeted lobbying on networked councils via a dichotomy: linear voting selects Katz-Bonacich centrality (decay beta-over-c); smooth voting selects slope-weighted Bonacich centrality, which can flip the Katz ranking when concavity and nonzero baselines saturate the network center. Extensions include a bounded-action variant solved exactly by a greedy-with-clawback algorithm under positive externalities, and a probabilistic-vote companion model where the swing-voter slope drives the same channel.',
     techChips: ['Game Theory', 'Network Centrality', 'Katz-Bonacich'],
     icon: 'network',
     iconSvg: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
