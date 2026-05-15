@@ -208,6 +208,74 @@
       color: var(--text-muted);
       font-size: var(--text-sm);
     }
+
+    /* ===== Paper-figure styling (inline SVG figures + captions) ===== */
+    .paper-figure {
+      margin: var(--space-6) 0;
+      padding: var(--space-5) var(--space-5);
+      background: var(--surface-muted);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    .paper-figure svg {
+      inline-size: 100%;
+      block-size: auto;
+      max-inline-size: 620px;
+      display: block;
+      margin: 0 auto;
+    }
+    .paper-figure figcaption {
+      margin-block-start: var(--space-3);
+      padding-block-start: var(--space-3);
+      border-block-start: 1px solid var(--border);
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      line-height: 1.55;
+      max-inline-size: 65ch;
+      margin-inline: auto;
+      text-align: left;
+    }
+    .paper-figure figcaption .figlabel {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      margin-inline-end: var(--space-2);
+    }
+    /* SVG text defaults shared across paper figures */
+    .paper-figure .pf-edge { stroke: #1a1a1a; stroke-width: 2.5; }
+    .paper-figure .pf-edge--neg { stroke: #c03030; }
+    .paper-figure .pf-edge--pos { stroke: #3a8a3a; }
+    .paper-figure .pf-node { fill: #ffffff; stroke: #1a1a1a; stroke-width: 2.5; }
+    .paper-figure .pf-node--center { fill: #e6eef7; }
+    .paper-figure .pf-node--argmax { fill: #dcefdc; }
+    .paper-figure .pf-node--saturated { fill: #b4b4b4; }
+    .paper-figure .pf-node--leaf-prob { fill: #e6eef7; }
+    .paper-figure .pf-node--center-prob { fill: #f5d8d8; }
+    .paper-figure .pf-num {
+      font-family: "Times New Roman", "Cambria", serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 17px;
+      fill: #1a1a1a;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+    .paper-figure .pf-label {
+      font-family: "Times New Roman", "Cambria", serif;
+      font-size: 13px;
+      fill: #1a1a1a;
+      text-anchor: middle;
+    }
+    .paper-figure .pf-label--muted { fill: #5C5C5C; font-size: 11px; }
+    .paper-figure .pf-label--bold { font-weight: 700; }
+    .paper-figure .pf-label--neg { fill: #c03030; }
+    .paper-figure .pf-label--pos { fill: #3a8a3a; }
+    .paper-figure .pf-bar--leaf { fill: #3a8a3a; }
+    .paper-figure .pf-bar--center { fill: #d97706; }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
         integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
@@ -366,6 +434,26 @@
 
       <p>To make this concrete, consider the three-member path: members 1, 2, 3 with $g_{12} = g_{23} = 1$, $b = 0$, $c = 1$, $\beta = 0.4$, $\bar T = 1$. The eigenvalues of $G$ are $\{-\sqrt{2}, 0, \sqrt{2}\}$, so the spectral condition $0.4\sqrt{2} \approx 0.566 < 1$ holds. Direct calculation gives Katz–Bonacich vector $v \approx (2.059,\, 2.647,\, 2.059)^\top$. The center node strictly dominates: every walk between the endpoints must pass through it, so it accumulates extra walk weight. The unique optimal target is $i^* = 2$ at cost $C^* \approx 0.378$. The peripheral counterfactual — loading the budget on member 1 — costs $\approx 0.486$, a $28.6\%$ <em>centrality premium</em> for mis-targeting that comes purely from network geometry.</p>
 
+      <figure class="paper-figure">
+        <svg viewBox="0 0 600 200" role="img" aria-labelledby="fig1-caption">
+          <line class="pf-edge" x1="100" y1="80" x2="300" y2="80"/>
+          <line class="pf-edge" x1="300" y1="80" x2="500" y2="80"/>
+          <circle class="pf-node"            cx="100" cy="80" r="32"/>
+          <circle class="pf-node pf-node--center" cx="300" cy="80" r="32"/>
+          <circle class="pf-node"            cx="500" cy="80" r="32"/>
+          <text class="pf-num" x="100" y="80">1</text>
+          <text class="pf-num" x="300" y="80">2</text>
+          <text class="pf-num" x="500" y="80">3</text>
+          <text class="pf-label" x="100" y="138">v₁ ≈ 2.06</text>
+          <text class="pf-label pf-label--muted" x="100" y="156">(leaf)</text>
+          <text class="pf-label pf-label--bold" x="300" y="138">v₂ ≈ 2.65</text>
+          <text class="pf-label pf-label--muted pf-label--bold" x="300" y="156">(optimal target)</text>
+          <text class="pf-label" x="500" y="138">v₃ ≈ 2.06</text>
+          <text class="pf-label pf-label--muted" x="500" y="156">(leaf)</text>
+        </svg>
+        <figcaption id="fig1-caption"><span class="figlabel">Figure 1</span>The three-member path network with Katz–Bonacich centralities computed at $c = 1$, $\beta = 0.4$. Every walk between the leaves passes through the center, so $v_2$ strictly exceeds $v_1 = v_3$, and Theorem 1 concentrates the entire lobbying budget on member 2.</figcaption>
+      </figure>
+
       <p>Theorem 1 is the LP version of the eigenvector-alignment theorem in Galeotti, Golub, and Goyal (2020). The difference is the centrality measure. Their work characterizes interventions using the top principal components of $G$; here the relevant object is Katz–Bonacich centrality with decay $\beta/c$. The two coincide only in the near-critical limit $\beta\,\lambda_{\max}(G) \to c^-$ when the leading eigenvalue is simple. Away from that limit, the ranking depends on both $\beta$ and $c$, and eigenvector centrality can pick the wrong target.</p>
 
       <h2 id="smooth-rule">Smooth passage rule</h2>
@@ -379,9 +467,59 @@
 
       <p>To make the curvature effect concrete, return to the three-member path with $c = 1$, $\beta = 0.4$, the centered sigmoid $f(a) = \sigma(a) - \tfrac{1}{2}$, but raise the symmetric baseline to $b_i = 2$ for every member. Then $a^0 = 2v \approx (4.118,\, 5.294,\, 4.118)$, so the central member begins highly saturated. Sigmoid slopes evaluated at $a^0$ are $\nabla f(a^0) \approx (0.01576,\, 0.00497,\, 0.01576)$, and the slope-weighted centrality becomes $w \approx (0.02611,\, 0.02585,\, 0.02611)$. The leaves now beat the center: $w_1 = w_3 \approx 0.02611 > w_2 \approx 0.02585$, even though $v_2 \approx 2.647$ strictly exceeds $v_1 = v_3 \approx 2.059$. The center loses because its high Katz centrality pushes $a^0_2$ into the sigmoid's saturated tail, where $f'$ is small.</p>
 
+      <figure class="paper-figure">
+        <svg viewBox="0 0 600 230" role="img" aria-labelledby="fig2-caption">
+          <text class="pf-label pf-label--muted" x="100" y="22">arg max w</text>
+          <text class="pf-label pf-label--muted" x="500" y="22">arg max w</text>
+          <line class="pf-edge" x1="100" y1="90" x2="300" y2="90"/>
+          <line class="pf-edge" x1="300" y1="90" x2="500" y2="90"/>
+          <circle class="pf-node pf-node--argmax"    cx="100" cy="90" r="32"/>
+          <circle class="pf-node pf-node--saturated" cx="300" cy="90" r="32"/>
+          <circle class="pf-node pf-node--argmax"    cx="500" cy="90" r="32"/>
+          <text class="pf-num" x="100" y="90">1</text>
+          <text class="pf-num" x="300" y="90">2</text>
+          <text class="pf-num" x="500" y="90">3</text>
+          <text class="pf-label" x="100" y="148">v₁ ≈ 2.06</text>
+          <text class="pf-label pf-label--bold" x="100" y="167">w₁ ≈ 0.0261</text>
+          <text class="pf-label" x="300" y="148">v₂ ≈ 2.65</text>
+          <text class="pf-label" x="300" y="167">w₂ ≈ 0.0259</text>
+          <text class="pf-label pf-label--muted" x="300" y="187" font-style="italic">low f ′</text>
+          <text class="pf-label" x="500" y="148">v₃ ≈ 2.06</text>
+          <text class="pf-label pf-label--bold" x="500" y="167">w₃ ≈ 0.0261</text>
+        </svg>
+        <figcaption id="fig2-caption"><span class="figlabel">Figure 2</span>Katz–Bonacich still ranks the center, but slope-weighted centrality $w$ favors the leaves once $a^0$ pushes the hub into the flat tail of a concave aggregator (baseline $b = 2$, centered sigmoid $f$).</figcaption>
+      </figure>
+
       <p>A companion model adds the same idea from a different angle. Instead of unbounded actions, let $a_i \in (0,1)$ be the probability member $i$ votes yes, and replace the quadratic penalty with a binary-Shannon entropy cost. The first-order condition becomes a sigmoid best response,
       $$a_i^* \;=\; \sigma\!\left(\frac{b_i + t_i + \beta \sum_{j \in N} g_{ij}\, a_j^*}{\kappa}\right), \qquad \sigma(x) \;:=\; \frac{1}{1 + e^{-x}},$$
       with noise parameter $\kappa > 0$. Differentiating implicitly in $t$ and aggregating gives a marginal targeting return that factors as $\tilde v_j = a_j^*(1 - a_j^*) \cdot [\text{modified Bonacich centrality}]_j$. The first factor is the swing-voter slope $\sigma'(a_j^*) = a_j^*(1 - a_j^*)$: large when $j$ is on the fence, small when $j$ is locked in. The second factor sums over walks reweighted by the swing slopes of members along each walk. The product can flip the centrality ranking — a peripheral leaf on the fence beats a hostile central member — confirming that slope weighting is not an artifact of the Taylor expansion but a structural feature of any model where vote responsiveness varies across members.</p>
+
+      <p>Figure 3 makes this concrete on the same 3-node path with $\beta/\kappa = 0.4$ and hostile center $b = (0,\, -2,\, 0)$. Numerical root-finding of the sigmoid system gives $a^* \approx (0.517,\, 0.170,\, 0.517)$ and swing slopes $\sigma'(a^*) \approx (0.250,\, 0.141,\, 0.250)$. The product with the modified Bonacich column sums yields $\tilde v \approx (0.267,\, 0.171,\, 0.267)$: each peripheral leaf delivers roughly <span class="m-metric">56% more</span> expected vote-share per lobbying dollar than the center, even though the center still has the network advantage in raw walks.</p>
+
+      <figure class="paper-figure">
+        <svg viewBox="0 0 600 240" role="img" aria-labelledby="fig3-caption">
+          <text class="pf-label" x="100" y="22">b₁ = 0</text>
+          <text class="pf-label" x="300" y="22">b₂ = −2</text>
+          <text class="pf-label" x="500" y="22">b₃ = 0</text>
+          <line class="pf-edge" x1="100" y1="85" x2="300" y2="85"/>
+          <line class="pf-edge" x1="300" y1="85" x2="500" y2="85"/>
+          <circle class="pf-node pf-node--leaf-prob"   cx="100" cy="85" r="30"/>
+          <circle class="pf-node pf-node--center-prob" cx="300" cy="85" r="30"/>
+          <circle class="pf-node pf-node--leaf-prob"   cx="500" cy="85" r="30"/>
+          <text class="pf-num" x="100" y="85">1</text>
+          <text class="pf-num" x="300" y="85">2</text>
+          <text class="pf-num" x="500" y="85">3</text>
+          <!-- bars: scale 0.267 -> 80px, 0.171 -> 51px -->
+          <rect class="pf-bar--leaf"   x="60"  y="140" width="80" height="16"/>
+          <rect class="pf-bar--center" x="275" y="140" width="51" height="16"/>
+          <rect class="pf-bar--leaf"   x="460" y="140" width="80" height="16"/>
+          <text class="pf-label" x="100" y="180">ṽ₁ ≈ 0.267</text>
+          <text class="pf-label" x="300" y="180">ṽ₂ ≈ 0.171</text>
+          <text class="pf-label" x="500" y="180">ṽ₃ ≈ 0.267</text>
+          <text class="pf-label pf-label--muted" x="300" y="210" font-style="italic">marginal expected yes votes per dollar at t = 0</text>
+        </svg>
+        <figcaption id="fig3-caption"><span class="figlabel">Figure 3</span>Hostile center (low swing slope $\sigma'(a_2^*)$) versus fence-sitting leaves on the path. Bars plot $\tilde v_j \propto$ swing × modified-Bonacich column sum; the leaves dominate.</figcaption>
+      </figure>
 
       <section class="lobby-widget" aria-label="Interactive targeting explorer for the three-node path">
         <p class="lobby-widget__eyebrow">Interactive · 3-node path</p>
@@ -465,6 +603,25 @@
       and observes that the clawback step maintains $z_i = c - b_i - \beta(Ga)_i$ throughout the saturated set $S$ — exactly complementary slackness for the constraints binding at $z_i$. Because $g_{ij} \geq 0$, peer pressure into every member of $S$ is weakly increasing along the algorithm's trajectory, so the saturated set grows monotonically and the procedure terminates at a basic feasible solution of the lifted LP, which is a global optimum.</p>
 
       <p>The monotonicity property is exactly what fails with signed networks. Consider a three-node council with $g_{12} = g_{13} = -1$, $g_{23} = +1$, baselines $b = (0.8, 0.2, 0.2)$, $c = 1$, $\beta = 0.5$, and threshold $\bar T = 2$. A greedy lobbyist sees member 1 as nearly a free vote: a small bribe $t_1 = 0.2$ pushes $a_1$ to the ceiling. But once $a_1 = 1$, the negative externalities collapse the peer-pressure floor at members 2 and 3 by $\beta \cdot 1 = 0.5$, pinning $a_2 = a_3 = 0$. The lobbyist is now stuck fighting $-0.5$ of peer pressure on the only remaining members. The global optimum is qualitatively different: skip member 1 entirely (leave $a_1 = 0.8$), and target the reinforcing pair $\{2,3\}$, who pull each other up. With $g_{23} = +1$, each of $\{2, 3\}$ needs only $t_2 = t_3 = 0.3$ to reach saturation, total cost $0.6$. Greedy with clawback never reaches this solution: it follows the steepest initial gradient at member 1 into a local trap. The bounded-action program is genuinely non-convex once $G$ admits negative entries; this signed-network case is left to future work.</p>
+
+      <figure class="paper-figure">
+        <svg viewBox="0 0 600 260" role="img" aria-labelledby="fig4-caption">
+          <text class="pf-label pf-label--muted" x="300" y="20" font-style="italic">high b₁ (cheap to saturate)</text>
+          <line class="pf-edge pf-edge--neg" x1="300" y1="60"  x2="200" y2="195"/>
+          <line class="pf-edge pf-edge--neg" x1="300" y1="60"  x2="400" y2="195"/>
+          <line class="pf-edge pf-edge--pos" x1="200" y1="195" x2="400" y2="195"/>
+          <text class="pf-label pf-label--neg pf-label--bold" x="225" y="120">−1</text>
+          <text class="pf-label pf-label--neg pf-label--bold" x="375" y="120">−1</text>
+          <text class="pf-label pf-label--pos pf-label--bold" x="300" y="222">+1</text>
+          <circle class="pf-node" cx="300" cy="60"  r="26"/>
+          <circle class="pf-node" cx="200" cy="195" r="26"/>
+          <circle class="pf-node" cx="400" cy="195" r="26"/>
+          <text class="pf-num" x="300" y="60">1</text>
+          <text class="pf-num" x="200" y="195">2</text>
+          <text class="pf-num" x="400" y="195">3</text>
+        </svg>
+        <figcaption id="fig4-caption"><span class="figlabel">Figure 4</span>Member 1 is tied to 2 and 3 through negative weights (red); 2 and 3 reinforce each other (green, $+1$). Greedy exploitation of the cheap wedge at member 1 collapses the reinforcing pair and traps the lobbyist; the global optimum skips member 1 entirely.</figcaption>
+      </figure>
 
       <h2 id="discussion">Discussion</h2>
       <p>The two main results can be summarized in one line. Linear voting selects Katz–Bonacich centrality, while smooth voting selects slope-weighted Bonacich centrality. Theorem 1 is the LP-corner identification under linear passage; the slope-weighted theorem extends it to any smooth strictly increasing aggregator $f$ at small support gaps. These rules agree in the linear and zero-baseline cases, and otherwise can disagree because curvature makes some members more responsive at the margin than others. The probabilistic-vote companion model shows the same idea through the swing-voter slope $\sigma'(a^*) = a^*(1 - a^*)$.</p>
