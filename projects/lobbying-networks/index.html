@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260514-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260514-2">
 
   <!-- ===== Interactive widget styles (self-contained, this page only) ===== -->
   <style>
@@ -330,6 +330,31 @@
       line-height: 1.55;
       max-inline-size: 60ch;
     }
+    .clawback-widget__slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-3);
+      margin-block-end: var(--space-3);
+      padding-block-end: var(--space-3);
+      border-block-end: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .clawback-widget__slide-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      line-height: 1.3;
+    }
+    .clawback-widget__progress {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
     .clawback-widget__controls {
       display: flex;
       gap: var(--space-3);
@@ -337,6 +362,18 @@
       margin-block-end: var(--space-4);
       flex-wrap: wrap;
     }
+    .clawback-widget__nav {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      margin-block-start: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .clawback-widget__nav .clawback-btn[disabled] {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .clawback-widget__nav .spacer { flex: 1; }
     .clawback-btn {
       background: var(--accent);
       color: #ffffff;
@@ -405,7 +442,7 @@
     .cw-node {
       stroke: var(--accent);
       stroke-width: 2.5;
-      transition: fill 60ms linear;
+      transition: fill 380ms ease-out, stroke-width 220ms ease, filter 220ms ease;
     }
     .cw-active {
       stroke-width: 4;
@@ -803,11 +840,11 @@
       <section class="clawback-widget" id="clawback-widget" aria-label="Greedy vs Clawback animation">
         <p class="clawback-widget__eyebrow">Interactive · Bounded actions</p>
         <h3 class="clawback-widget__title">Greedy vs Greedy-with-Clawback</h3>
-        <p class="clawback-widget__intro">Both algorithms attack the same 3-node path with $\beta = 0.5$, $c = 1$, $b = 0$, $\bar T = 2.5$ and the action cap $a_i \in [0,1]$. Watch the clawback panel's cost ticker actually <em>drop</em> as new peer pressure refunds the previous over-bribe on member 2.</p>
+        <p class="clawback-widget__intro">Both algorithms attack the same 3-node path with $\beta = 0.5$, $c = 1$, $b = 0$, $\bar T = 2.5$ and the action cap $a_i \in [0,1]$. Click <strong>Next</strong> to step through the two procedures side by side and watch where the clawback rule saves money.</p>
 
-        <div class="clawback-widget__controls">
-          <button id="cw-run" type="button" class="clawback-btn">▶ Run animation</button>
-          <button id="cw-replay" type="button" class="clawback-btn clawback-btn--secondary" hidden>↻ Replay</button>
+        <div class="clawback-widget__slide-header">
+          <p class="clawback-widget__slide-title" data-cw="slide-title">Initial state — nothing bribed yet</p>
+          <span class="clawback-widget__progress">Slide <span data-cw="slide-num">1</span> of 4</span>
         </div>
 
         <div class="clawback-widget__panels">
@@ -856,6 +893,13 @@
             </svg>
             <p class="clawback-status" data-cw="status">Press Run to start the animation.</p>
           </div>
+        </div>
+
+        <div class="clawback-widget__nav">
+          <button id="cw-prev" type="button" class="clawback-btn clawback-btn--secondary" disabled aria-label="Previous slide">← Previous</button>
+          <button id="cw-next" type="button" class="clawback-btn" aria-label="Next slide">Next →</button>
+          <span class="spacer" aria-hidden="true"></span>
+          <button id="cw-reset" type="button" class="clawback-btn clawback-btn--secondary" aria-label="Reset to first slide">↻ Reset</button>
         </div>
 
         <div class="clawback-summary" id="cw-summary" aria-live="polite">
@@ -1117,135 +1161,73 @@
   })();
   </script>
 
-  <!-- ===== Greedy vs Clawback animation ===== =====
-       Two synchronized panels run pre-computed trajectories for the 3-node path
-       with β = 0.5, c = 1, b = 0, T̄ = 2.5. Math derivation lives in the article
-       prose above and the paper (Section 6.2 of paper_single_DRAFT.tex).
+  <!-- ===== Greedy vs Clawback slide deck =====
+       Discrete 4-slide walkthrough comparing naive greedy with greedy-with-clawback
+       on the 3-node path (β = 0.5, c = 1, b = 0, T̄ = 2.5). User clicks Next/Prev
+       to advance — no auto-play. Math derivation: Section 6.2 of paper_single_DRAFT.tex.
        ============================================================ -->
   <script>
-  (function clawbackAnimation() {
+  (function clawbackSlides() {
     'use strict';
 
     var widget = document.getElementById('clawback-widget');
     if (!widget) return;
 
-    // Phase boundaries in seconds (animation timeline).
-    // Tuned for readability: each status message gets ~2-3s of legible airtime,
-    // critical phases (clawback ramp + step 2 with lockstep refund) get longer.
-    var T_STEP1    = 2.6;     // 0    -> 2.6  : step 1 (raise t_2 to 1) — 2.6s
-    var T_CLAWBACK = 4.4;     // 2.6  -> 4.4  : clawback (clawback panel only: t_2 1 -> 0.5) — 1.8s
-    var T_PAUSE    = 6.0;     // 4.4  -> 6.0  : pause so the contrast (over-bribed vs binding) reads — 1.6s
-    var T_STEP2    = 9.4;     // 6.0  -> 9.4  : step 2 (raise t_1 to 0.5; clawback also drops t_2 0.5 -> 0.25) — 3.4s
-    var T_DONE     = 10.4;    // 9.4  -> 10.4 : settle, reveal summary — 1.0s
-
-    var BETA = 0.5;
-    var TARGET = 2.5;
-
     var naivePanel = document.getElementById('cw-panel-naive');
     var clawPanel  = document.getElementById('cw-panel-clawback');
-    var runBtn     = document.getElementById('cw-run');
-    var replayBtn  = document.getElementById('cw-replay');
+    var prevBtn    = document.getElementById('cw-prev');
+    var nextBtn    = document.getElementById('cw-next');
+    var resetBtn   = document.getElementById('cw-reset');
     var summary    = document.getElementById('cw-summary');
+    var slideTitleEl = widget.querySelector('[data-cw="slide-title"]');
+    var slideNumEl   = widget.querySelector('[data-cw="slide-num"]');
 
-    var rafId = null;
-    var startTime = 0;
-    var hasAutoplayed = false;
+    // The 4 slide states. focus is which node gets the highlight (0 = none, 1/2/3).
+    var SLIDES = [
+      // Slide 1 / 4: initial state
+      {
+        title: 'Initial state — nothing bribed yet',
+        naive:    { t: [0, 0, 0],   a: [0, 0, 0],     focus: 0 },
+        clawback: { t: [0, 0, 0],   a: [0, 0, 0],     focus: 0 },
+        naiveStatus: 'Start. No bribes yet — aggregate support is 0; we need 2.50.',
+        clawbackStatus: 'Same starting position. The two algorithms diverge in how they handle the redundancy that emerges in step 2.'
+      },
+      // Slide 2 / 4: step 1 (both panels identical)
+      {
+        title: 'Step 1 · Saturate member 2',
+        naive:    { t: [0, 1, 0],   a: [0.5, 1, 0.5], focus: 2 },
+        clawback: { t: [0, 1, 0],   a: [0.5, 1, 0.5], focus: 2 },
+        naiveStatus: 'Lift t₂ until member 2 hits the ceiling a₂ = 1. Peer pressure pulls the leaves to a₁ = a₃ = 0.5 each. Cost: 1.00. But the leaves\' free contributions mean t₂ now over-pays by 0.50.',
+        clawbackStatus: 'Same opening move — set t₂ = 1 to saturate the center while peers are at 0. Both panels match here. Next slide: spot the redundancy.'
+      },
+      // Slide 3 / 4: clawback (only clawback panel changes)
+      {
+        title: 'Step 1.5 · Clawback (clawback panel only)',
+        naive:    { t: [0, 1, 0],     a: [0.5, 1, 0.5], focus: 0 },
+        clawback: { t: [0, 0.5, 0],   a: [0.5, 1, 0.5], focus: 2 },
+        naiveStatus: 'No clawback. t₂ stays at 1.00. The leaves\' peer pressure (0.5) is going to waste against the saturated cap.',
+        clawbackStatus: 'Refund the redundancy. Peer pressure 0.5 from the leaves substitutes for half the bribe → drop t₂ from 1.00 to 0.50. Member 2 stays saturated. Cost halves to 0.50.'
+      },
+      // Slide 4 / 4: step 2 — final
+      {
+        title: 'Step 2 · Saturate member 1 (the punchline)',
+        naive:    { t: [0.5, 1, 0],     a: [1, 1, 0.5], focus: 1 },
+        clawback: { t: [0.5, 0.25, 0],  a: [1, 1, 0.5], focus: 1 },
+        naiveStatus: 'Lift t₁ = 0.5 to saturate member 1. Member 2\'s bribe stays at 1.00 (no clawback). Final cost: 1.50.',
+        clawbackStatus: 'Lift t₁ = 0.5. As a₁ rises 0.5 → 1, new peer pressure on member 2 grows by 0.25 → clawback drops t₂ in lockstep from 0.50 → 0.25. Same actions a = (1, 1, 0.5), half the cost. Final: 0.75.'
+      }
+    ];
+
+    var BLUE = [15, 76, 129];
 
     function clamp01(x) { return Math.max(0, Math.min(1, x)); }
-
-    // Compute (t, a, focusedNode) for the naive panel at elapsed time T (seconds).
-    function naiveAt(T) {
-      // Phase 1: t_2 ramps 0 -> 1. Interior equilibrium a_2 = min(1, 2·t_2) (since
-      // a_1 = a_3 = β·a_2 = 0.5·a_2 and the FOC for a_2 is t_2 + β·(a_1+a_3) = a_2).
-      if (T < T_STEP1) {
-        var p = T / T_STEP1;
-        var t2 = p;
-        var a2 = Math.min(1, 2 * t2);
-        var a1 = 0.5 * a2;
-        return { t: [0, t2, 0], a: [a1, a2, a1], focus: 2 };
-      }
-      // Pause: t_2 = 1, equilibrium (0.5, 1, 0.5).
-      if (T < T_PAUSE) {
-        return { t: [0, 1, 0], a: [0.5, 1, 0.5], focus: 2 };
-      }
-      // Phase 2: t_1 ramps 0 -> 0.5. a_1 rises from 0.5 to 1 (interior a_1 = t_1 + 0.5·a_2).
-      if (T < T_STEP2) {
-        var p2 = (T - T_PAUSE) / (T_STEP2 - T_PAUSE);
-        var t1 = 0.5 * p2;
-        var a1f = 0.5 + 0.5 * p2;
-        return { t: [t1, 1, 0], a: [a1f, 1, 0.5], focus: 1 };
-      }
-      // Done.
-      return { t: [0.5, 1, 0], a: [1, 1, 0.5], focus: 0 };
-    }
-
-    function clawbackAt(T) {
-      // Phase 1: same ramp as naive
-      if (T < T_STEP1) {
-        var p = T / T_STEP1;
-        var t2 = p;
-        var a2 = Math.min(1, 2 * t2);
-        var a1 = 0.5 * a2;
-        return { t: [0, t2, 0], a: [a1, a2, a1], focus: 2 };
-      }
-      // Phase 1b: clawback. t_2 ramps 1 -> 0.5 (binding value at current a).
-      if (T < T_CLAWBACK) {
-        var pc = (T - T_STEP1) / (T_CLAWBACK - T_STEP1);
-        var t2c = 1 - 0.5 * pc;
-        return { t: [0, t2c, 0], a: [0.5, 1, 0.5], focus: 2 };
-      }
-      // Pause
-      if (T < T_PAUSE) {
-        return { t: [0, 0.5, 0], a: [0.5, 1, 0.5], focus: 2 };
-      }
-      // Phase 2: t_1 0 -> 0.5 AND t_2 0.5 -> 0.25 simultaneously.
-      // Clawback rule: t_2 = c - β·(a_1+a_3) = 1 - 0.5·(a_1+0.5) = 0.75 - 0.5·a_1.
-      if (T < T_STEP2) {
-        var p2 = (T - T_PAUSE) / (T_STEP2 - T_PAUSE);
-        var t1 = 0.5 * p2;
-        var a1f = 0.5 + 0.5 * p2;
-        var t2f = 0.75 - 0.5 * a1f;        // -> 0.5 -> 0.25
-        return { t: [t1, t2f, 0], a: [a1f, 1, 0.5], focus: 1 };
-      }
-      return { t: [0.5, 0.25, 0], a: [1, 1, 0.5], focus: 0 };
-    }
-
-    // Status strings indexed by phase, per panel
-    function statusAt(T, isClawback) {
-      if (T < T_STEP1) {
-        return isClawback
-          ? 'Step 1: lifting t₂. Member 2 saturates at t₂ = 0.5 — but the algorithm doesn’t know yet.'
-          : 'Step 1: lifting t₂ until member 2 hits the cap a₂ = 1.';
-      }
-      if (T < T_CLAWBACK) {
-        return 'Clawback! Peer pressure from the leaves (a₁ = a₃ = 0.5) already gives member 2 half its required input. Refund t₂ down to 0.50.';
-      }
-      if (T < T_PAUSE) {
-        return isClawback
-          ? 'Step 1 done. Member 2 saturated with the MINIMUM bribe (t₂ = 0.50).'
-          : 'Step 1 done. Member 2 saturated, but t₂ = 1.00 over-pays by 0.50 (the leaves’ peer pressure is wasted on a saturated cap).';
-      }
-      if (T < T_STEP2) {
-        return isClawback
-          ? 'Step 2: lifting t₁. As member 1 rises, peer pressure on member 2 grows by β·Δa₁ — the clawback shaves t₂ in lockstep.'
-          : 'Step 2: lifting t₁ until member 1 saturates. Member 2 stays at t₂ = 1.00 (no clawback).';
-      }
-      return isClawback
-        ? 'Done. t = (0.50, 0.25, 0). Cost = 0.75.'
-        : 'Done. t = (0.50, 1.00, 0). Cost = 1.50.';
-    }
-
-    var BLUE = [15, 76, 129]; // var(--accent) RGB
-
     function setNodeFill(node, a) {
-      // a in [0,1] -> fill from white to accent blue (max alpha 0.78)
       var alpha = clamp01(a) * 0.78;
       node.setAttribute('fill', 'rgba(' + BLUE[0] + ',' + BLUE[1] + ',' + BLUE[2] + ',' + alpha.toFixed(3) + ')');
     }
 
-    function updatePanel(panel, state, prevCost) {
+    function updatePanel(panel, state) {
       var t = state.t, a = state.a, focus = state.focus;
-      // Bribes
       for (var i = 0; i < 3; i++) {
         panel.querySelector('[data-cw="bribe-' + (i+1) + '"]').textContent =
           't' + ['₁','₂','₃'][i] + ' = ' + t[i].toFixed(2);
@@ -1256,94 +1238,63 @@
         if (i + 1 === focus) node.classList.add('cw-active');
         else node.classList.remove('cw-active');
       }
-      // Aggregate
       var agg = a[0] + a[1] + a[2];
       panel.querySelector('[data-cw="agg"]').textContent =
         'Σ aᵢ = ' + agg.toFixed(2) + ' / 2.50';
-      // Cost
       var cost = t[0] + t[1] + t[2];
-      var costEl = panel.querySelector('[data-cw="cost"]');
-      costEl.textContent = cost.toFixed(2);
-      // Cost-dropping visual flag (clawback panel only really triggers this)
-      var costContainer = costEl.parentElement;
-      if (cost < prevCost - 0.001) costContainer.classList.add('dropping');
-      else costContainer.classList.remove('dropping');
+      panel.querySelector('[data-cw="cost"]').textContent = cost.toFixed(2);
       return cost;
     }
 
-    var prevNaiveCost = 0, prevClawCost = 0;
-
-    function frame(now) {
-      var T = (now - startTime) / 1000;
-
-      var naiveState = naiveAt(T);
-      var clawState = clawbackAt(T);
-
-      prevNaiveCost = updatePanel(naivePanel, naiveState, prevNaiveCost);
-      prevClawCost  = updatePanel(clawPanel,  clawState,  prevClawCost);
-
-      naivePanel.querySelector('[data-cw="status"]').textContent = statusAt(T, false);
-      clawPanel.querySelector('[data-cw="status"]').textContent  = statusAt(T, true);
-
-      if (T < T_DONE) {
-        rafId = requestAnimationFrame(frame);
+    // When advancing to a slide whose cost is LOWER than the previous slide on a given panel,
+    // briefly flash that panel's cost in green so the refund moment is obvious.
+    function flashIfDropping(panel, prevCost, newCost) {
+      var el = panel.querySelector('.clawback-panel__cost');
+      if (newCost < prevCost - 0.001) {
+        el.classList.add('dropping');
+        setTimeout(function () { el.classList.remove('dropping'); }, 1400);
       } else {
-        // Snap to final state and reveal summary
-        prevNaiveCost = updatePanel(naivePanel, { t: [0.5, 1, 0],    a: [1, 1, 0.5], focus: 0 }, prevNaiveCost);
-        prevClawCost  = updatePanel(clawPanel,  { t: [0.5, 0.25, 0], a: [1, 1, 0.5], focus: 0 }, prevClawCost);
-        naivePanel.querySelector('[data-cw="status"]').textContent = statusAt(T_DONE, false);
-        clawPanel.querySelector('[data-cw="status"]').textContent  = statusAt(T_DONE, true);
-        // Strip the "dropping" flag after settling
-        naivePanel.querySelector('.clawback-panel__cost').classList.remove('dropping');
-        clawPanel.querySelector('.clawback-panel__cost').classList.remove('dropping');
-        summary.classList.add('active');
-        runBtn.hidden = true;
-        replayBtn.hidden = false;
+        el.classList.remove('dropping');
       }
     }
 
-    function reset() {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = null;
-      prevNaiveCost = 0;
-      prevClawCost = 0;
-      updatePanel(naivePanel, { t: [0,0,0], a: [0,0,0], focus: 0 }, 0);
-      updatePanel(clawPanel,  { t: [0,0,0], a: [0,0,0], focus: 0 }, 0);
-      summary.classList.remove('active');
-      runBtn.hidden = false;
-      replayBtn.hidden = true;
-      naivePanel.querySelector('[data-cw="status"]').textContent = 'Press Run to start the animation.';
-      clawPanel.querySelector('[data-cw="status"]').textContent  = 'Press Run to start the animation.';
+    var currentSlide = 0;
+
+    function applySlide(idx) {
+      idx = Math.max(0, Math.min(SLIDES.length - 1, idx));
+      var slide = SLIDES[idx];
+
+      // Read previous costs from DOM so the green-flash logic can compare regardless of direction
+      var prevNaiveCost = parseFloat(naivePanel.querySelector('[data-cw="cost"]').textContent) || 0;
+      var prevClawCost  = parseFloat(clawPanel.querySelector('[data-cw="cost"]').textContent) || 0;
+
+      var newNaiveCost = updatePanel(naivePanel, slide.naive);
+      var newClawCost  = updatePanel(clawPanel,  slide.clawback);
+
+      naivePanel.querySelector('[data-cw="status"]').textContent = slide.naiveStatus;
+      clawPanel.querySelector('[data-cw="status"]').textContent  = slide.clawbackStatus;
+
+      slideTitleEl.textContent = slide.title;
+      slideNumEl.textContent = String(idx + 1);
+
+      flashIfDropping(naivePanel, prevNaiveCost, newNaiveCost);
+      flashIfDropping(clawPanel,  prevClawCost,  newClawCost);
+
+      prevBtn.disabled = (idx === 0);
+      nextBtn.disabled = (idx === SLIDES.length - 1);
+
+      if (idx === SLIDES.length - 1) summary.classList.add('active');
+      else summary.classList.remove('active');
+
+      currentSlide = idx;
     }
 
-    function start() {
-      reset();
-      runBtn.disabled = true;
-      startTime = performance.now();
-      rafId = requestAnimationFrame(frame);
-      // Re-enable Run after a moment in case the user wants to interact further (Replay shows up at the end)
-      setTimeout(function () { runBtn.disabled = false; }, 200);
-    }
+    prevBtn.addEventListener('click', function () { applySlide(currentSlide - 1); });
+    nextBtn.addEventListener('click', function () { applySlide(currentSlide + 1); });
+    resetBtn.addEventListener('click', function () { applySlide(0); });
 
-    runBtn.addEventListener('click', start);
-    replayBtn.addEventListener('click', start);
-
-    // Autoplay once when the widget scrolls into view, with reduced-motion respect.
-    var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if ('IntersectionObserver' in window && !reducedMotion) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting && !hasAutoplayed) {
-            hasAutoplayed = true;
-            start();
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.45 });
-      io.observe(widget);
-    }
     // Initial paint
-    reset();
+    applySlide(0);
   })();
   </script>
 </body>
