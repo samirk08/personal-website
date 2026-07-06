@@ -459,6 +459,61 @@
   .contact__arrow { transition: translate 180ms ease-out, color 180ms ease-out; }
 }
 
+/* ===== Background orbs =====
+   Decorative blurred circles that drift very slowly behind the page content
+   (fixed layer, negative z-index, pointer-events none). Deliberately faint —
+   the site is content-first, so they add depth without competing with text.
+   Not used on article pages (long-form reading stays distraction-free). */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bg-orbs span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+.bg-orbs span:nth-child(1) {
+  inline-size: 480px; block-size: 480px;
+  inset-block-start: -120px; inset-inline-end: -100px;
+  background: radial-gradient(circle at 35% 35%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 70%);
+}
+.bg-orbs span:nth-child(2) {
+  inline-size: 380px; block-size: 380px;
+  inset-block-start: 45%; inset-inline-start: -140px;
+  background: radial-gradient(circle at 40% 40%, color-mix(in oklch, var(--ring) 18%, transparent), transparent 70%);
+}
+.bg-orbs span:nth-child(3) {
+  inline-size: 320px; block-size: 320px;
+  inset-block-end: -80px; inset-inline-end: 15%;
+  background: radial-gradient(circle at 40% 40%, color-mix(in oklch, var(--accent) 12%, transparent), transparent 70%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bg-orbs span:nth-child(1) { animation: orbDrift1 26s ease-in-out infinite alternate; }
+  .bg-orbs span:nth-child(2) { animation: orbDrift2 32s ease-in-out infinite alternate; }
+  .bg-orbs span:nth-child(3) { animation: orbDrift3 38s ease-in-out infinite alternate; }
+  @keyframes orbDrift1 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-70px, 60px) scale(1.12); }
+  }
+  @keyframes orbDrift2 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(60px, -70px) scale(0.92); }
+  }
+  @keyframes orbDrift3 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-50px, -40px) scale(1.08); }
+  }
+}
+/* Very narrow screens: fewer, smaller orbs so nothing bleeds into the text column. */
+@media (max-width: 600px) {
+  .bg-orbs span { filter: blur(48px); }
+  .bg-orbs span:nth-child(3) { display: none; }
+}
+
 /* ===== Footer =====
    Three-zone footer: brand + tagline, site nav, and contact links, with a
    muted meta line underneath. Falls back gracefully on the old single-<p>
