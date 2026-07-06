@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260706-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -109,6 +109,16 @@
       <h2 id="abstract">Abstract</h2>
       <p>Modern economic analyses often require linking centuries-old U.S. tariff schedules — written in archaic prose and coded under multiple, now-obsolete systems — to today's eight-digit Harmonized System (HS). I present the first fully automated concordance that threads every tariff line from the 1789 Tariff Act through four major coding overhauls into the 2023 HS vocabulary. The pipeline "walks" backwards one calendar year at a time: each description is (i) modernized with a GPT-4 prompt, (ii) embedded with the sentence-transformer MPNet, and (iii) matched to its nearest neighbor in the previous year using a composite similarity score. When that score dips below a specified threshold, I first apply a hierarchical HS fallback — matching at the 2-, 4-, or 6-digit level appropriate to the historical regime — before any remaining low-confidence records trigger a Selenium-based query to the U.S. Census HS-Classifier, with GPT selecting among the most probable codes the website outputs. On three public schedules — 1789 (free text), 1963 (TSUS-8), and 1989 (HS-8) — the method attains 65%, 75%, and 90% similarity scores respectively. The resulting open-source concordance and Python package let researchers map any historical description to a ranked list of 2023 HS codes with confidence scores, enabling consistent long-run trade analyses without manual recoding.</p>
 
+      <aside class="key-takeaways" aria-label="Key takeaways">
+        <p class="key-takeaways__heading">Key takeaways</p>
+        <ul>
+          <li>First fully automated concordance linking every U.S. tariff line from the 1789 Tariff Act to the 2023 Harmonized System vocabulary.</li>
+          <li>Across 1989–2022, ~79% of tariff lines keep their exact HS-6 code; only 6.8% jump to a different chapter.</li>
+          <li>Similarity cliffs at 1930 and 1963 line up exactly with the years U.S. tariff law was rewritten from scratch.</li>
+          <li>Only ~2.2% of records ever need the Selenium + GPT web-verification fallback — and it rescues nearly all of them.</li>
+        </ul>
+      </aside>
+
       <h2 id="introduction">Introduction</h2>
       <p>U.S. trade policy has evolved dramatically over the last 250 years, and its history is recorded in a fragmented stack of tariff schedules: the 1789 Tariff Act lists goods in plain English with no numeric code; the 1930 Smoot–Hawley schedule introduces paragraph-level structure; the TSUS arrives in 1963 with an 8-digit code; the TSUSA layers an annotated revision in 1972; and the U.S. finally adopts the international Harmonized System (HS) on 1 January 1989, with WCO-led revisions every five years thereafter. Researchers studying long-run trade policy face the obvious problem: a "1789 nutmeg" line and a "2023 nutmeg, crushed or ground" line look like the same product, but they live in entirely different vocabularies, and there is no canonical mapping between them.</p>
       <p>I built this pipeline as my SuperUROP at MIT Political Science to close that gap. The motivating use case is concrete: an economic historian wants to compare U.S. import duty patterns from the early Republic to the modern day, and currently has to do that alignment by hand, line by line, across hundreds of thousands of records. Prior NLP work has tackled product-description matching for clean modern e-commerce data, and a separate strand of research has tackled historical text normalization (orthographic drift, archaic spellings). What was missing was a single system that handled both at once — language drift across centuries, plus successive reorganizations of the underlying classification scheme.</p>
@@ -198,7 +208,32 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__name">Samir Kadariya</p>
+        <p class="site-footer__tag">MIT '26 — BS Artificial Intelligence &amp; Decision Making + BS Mathematics.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Site</p>
+        <ul class="site-footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/experience">Experience</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Elsewhere</p>
+        <ul class="site-footer__links">
+          <li><a href="mailto:samirk08@mit.edu">samirk08@mit.edu</a></li>
+          <li><a href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="site-footer__meta">© 2026 Samir Kadariya · Last updated 2026-07-06</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

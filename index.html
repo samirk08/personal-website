@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260510-13">
+  <link rel="stylesheet" href="/css/main.css?v=20260706-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -52,7 +52,8 @@
           <h1 class="hero__name">Hi, I'm Samir.</h1>
           <p class="hero__identifier">MIT '26 · BS Artificial Intelligence and Decision Making + BS Mathematics</p>
           <div class="hero__cta">
-            <a class="btn btn--solid" href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a>
+            <a class="btn btn--solid" href="/projects">View projects</a>
+            <a class="btn btn--ghost" href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a>
           </div>
         </div>
         <aside class="hero-card">
@@ -80,7 +81,55 @@
       </a>
     </section>
 
-    <section class="page-summary" id="summary" aria-label="Quick summary">
+    <!-- Selected work — three flagship projects so a visitor sees the depth of
+         the CS + math work without leaving the homepage (core value: understand
+         who Samir is within ~30 seconds of landing). -->
+    <section class="home-work" id="summary" aria-labelledby="home-work-heading">
+      <div class="home-work__head">
+        <h2 class="m-section__heading" id="home-work-heading">Selected Work</h2>
+        <a class="home-work__all" href="/projects">All 10 projects</a>
+      </div>
+      <div class="card-grid">
+        <article class="card reveal" data-section="cs">
+          <span class="card__chip">Class project · MIT 6.7960</span>
+          <a class="card__link" href="/projects/transformers-vs-lstms/" aria-label="When Do Transformers Actually Beat LSTMs for Time Series Forecasting?"></a>
+          <div class="card__heading">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+            </span>
+            <h3 class="card__title">When Do Transformers Actually Beat LSTMs for Time Series Forecasting?</h3>
+          </div>
+          <p class="card__teaser">Empirical study of LSTM, Transformer, TFT, PatchTST, Crossformer, and Autoformer architectures across electricity, traffic, and flu forecasting horizons.</p>
+          <p class="card__meta">Group project · 3-person team</p>
+        </article>
+        <article class="card reveal" data-section="cs">
+          <span class="card__chip">Research</span>
+          <a class="card__link" href="/projects/nlp-tariff/" aria-label="Concordance Mapping of U.S. Tariffs Over 250 Years"></a>
+          <div class="card__heading">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            </span>
+            <h3 class="card__title">Concordance Mapping of U.S. Tariffs Over 250 Years</h3>
+          </div>
+          <p class="card__teaser">NLP pipeline that maps every U.S. tariff line from 1789 to the modern HS code system using GPT-4 + MPNet, achieving ~79% HS-6 retention.</p>
+          <p class="card__meta">Solo project · MIT Political Science · SuperUROP</p>
+        </article>
+        <article class="card reveal" data-section="math">
+          <span class="card__chip">Class project · MIT 14.18</span>
+          <a class="card__link" href="/projects/lobbying-networks/" aria-label="Targeted Lobbying on Council Networks"></a>
+          <div class="card__heading">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+            </span>
+            <h3 class="card__title">Targeted Lobbying on Council Networks</h3>
+          </div>
+          <p class="card__teaser">Game-theoretic analysis of optimal lobbying on council networks — Katz–Bonacich centrality identifies the members whose votes propagate furthest.</p>
+          <p class="card__meta">Co-authored · 2-person team</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="page-summary" aria-label="Quick summary">
       <section class="page-summary__group" aria-labelledby="summary-education">
         <h2 class="m-section__heading" id="summary-education">Education</h2>
         <article class="page-summary__card">
@@ -136,7 +185,32 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__name">Samir Kadariya</p>
+        <p class="site-footer__tag">MIT '26 — BS Artificial Intelligence &amp; Decision Making + BS Mathematics.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Site</p>
+        <ul class="site-footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/experience">Experience</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Elsewhere</p>
+        <ul class="site-footer__links">
+          <li><a href="mailto:samirk08@mit.edu">samirk08@mit.edu</a></li>
+          <li><a href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="site-footer__meta">© 2026 Samir Kadariya · Last updated 2026-07-06</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

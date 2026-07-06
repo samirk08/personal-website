@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260706-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -108,6 +108,16 @@
 
       <aside class="my-role"><strong>My role:</strong> Co-authored class project (3-person team). Designed and tested in-context cipher prompts on Claude 3.5 Sonnet using HarmBench — purely prompt-level attacks, no model modification.</aside>
 
+      <aside class="key-takeaways" aria-label="Key takeaways">
+        <p class="key-takeaways__heading">Key takeaways</p>
+        <ul>
+          <li>In-context cipher prompts can bypass LLM safety training with no model access — the attack lives entirely at the prompt level.</li>
+          <li>Attack success is highest on larger models with stronger reasoning: the models best at following a cipher are also the easiest to jailbreak with one.</li>
+          <li>On Claude 3.5 Sonnet against HarmBench, attack success rate falls from ~80% with 5 quiet terms to 0% with 25.</li>
+          <li>We propose a layered defense: static filters, dynamic detection systems, and real-time monitoring.</li>
+        </ul>
+      </aside>
+
       <h2 id="introduction">Introduction</h2>
       <p>Large language models have moved from research curiosity to deployed product in a few short years. Their reasoning, instruction-following, and domain expertise make them powerful, but those same capabilities widen the attack surface. Developers have layered on safety mechanisms — RLHF, constitutional training, adversarial testing, input/output filters — and yet adversarial inputs still slip through. The pattern that motivated our team is uncomfortable: the more capable a model becomes, the more sophisticated its reasoning about novel inputs, and therefore the more it can be coaxed into reasoning about an attacker-supplied encoding scheme well enough to participate in a jailbreak.</p>
       <p>Our work targets that exact tension. The class is MIT 6.3950, the team is three of us, and the question we set out to answer is: can we construct an in-context attack that does not depend on any pre-existing cipher the model was trained against, and instead teaches the target model a fresh string-to-string mapping inside the conversation? If we can, conventional safety filters trained to recognize known cipher families lose their grip — there is an effectively infinite space of encodings the attacker can dial in, and each one has to be defended against from scratch.</p>
@@ -197,7 +207,32 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__name">Samir Kadariya</p>
+        <p class="site-footer__tag">MIT '26 — BS Artificial Intelligence &amp; Decision Making + BS Mathematics.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Site</p>
+        <ul class="site-footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/experience">Experience</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Elsewhere</p>
+        <ul class="site-footer__links">
+          <li><a href="mailto:samirk08@mit.edu">samirk08@mit.edu</a></li>
+          <li><a href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="site-footer__meta">© 2026 Samir Kadariya · Last updated 2026-07-06</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

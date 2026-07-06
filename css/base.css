@@ -42,14 +42,20 @@ a:hover { color: var(--accent-hover); }
   border-radius: var(--radius-sm); z-index: 10;
 }
 
-/* Section rhythm (UI-SPEC §Spacing — 64px → 96px clamp) */
-section {
-  padding-block: clamp(4rem, 4rem + 2vw, 6rem);
+/* Section rhythm (UI-SPEC §Spacing — 64px → 96px clamp).
+   Scoped to DIRECT children of <main> only: the old bare `section` selector
+   also hit nested sections (.page-summary__group, .m-section, .references),
+   stacking 64-96px of padding inside already-padded parents and producing
+   enormous dead gaps between content groups. */
+main > section {
+  padding-block: clamp(3rem, 3rem + 1.5vw, 4.5rem);
   padding-inline: var(--space-4);
   scroll-margin-top: var(--space-8);
 }
-@media (min-width: 600px)  { section { padding-inline: var(--space-6); } }
-@media (min-width: 1024px) { section { padding-inline: var(--space-8); } }
+/* Anchor targets clear the sticky site nav (~68px tall) instead of hiding under it. */
+section, [id] { scroll-margin-top: calc(68px + var(--space-4)); }
+@media (min-width: 600px)  { main > section { padding-inline: var(--space-6); } }
+@media (min-width: 1024px) { main > section { padding-inline: var(--space-8); } }
 
 section > h2 {
   font-size: var(--text-xl);

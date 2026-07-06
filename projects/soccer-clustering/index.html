@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260706-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -106,6 +106,15 @@
       <h2 id="abstract">Abstract</h2>
       <p>I investigate whether identifiable clusters of soccer team playing styles are significantly associated with match outcomes such as win rate, goal difference, and expected-goals difference. The analysis spans the FIFA Men's World Cup 2022, UEFA Euro 2024, CONMEBOL Copa America 2024, and FC Barcelona's La Liga seasons from 2006/07 through 2020/21, with all event data scraped minute-by-minute from the public StatsBomb Python package. After extracting per-match team features (pressure, interceptions, tackles, passes, carries, goalkeeper line, possession share, expected goals, and a passing-network feature I construct from the same data), I run PCA + K-means and recover three clusters in every case study: a defensive/reactive cluster, a balanced/possession cluster, and a proactive/attacking cluster. Across all four cases I find a consistent relationship between cluster membership and outcomes — proactive teams win more and run higher goal differentials — and the differences are statistically significant via ANOVA (p-values 0.001 to 0.011) and significant via chi-square in two of the four cases. The Barcelona-across-seasons subcase is the most striking: the Guardiola-style high-press seasons cluster together with a +2.10 average goal difference and a 75.5% win rate across 204 matches, while earlier and post-peak seasons sit on lower-magnitude clusters even when they win at similar rates.</p>
 
+      <aside class="key-takeaways" aria-label="Key takeaways">
+        <p class="key-takeaways__heading">Key takeaways</p>
+        <ul>
+          <li>PCA + K-means recovers the same three play-style clusters in all four case studies: defensive/reactive, balanced/possession, and proactive/attacking.</li>
+          <li>Cluster membership tracks outcomes — proactive teams win more and run higher goal differentials — with ANOVA p-values from 0.001 to 0.011.</li>
+          <li>Event data spans World Cup 2022, Euro 2024, Copa America 2024, and 15 seasons of FC Barcelona, all from public StatsBomb data.</li>
+        </ul>
+      </aside>
+
       <h2 id="introduction">Introduction</h2>
       <p>This project started from a real moment of frustration as a fan: F.C. Barcelona, a possession-heavy heavy favorite, lost a Champions League knockout to Inter Milan's counterattacking and defensive game plan. The popular soccer-analytics narrative is that possession and high pressing dominate the modern era. The Inter result said something more nuanced — that style alone is not enough, and that a "weaker" team executing a different tactical profile can systematically beat a "stronger" team committed to the prestige style. I wanted to know whether that anecdote is just a knockout-tournament fluke or whether it generalizes: do certain playing-style clusters actually associate with better match outcomes once you control for the question across many tournaments and many teams?</p>
       <p>Prior soccer-analytics work supplied a useful starting frame. Gollan et al. (2018) characterized English Premier League game styles into clusters and noted that top teams more often fell into possession-dominant clusters. He, Zhang, and Mao (2023) introduced the constructs of <em>playing-style flexibility</em> (range of styles a team can play) and <em>imposition</em> (sticking to one style regardless of opponent), and found that flexibility correlates with higher win rates. What both lines of work suggest is that style is real, measurable, and predictive — but neither tested whether the style-outcome link survives moving from a single multi-season league to discrete tournaments where teams play few games and stylistic identity is sharp.</p>
@@ -193,7 +202,32 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__name">Samir Kadariya</p>
+        <p class="site-footer__tag">MIT '26 — BS Artificial Intelligence &amp; Decision Making + BS Mathematics.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Site</p>
+        <ul class="site-footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/experience">Experience</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Elsewhere</p>
+        <ul class="site-footer__links">
+          <li><a href="mailto:samirk08@mit.edu">samirk08@mit.edu</a></li>
+          <li><a href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="site-footer__meta">© 2026 Samir Kadariya · Last updated 2026-07-06</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

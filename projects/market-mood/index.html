@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260508-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260706-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -111,6 +111,16 @@
 
       <aside class="my-role"><strong>My role:</strong> Hackathon team project (4-person team). Built parts of the Reddit sentiment ingestion + dashboard during HackMIT 2024 (specifics scoped in Phase 3 detail page).</aside>
 
+      <aside class="key-takeaways" aria-label="Key takeaways">
+        <p class="key-takeaways__heading">Key takeaways</p>
+        <ul>
+          <li>End-to-end Reddit → LLM scoring → dashboard pipeline shipped inside a single 36-hour hackathon by a 4-person team.</li>
+          <li>The full ingest + score + aggregate path runs in roughly 10–20 seconds per ticker on a fresh query.</li>
+          <li>Upvote-weighted and unweighted mood lines render side by side, with the underlying source posts inline so users can judge the signal themselves.</li>
+          <li>Deliberately a starting point, not a production system — calibration, robustness, and prompt specialization are scoped as follow-ups.</li>
+        </ul>
+      </aside>
+
       <h2 id="introduction">Introduction</h2>
       <p>Retail investor discussion on Reddit — particularly on subreddits like r/wallstreetbets, r/investing, and r/stocks — has been a measurable driver of intraday price action since at least the 2021 GameStop episode. Existing sentiment products either focus on Twitter (now X) or on news headlines, and the small handful that do touch Reddit are either expensive institutional offerings or thin demos that only score one subreddit. Our team's premise going into HackMIT 2024 was that the LLM-as-classifier path — using a general-purpose model with a sentiment-scoring prompt rather than training a fine-tuned classifier — should make a useful Reddit-sentiment dashboard buildable in a single weekend, even by a four-person team with no shared infrastructure going in.</p>
       <p>The hackathon framing matters because it constrains every design decision. We had 36 hours, four pairs of hands, no prior database, no auth system, and no ML training budget. Anything that wasn't strictly required for the demo loop — login flows, multi-tenant persistence, rate-limit-aware scheduling, retry queues — got cut. What survived was the minimum path that lets a user type "AAPL," see Reddit posts about Apple from the last few hours, and see those posts roll up to a numeric mood score and a small set of source links.</p>
@@ -162,7 +172,32 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__name">Samir Kadariya</p>
+        <p class="site-footer__tag">MIT '26 — BS Artificial Intelligence &amp; Decision Making + BS Mathematics.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Site</p>
+        <ul class="site-footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/experience">Experience</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Elsewhere</p>
+        <ul class="site-footer__links">
+          <li><a href="mailto:samirk08@mit.edu">samirk08@mit.edu</a></li>
+          <li><a href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="site-footer__meta">© 2026 Samir Kadariya · Last updated 2026-07-06</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

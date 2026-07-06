@@ -20,8 +20,31 @@
     color: var(--text);
   }
   .article h1 { font-size: var(--text-3xl); line-height: 1.15; margin-block: 0 var(--space-4); font-weight: 600; }
-  .article h2 { font-size: var(--text-xl);  line-height: 1.3;  margin-block: var(--space-8) var(--space-3); font-weight: 600; }
+  /* Section headings as small-caps mono kickers — matches the m-section
+     headings used across the rest of the site, and makes long paper-style
+     articles scannable: the reader sees clear section breaks, not just
+     slightly-bigger bold text floating in prose. */
+  .article h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.3;
+    margin-block: var(--space-10) var(--space-4);
+    padding-block-start: var(--space-5);
+    border-block-start: 1px solid var(--border);
+  }
+  .article h2:first-child { margin-block-start: 0; padding-block-start: 0; border-block-start: none; }
   .article h3 { font-size: var(--text-lg);  line-height: 1.35; margin-block: var(--space-6) var(--space-2); font-weight: 600; }
+  /* Abstract lead — the first paragraph after the Abstract heading reads as
+     the article's lede: slightly larger, looser leading. Every detail page
+     opens with <h2 id="abstract">, so this is safe to key off site-wide. */
+  .article #abstract + p {
+    font-size: var(--text-lg);
+    line-height: 1.7;
+  }
   .article p  { margin-block: 0 var(--space-4); }
   .article p + p { margin-block-start: var(--space-3); }
   .article a  { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
@@ -62,7 +85,7 @@
     padding-block: var(--space-2);
   }
   .article-header__back:hover { color: var(--accent); }
-  .article-header__title { font-size: var(--text-3xl); margin-block: 0 var(--space-3); }
+  .article-header__title { font-size: var(--text-title); font-weight: 600; letter-spacing: -0.02em; margin-block: 0 var(--space-3); }
   .article-header__meta  { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; margin-block: 0 var(--space-2); }
   .article-header__role  { color: var(--text-muted); font-size: var(--text-sm); margin-block: 0 var(--space-3); }
   .article-header__links { margin-block: 0 var(--space-4); }
@@ -87,6 +110,38 @@
     color: var(--text-muted);
   }
 
+  /* §8b Key takeaways — accent-tinted summary box at the end of the abstract
+     section on every detail page. Gives a skimming reader (recruiter on a
+     phone) the 3-4 headline results without reading the full paper prose. */
+  .key-takeaways {
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in oklch, var(--accent) 22%, transparent);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-6);
+    margin-block: var(--space-6);
+  }
+  .key-takeaways__heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 var(--space-3);
+  }
+  .key-takeaways ul {
+    margin: 0;
+    padding-inline-start: var(--space-5);
+    display: grid;
+    gap: var(--space-2);
+  }
+  .key-takeaways li {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .key-takeaways li::marker { color: var(--accent); }
+
   /* §8 myContribution callout (group / co-authored / hackathon-team only) */
   .my-role {
     background: var(--surface-muted);
@@ -99,16 +154,24 @@
     color: var(--text);
   }
 
-  /* §3 Figures */
+  /* §3 Figures — framed on a white surface so matplotlib exports (white
+     canvas) don't float raw on the cream page background. */
   .figure {
     margin-block: var(--space-6);
     margin-inline: 0;
+  }
+  .figure picture, .figure > img {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
   }
   .figure img {
     max-inline-size: 100%;
     block-size: auto;
     border-radius: var(--radius-sm);
-    background: var(--surface-muted);
+    margin-inline: auto;
   }
   .figure figcaption {
     font-size: var(--text-sm);
@@ -216,9 +279,10 @@
     .article-toc {
       display: block;
       position: sticky;
-      inset-block-start: var(--space-6);
+      /* Clear the sticky site nav (~68px) plus breathing room. */
+      inset-block-start: calc(68px + var(--space-5));
       align-self: start;
-      max-block-size: calc(100vh - var(--space-12));
+      max-block-size: calc(100vh - 68px - var(--space-12));
       overflow-y: auto;
       padding-block: var(--space-2);
       font-family: var(--font-mono);
@@ -322,5 +386,65 @@
   .article-toc .article-toc__list .article-toc__item a[aria-current="location"] .article-toc__label {
     color: var(--text);
     font-weight: 500;
+  }
+
+  /* §7 Reading time — injected by js/article-extras.js into the header meta row. */
+  .article-header__reading {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* §9 Prev/next project pagination — injected by js/article-extras.js at the
+     end of .article-body so readers can move through the portfolio without
+     bouncing back to /projects after every article. */
+  .article-pagenav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    margin-block: var(--space-10) var(--space-8);
+    padding-block-start: var(--space-6);
+    border-block-start: 1px solid var(--border);
+  }
+  @media (min-width: 600px) {
+    .article-pagenav { grid-template-columns: 1fr 1fr; }
+  }
+  .article-pagenav__link {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--text);
+    min-block-size: 44px;
+  }
+  .article-pagenav__link--next { text-align: end; }
+  .article-pagenav__link--next:only-child { grid-column: 2; }
+  @media (prefers-reduced-motion: no-preference) {
+    .article-pagenav__link { transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .article-pagenav__link:hover {
+      border-color: color-mix(in oklch, var(--accent) 45%, var(--border));
+      box-shadow: var(--shadow-sm);
+    }
+    .article-pagenav__link:hover .article-pagenav__title { color: var(--accent); }
+  }
+  .article-pagenav__dir {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .article-pagenav__title {
+    font-weight: 600;
+    font-size: var(--text-sm);
+    line-height: 1.4;
+    color: var(--text);
   }
 }

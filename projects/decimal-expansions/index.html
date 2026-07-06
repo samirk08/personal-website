@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260509-5">
+  <link rel="stylesheet" href="/css/main.css?v=20260706-1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css"
         integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js"
@@ -111,6 +111,15 @@
       <h2 id="abstract">Abstract</h2>
       <p>I study the period of the decimal expansion of a rational number \(a/b\) in lowest terms — the smallest positive integer \(k\) such that the digits of \(a/b\) are eventually periodic with block length \(k\). The starting question is: given \(b\), how long can the period be? A short pigeonhole argument shows the period exists and is at most \(b\); a sharper application restricted to remainders coprime to \(b\) shows that whenever \(b\) and \(10\) are coprime, the period is at most \(\varphi(b)\), where \(\varphi\) is Euler's totient function. The bulk of the paper develops the prime-power machinery that pins down the exact period rather than just a bound: a complete formula for the period and pre-period of any rational number, given only the prime factorization of its denominator, with a single "exceptional-prime" parameter \(s\) absorbing the rare cases (only \(p = 3\) and \(p = 487\) below \(1000\)) where the generic formula fails.</p>
 
+      <aside class="key-takeaways" aria-label="Key takeaways">
+        <p class="key-takeaways__heading">Key takeaways</p>
+        <ul>
+          <li>Pigeonhole gives period ≤ b; restricting to remainders coprime to b sharpens this to φ(b) whenever gcd(b, 10) = 1.</li>
+          <li>The main result is a complete closed-form formula for the exact period and pre-period of any rational a/b from the prime factorization of its denominator.</li>
+          <li>A single “exceptional-prime” parameter s absorbs the rare failures of the generic formula — only p = 3 and p = 487 below 1000.</li>
+        </ul>
+      </aside>
+
       <h2 id="introduction">Introduction</h2>
       <p>The starting object is the decimal expansion of \(a/b\) for integers \(a\) and \(b\) with \(b \geq 2\). Carrying out long division produces a sequence of remainders \(r_0, r_1, r_2, \ldots\), where \(r_0 = a \bmod b\) and \(r_{j+1} = 10\, r_j \bmod b\). The next digit of the expansion is \(\lfloor 10\, r_j / b \rfloor\), so two equal remainders force the digit sequence to repeat from that point onward. The <em>period</em> is the smallest \(k\) for which the expansion is eventually periodic with block length \(k\); the <em>pre-period</em> is the length of the non-repeating prefix.</p>
       <p>Two observations from elementary number theory get the project off the ground. First, the remainders all live in \(\{0, 1, \ldots, b-1\}\), a set of size \(b\). Among the first \(b+1\) terms \(r_0, \ldots, r_b\), pigeonhole forces two to coincide — and once two remainders coincide the sequence is locked into a cycle from that point. So every rational has an eventually periodic decimal expansion, with period at most \(b\). Second, when \(b\) and \(10\) are coprime, every \(r_j\) is itself coprime to \(b\) (induction on the recursion \(r_{j+1} = 10\, r_j \bmod b\) uses \(\gcd(10, b) = 1\) to preserve coprimality), so the remainders live in the group of units \((\mathbb{Z}/b\mathbb{Z})^{\times}\), which has size \(\varphi(b)\). Pigeonhole there gives the cleaner bound: period at most \(\varphi(b)\).</p>
@@ -162,7 +171,32 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-09</p>
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__name">Samir Kadariya</p>
+        <p class="site-footer__tag">MIT '26 — BS Artificial Intelligence &amp; Decision Making + BS Mathematics.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Site</p>
+        <ul class="site-footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/experience">Experience</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Elsewhere</p>
+        <ul class="site-footer__links">
+          <li><a href="mailto:samirk08@mit.edu">samirk08@mit.edu</a></li>
+          <li><a href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="site-footer__meta">© 2026 Samir Kadariya · Last updated 2026-07-06</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

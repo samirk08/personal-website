@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css?v=20260510-1">
+  <link rel="stylesheet" href="/css/main.css?v=20260706-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -45,38 +45,34 @@
     <section class="page-body">
       <section class="m-section" aria-labelledby="featured-heading" style="margin-block-start:0;">
         <h2 class="m-section__heading" id="featured-heading">Featured Work</h2>
-        <ol class="m-list">
-          <li>
-            <article class="m-item">
-              <h3 class="m-item__title"><a href="/projects/transformers-vs-lstms/">When Do Transformers Actually Beat LSTMs for Time Series Forecasting?</a></h3>
-              <p class="m-item__meta">
-                <span class="m-badge">Featured</span>
-                <span class="m-item__meta-sep">·</span>
-                <span>Deep Learning</span>
-                <span class="m-item__meta-sep">·</span>
-                <span>MIT 6.7960 · Fall 2025</span>
-                <span class="m-item__meta-sep">·</span>
-                <span>3-person team</span>
-              </p>
-              <p class="m-item__prose">A controlled comparison of <span class="m-metric">Transformer vs LSTM</span> architectures across three time-series forecasting datasets, with attention-pattern analysis and ablations isolating where each architecture genuinely wins.</p>
-              <a class="m-item__link" href="/projects/transformers-vs-lstms/">Read more</a>
-            </article>
-          </li>
-          <li>
-            <article class="m-item">
-              <h3 class="m-item__title"><a href="/projects/lobbying-networks/">Targeted Lobbying on Council Networks</a></h3>
-              <p class="m-item__meta">
-                <span class="m-badge">Featured</span>
-                <span class="m-item__meta-sep">·</span>
-                <span>Game Theory</span>
-                <span class="m-item__meta-sep">·</span>
-                <span>MIT 14.18</span>
-              </p>
-              <p class="m-item__prose">Game-theoretic analysis of how a strategic outsider should target lobbying effort across a council network — using <span class="m-metric">Katz–Bonacich centrality</span> to identify members whose votes propagate furthest through the influence graph.</p>
-              <a class="m-item__link" href="/projects/lobbying-networks/">Read more</a>
-            </article>
-          </li>
-        </ol>
+        <div class="featured-grid">
+          <article class="featured-card">
+            <a class="featured-card__link" href="/projects/transformers-vs-lstms/" aria-label="When Do Transformers Actually Beat LSTMs for Time Series Forecasting?"></a>
+            <p class="m-item__meta">
+              <span class="m-badge">Featured</span>
+              <span class="m-item__meta-sep">·</span>
+              <span>Deep Learning</span>
+              <span class="m-item__meta-sep">·</span>
+              <span>MIT 6.7960 · Fall 2025</span>
+            </p>
+            <h3 class="featured-card__title">When Do Transformers Actually Beat LSTMs for Time Series Forecasting?</h3>
+            <p class="m-item__prose">A controlled comparison of <span class="m-metric">Transformer vs LSTM</span> architectures across three time-series forecasting datasets, with attention-pattern analysis and ablations isolating where each architecture genuinely wins.</p>
+            <span class="m-item__link" aria-hidden="true">Read more</span>
+          </article>
+          <article class="featured-card">
+            <a class="featured-card__link" href="/projects/lobbying-networks/" aria-label="Targeted Lobbying on Council Networks"></a>
+            <p class="m-item__meta">
+              <span class="m-badge">Featured</span>
+              <span class="m-item__meta-sep">·</span>
+              <span>Game Theory</span>
+              <span class="m-item__meta-sep">·</span>
+              <span>MIT 14.18</span>
+            </p>
+            <h3 class="featured-card__title">Targeted Lobbying on Council Networks</h3>
+            <p class="m-item__prose">Game-theoretic analysis of how a strategic outsider should target lobbying effort across a council network — using <span class="m-metric">Katz–Bonacich centrality</span> to identify members whose votes propagate furthest through the influence graph.</p>
+            <span class="m-item__link" aria-hidden="true">Read more</span>
+          </article>
+        </div>
       </section>
 
       <div class="project-filter" role="tablist" aria-label="Filter projects">
@@ -125,7 +121,32 @@
   </main>
 
   <footer class="site-footer">
-    <p>Samir Kadariya · 2026 · Last updated 2026-05-07</p>
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__name">Samir Kadariya</p>
+        <p class="site-footer__tag">MIT '26 — BS Artificial Intelligence &amp; Decision Making + BS Mathematics.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="site-footer__heading">Site</p>
+        <ul class="site-footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/experience">Experience</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="site-footer__heading">Elsewhere</p>
+        <ul class="site-footer__links">
+          <li><a href="mailto:samirk08@mit.edu">samirk08@mit.edu</a></li>
+          <li><a href="https://github.com/samirk08" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/samir-kadariya" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="/assets/pdf/samir-kadariya-resume.pdf" target="_blank" rel="noopener noreferrer">Resume (PDF) ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="site-footer__meta">© 2026 Samir Kadariya · Last updated 2026-07-06</p>
   </footer>
 
   <script type="module" src="/js/main.js"></script>

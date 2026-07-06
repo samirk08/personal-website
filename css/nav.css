@@ -22,9 +22,17 @@
 }
 
 .site-nav:not([data-page="home"]) {
-  background: var(--bg);
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
   border-block-end: 1px solid var(--border);
   color: var(--text);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-nav:not([data-page="home"]) { background: var(--bg); }
 }
 
 .site-nav__brand {
