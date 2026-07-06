@@ -4,9 +4,16 @@
 .measure   { max-inline-size: var(--measure);      margin-inline: auto; }
 .measure-wide { max-inline-size: var(--measure-wide); margin-inline: auto; }
 
-/* Reveal skeleton — Plan 02-02 adds .is-visible toggle via IntersectionObserver. */
+/* Reveal skeleton — .is-visible toggled via IntersectionObserver in
+   js/animations.js, which also auto-applies .reveal to common content blocks
+   and sets --reveal-delay for a small cascade across sibling groups. */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal { opacity: 0; transform: translateY(8px); transition: opacity 500ms ease-out, transform 500ms ease-out; }
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+    transition-delay: var(--reveal-delay, 0ms);
+  }
   .reveal.is-visible { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {

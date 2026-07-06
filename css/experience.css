@@ -14,19 +14,22 @@
   border-block-end: none;
 }
 
-/* Visible gap between cards so they don't sit flush against each other.
-   Override components.css line 181 (`max-inline-size: var(--measure-wide)`)
-   so cards fill the page-body width (1200px) instead of being capped at
-   880px — the narrower cap made the cards look small relative to the page. */
+/* Flat minimal list (2026-07 restyle, arko-ghosh.com reference): no card
+   chrome — entries are full-width rows divided by thin separators, with the
+   "+" toggle on the right. The expanded body flows in below the row, aligned
+   with the text column, still boxless. */
 .timeline {
-  display: grid;
-  gap: var(--space-6);
+  display: block;
   max-inline-size: var(--measure-grid);
+  border-block-start: 1px solid var(--border);
+}
+.timeline__entry {
+  border-block-end: 1px solid var(--border);
 }
 
-/* ===== Card head (always visible) =====
+/* ===== Row head (always visible) =====
    4 columns on desktop: logo | text | when | toggle.
-   The logo column is fixed at 200px so titles align across all cards
+   The logo column is fixed at 200px so titles align across all rows
    regardless of whether the logo is square (~48×48) or a wide wordmark
    (up to ~191×48 for the MIT Political Science lockup). */
 .timeline__head {
@@ -35,10 +38,9 @@
   align-items: center;
   gap: var(--space-5);
   inline-size: 100%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: var(--space-6) var(--space-8);
+  background: transparent;
+  border: 0;
+  padding: var(--space-6) var(--space-2);
   text-align: start;
   font: inherit;
   color: inherit;
@@ -71,12 +73,13 @@
   block-size: 64px;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .timeline__head { transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
+  .timeline__title { transition: color 180ms ease-out; }
 }
 @media (hover: hover) and (pointer: fine) {
-  .timeline__head:hover {
-    border-color: color-mix(in oklch, var(--accent) 60%, var(--border));
-    box-shadow: var(--shadow-sm);
+  .timeline__head:hover .timeline__title { color: var(--accent); }
+  .timeline__head:hover .timeline__toggle {
+    border-color: var(--accent);
+    background: var(--accent-soft);
   }
 }
 /* Focus outline lives on the entry container (see :has() rule below) so the
@@ -163,42 +166,29 @@
 
 .timeline__body {
   margin-block-start: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-block-start: none;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-  padding: var(--space-6) var(--space-8);
+  background: transparent;
+  border: 0;
+  /* Align the expanded detail with the text column of the row above
+     (logo column 200px + grid gap). */
+  padding: 0 var(--space-2) var(--space-6) calc(200px + var(--space-5) + var(--space-2));
 }
 
 /* When any head inside an entry is keyboard-focused, paint the focus ring on
-   the entry so it wraps the unified head+body card (not just the head button). */
+   the entry so it wraps the unified head+body row (not just the head button). */
 .timeline__entry:has(.timeline__head:focus-visible) {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 
-/* When the card is expanded, lift the whole entry with a soft shadow so the
-   head+body pair reads as one elevated container rather than two stacked bars. */
-.timeline__entry:has(.timeline__head[aria-expanded="true"]) {
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-}
 @media (prefers-reduced-motion: no-preference) {
   .timeline__body {
-    animation: timelineBodyIn 220ms ease-out;
+    animation: timelineBodyIn 260ms ease-out;
   }
   @keyframes timelineBodyIn {
-    from { opacity: 0; transform: translateY(-4px); }
+    from { opacity: 0; transform: translateY(-6px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-}
-
-/* When the head is expanded, square off its bottom corners so it visually
-   joins the body. */
-.timeline__head[aria-expanded="true"] {
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  border-block-end-color: transparent;
 }
 
 /* ===== Period sub-blocks (multi-stint roles, e.g. SESCO 2024 + 2025) =====
@@ -296,8 +286,8 @@
 /* ===== Mobile tweaks (≤ 600px): stack dates onto a new line below the title
    so the head doesn't squeeze and remains readable. ===== */
 @media (max-width: 600px) {
-  .timeline {
-    gap: var(--space-5);
+  .timeline__body {
+    padding: 0 var(--space-2) var(--space-5);
   }
   .timeline__head {
     grid-template-columns: 1fr auto;
@@ -305,12 +295,11 @@
       "text   toggle"
       "when   when";
     row-gap: var(--space-2);
-    padding: var(--space-4) var(--space-5);
+    padding: var(--space-5) var(--space-2);
   }
   .timeline__head-text { grid-area: text; }
   .timeline__when      { grid-area: when; text-align: start; }
   .timeline__toggle    { grid-area: toggle; }
-  .timeline__body      { padding: var(--space-5); }
   /* Logos hidden on mobile — head is already tight with title+role+date+toggle. */
   .timeline__logo      { display: none; }
 }
