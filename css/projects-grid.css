@@ -87,6 +87,64 @@
 }
 
 /* ============================================================
+ * 1c. Featured Work cards (/projects, top of page)
+ * ============================================================ */
+
+/* Two flagship projects rendered as large accent-edged cards instead of the
+ * old flat text list, so "Featured Work" reads as visually senior to the
+ * grid below it. Whole card is clickable via the stretched link. */
+.featured-grid {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: 1fr;
+  margin-block-end: var(--space-8);
+}
+@media (min-width: 800px) {
+  .featured-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.featured-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5) var(--space-6);
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .featured-card { transition: transform 180ms ease-out, box-shadow 180ms ease-out, border-color 180ms ease-out; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .featured-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in oklch, var(--accent) 45%, var(--border));
+    border-inline-start-color: var(--accent);
+  }
+  .featured-card:hover .featured-card__title { color: var(--accent); }
+}
+.featured-card__link {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+}
+.featured-card__title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+  color: var(--text);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .featured-card__title { transition: color 180ms ease-out; }
+}
+.featured-card:has(.featured-card__link:focus-visible) {
+  outline: 2px solid var(--ring); outline-offset: 4px;
+}
+
+/* ============================================================
  * 2. Filter pill control
  * ============================================================ */
 
